@@ -633,7 +633,7 @@ struct MyStruct {
 ```
 ## ***Swift.@标记***
 
-### `@frozen`
+### <span style="color:red; font-weight:bold;">***`@frozen`***</span>
 
 *用于标记枚举声明，表示该枚举是冻结的，即其**成员在编译时是不可改变的**。这有助于编译器进行一些优化。*
 
@@ -643,10 +643,11 @@ struct MyStruct {
     case failure(errorCode: Int)
 }
 ```
-在这个例子中，**Status**是一个枚举，通过 `@frozen` 标记表示它是冻结的。这意味着在***后续的代码中不能再添加新的枚举成员***，使得编译器可以进行一些优化。
-### `@usableFromInline`
+在这个例子中，**Status**是一个枚举，通过 <span style="color:red; font-weight:bold;">***`@frozen`***</span> 标记表示它是冻结的。这意味着在***后续的代码中不能再添加新的枚举成员***，使得编译器可以进行一些优化。
+### <span style="color:red; font-weight:bold;">***`@usableFromInline`***</span>
 
 *用于标记属性、方法、类型等，表示它们可以在模块内的其他地方内联使用，但对模块外不可见。*
+
 ```swift
 // MyModule.swift
 @usableFromInline
@@ -677,7 +678,7 @@ public func publicFunction() {
 let myStruct = InternalStruct(value: 42) // 错误，InternalStruct 对模块外不可见
 let result = internalFunction() // 错误，internalFunction 对模块外不可见
 ```
-### `@discardableResult`
+### <span style="color:red; font-weight:bold;">***`@discardableResult`***</span>
 
 *discard：*
 *【v.】扔掉，弃置；打出（无用的牌），垫（牌）*
@@ -690,7 +691,7 @@ func processResult() -> Int {
     // ...
 }
 ```
-### `@available`
+### <span style="color:red; font-weight:bold;">***`@available`***</span>
 
  *用于标记函数、方法、属性等，指示它们的可用性和版本要求。*
 ```swift
@@ -699,12 +700,12 @@ func newAPI() {
     // ...
 }
 ```
-### `@MainActor`
+### <span style="color:red; font-weight:bold;">***`@MainActor`***</span>
 
 * 是一个[***属性包装器***（property wrapper）](# 属性包装器（Property Wrappers）)，它用于标记特定的属性、方法或函数在主线程上执行；
 
 * 这是为了确保在 Swift 的并发编程中遵循特定的并发模型；
-* 具体来说，`@MainActor`是 Swift Concurrency 中的一部分，引入了 <span style="color:red; font-weight:bold;">***async/await***</span>  等新的并发编程特性；
+* 具体来说，`@MainActor`是 Swift Concurrency 中的一部分，引入了 <span style="color:red; font-weight:bold;">***`async/await`***</span>  等新的并发编程特性；
 * 它的目的是将代码标记为在主线程上执行，以确保操作 UI 或其他需要在主线程上执行的任务时不会发生线程不安全的情况。
 
 ```swift
@@ -721,12 +722,12 @@ func fetchData() async {
     updateUI()
 }
 ```
-### `@objc`
+### <span style="color:red; font-weight:bold;">***`@objc`***</span>
 
-* `@objc` 是一个 Objective-C 的修饰符；
+* <span style="color:red; font-weight:bold;">***`@objc`***</span> 是一个 Objective-C 的修饰符；
 * 在 Swift 中用于标记特定的声明以便与 Objective-C 代码进行交互；
 * 它可以应用于类、协议、方法、属性等；
-* 兼容 *Objective-C* 代码： 当你需要在 *Swift* 中使用*Objective-C* 的框架、类、方法等时，你可能需要使用 `@objc` 修饰符。*Objective-C* 使用动态消息传递，而 *Swift* 使用静态派发，因此在 *Swift* 中调用 *Objective-C* 代码时，需要一些额外的信息来确保兼容性。
+* 兼容 *Objective-C* 代码： 当你需要在 *Swift* 中使用*Objective-C* 的框架、类、方法等时，你可能需要使用 <span style="color:red; font-weight:bold;">***`@objc`***</span> 修饰符。*Objective-C* 使用动态消息传递，而 *Swift* 使用静态派发，因此在 *Swift* 中调用 *Objective-C* 代码时，需要一些额外的信息来确保兼容性。
 
 ```swift
 @objc class MySwiftClass: NSObject {
@@ -743,18 +744,18 @@ func fetchData() async {
 }
 let selector = #selector(myObjectiveCMethod)
 ```
-* 处理动态派发：`@objc` 也用于处理动态派发的情况，例如在 KVO（**K**ey-**V**alue **O**bserving）中。
+* 处理动态派发：<span style="color:red; font-weight:bold;">***`@objc`***</span> 也用于处理动态派发的情况，例如在 KVO（**K**ey-**V**alue **O**bserving）中。
 ```swift
 @objc dynamic var myProperty: Int = 0
 ```
 * 需要注意的是：
-  * 使用 `@objc` 会使得相应的声明变得更加 *Objective-C* 友好，但也可能导致一些 *Swift* 特性无法使用；
-  * 在新的 *Swift* 代码中，尽量避免不必要的 `@objc` 标记，以便充分利用 *Swift* 的静态类型检查和性能优势；
+  * 使用 <span style="color:red; font-weight:bold;">***`@objc`***</span> 会使得相应的声明变得更加 *Objective-C* 友好，但也可能导致一些 *Swift* 特性无法使用；
+  * 在新的 *Swift* 代码中，尽量避免不必要的 <span style="color:red; font-weight:bold;">***`@objc`***</span> 标记，以便充分利用 *Swift* 的静态类型检查和性能优势；
 
-### `@Binding`
+### <span style="color:red; font-weight:bold;">***`@Binding`***</span>
 
-* `@Binding` 是一个[***属性包装器***（property wrapper）](# 属性包装器（Property Wrappers）)，用于在 SwiftUI 中创建**双向绑定**（two-way binding）。它允许你在视图层次结构中传递数据，并确保这些数据的改变在整个视图层次结构中传播；
-  * 当你在一个视图中使用 `@Binding` 修饰符时，它表示该属性是一个引用到另一个视图层次结构中的数据的绑定；
+* <span style="color:red; font-weight:bold;">***`@Binding`***</span> 是一个[***属性包装器***（property wrapper）](# 属性包装器（Property Wrappers）)，用于在 SwiftUI 中创建**双向绑定**（two-way binding）。它允许你在视图层次结构中传递数据，并确保这些数据的改变在整个视图层次结构中传播；
+  * 当你在一个视图中使用 <span style="color:red; font-weight:bold;">***`@Binding`***</span> 修饰符时，它表示该属性是一个引用到另一个视图层次结构中的数据的绑定；
   * 当被绑定的数据发生变化时，相关的视图会自动更新，并且对绑定属性的修改也会反映到原始数据上；
 
 ```swift
@@ -802,11 +803,11 @@ struct Subview: View {
   <input type="text" v-model="message">
   这里message是模型中的数据，用户在输入框中输入的值会动态地更新到模型中，并且模型中的数据变化也会反映到输入框中。
   ```
-### `@escaping`
+### <span style="color:red; font-weight:bold;">***`@escaping`***</span>
 
 * 用于标记函数或闭包参数，表示它们在函数返回后仍然可以被调用；
 * 通常，当闭包作为参数传递给函数时，它默认是非逃逸的，即被保证在函数返回之前被执行；
-* 然而，如果该闭包可能在函数返回后执行，就需要使用 `@escaping` 修饰符
+* 然而，如果该闭包可能在函数返回后执行，就需要使用 <span style="color:red; font-weight:bold;">***`@escaping`***</span> 修饰符
 
 ```swift
 class MyViewController {
@@ -840,11 +841,17 @@ class MyViewController {
 	而 `registerCompletionHandler(completion:)` 函数的参数闭包默认是非逃逸的，因为它被保存在数组中，不会在函数返回后被`executeCompletionHandlers()` 函数用于执行保存的闭包数组中的所有闭包；
 */
 ```
-### `@inline`
+### <span style="color:red; font-weight:bold;">***`@inline`***</span>
 
-* 用于标记函数，表示希望编译器尽可能地将函数内容内联到调用点，以提高性能。
+* 用于标记函数，表示希望编译器尽可能地将函数内容内联到调用点，以提高性能；
 
-* 在大多数情况下，Swift 编译器会自动进行内联优化，但使用 `@inline` 可以对编译器的行为进行更明确的指导。
+* 在大多数情况下，Swift 编译器会自动进行内联优化，但使用 <span style="color:red; font-weight:bold;">***`@inline`***</span> 可以对编译器的行为进行更明确的指导；
+
+* <span style="color:red; font-weight:bold;">***使用 `@inline` 需要慎重，因为过度的内联可能导致代码体积膨胀，反而影响性能***</span> ；
+
+* 编译器通常能够很好地处理内联，因此在大多数情况下，开发者无需手动添加<span style="color:red; font-weight:bold;">***`@inline`***</span>；
+
+* 只有在对性能有特殊需求，且经过测试确认内联带来的性能提升时，才建议使用<span style="color:red; font-weight:bold;">***`@inline`***</span>；
 
 ```swift
 @inline(__always)
@@ -860,11 +867,10 @@ print(result)
 */
 ```
 
-请注意，<span style="color:red; font-weight:bold;">***使用 `@inline` 需要慎重，因为过度的内联可能导致代码体积膨胀，反而影响性能***</span> 。编译器通常能够很好地处理内联，因此在大多数情况下，开发者无需手动添加 `@inline`。只有在对性能有特殊需求，且经过测试确认内联带来的性能提升时，才建议使用 `@inline`。
-### `@Main`
+### <span style="color:red; font-weight:bold;">***`@Main`***</span>
 
-* 在Swift中，`@main` 是一个属性，用于标识应用程序的入口点，指定应用程序的主入口（main entry point）；
-* 在Swift应用程序中，可以使用 `@main` 属性来指定一个遵循 `App` 协议的类型，以表示应用程序的主要入口；
+* 在Swift中，<span style="color:red; font-weight:bold;">***`@Main`***</span> 是一个属性，用于标识应用程序的入口点，指定应用程序的主入口（main entry point）；
+* 在Swift应用程序中，可以使用 <span style="color:red; font-weight:bold;">***`@Main`***</span> 属性来指定一个遵循 `App` 协议的类型，以表示应用程序的主要入口；
 
 ```swift
 import SwiftUI
@@ -887,13 +893,13 @@ struct MyApp: App {
 
 <span style="color:red; font-weight:bold;">***在应用程序启动时，系统将自动创建并运行标记为 `@main` 的结构体，从而启动应用程序。***</span>
 
-### `@UIApplicationMain`
+### <span style="color:red; font-weight:bold;">***`@UIApplicationMain`***</span>
 
 * 是 Swift 中的一个标记性的属性，通常用于标识应用程序的主要入口点；
 * 在 Swift 中，它通常用于标记 *AppDelegate* 类，以指定应用程序的主要运行类；
-* 一个应用程序只能有一个使用 `@UIApplicationMain` 标记的类；
+* 一个应用程序只能有一个使用 <span style="color:red; font-weight:bold;">***`@UIApplicationMain`***</span> 标记的类；
 
-通过在 *AppDelegate* 类的声明前添加 `@UIApplicationMain` 属性，可以省略编写 `main.swift` 文件来启动应用程序
+通过在 *AppDelegate* 类的声明前添加 <span style="color:red; font-weight:bold;">***`@UIApplicationMain`***</span> 属性，可以省略编写 `main.swift` 文件来启动应用程序
 
 ```swift
 import UIKit
@@ -909,10 +915,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 }
 // 这样，编译器会自动生成 main.swift 文件，并在其中创建 UIApplication 对象和 AppDelegate 对象，从而启动应用程序。
 ```
-### `@State`
+### <span style="color:red; font-weight:bold;">***`@State`***</span>
 
-* 是 SwiftUI 中的一个[**属性包装器**（Property Wrapper）](# 属性包装器（Property Wrappers）)，用于声明和管理视图的状态；
-* `@State` 用于标识由视图持有和管理的可变状态，当状态发生改变时，视图会自动重新渲染以反映最新的状态；
+* 是 SwiftUI 中的一个[***属性包装器***（Property Wrapper）](# 属性包装器（Property Wrappers）)，用于声明和管理视图的状态；
+* <span style="color:red; font-weight:bold;">***`@State`***</span> 用于标识由视图持有和管理的可变状态，当状态发生改变时，视图会自动重新渲染以反映最新的状态；
 
 ```swift
 import SwiftUI
@@ -937,7 +943,7 @@ struct MyView: View {
 ```
 <span style="color:red; font-weight:bold;">***总的来说，`@State` 是 SwiftUI 中用于处理视图状态的重要[属性包装器](# 属性包装器（Property Wrappers）)，它使得状态管理更加简单和直观。***</span> 
 
-### `@EnvironmentObject`
+### <span style="color:red; font-weight:bold;">***`@EnvironmentObject`***</span>
 
 *是 SwiftUI 中的一个[**属性包装器**（Property Wrapper）](# 属性包装器（Property Wrappers）)，用于在视图之间传递和共享数据。它允许你在整个 SwiftUI 视图层次结构中传递一个共享的对象，并在需要的地方访问该对象的属性。*
 
@@ -979,13 +985,14 @@ struct ContentView: View {
 */
 ```
 **主要用途和特点：**
-* 传递共享数据： 通过使用 `@EnvironmentObject`，你可以在整个 *SwiftUI* 视图层次结构中传递一个共享的数据模型，而不必在每个视图中手动传递该数据。
+* 传递共享数据： 通过使用 <span style="color:red; font-weight:bold;">***`@EnvironmentObject`***</span>，你可以在整个 *SwiftUI* 视图层次结构中传递一个共享的数据模型，而不必在每个视图中手动传递该数据。
 * 全局访问： 通过在 *SwiftUI* 的 **Environment** 中存储对象，你可以在整个应用程序中提供对该对象的全局访问。
-* 数据更新时刷新视图： 当通过 `@EnvironmentObject `引用的对象发生更改时，相关视图会自动刷新以反映最新的数据。
-* 典型用法是在 `@main` 函数中设置环境对象，以便在整个应用程序中共享。
-### `@Environment`
+* 数据更新时刷新视图： 当通过 <span style="color:red; font-weight:bold;">***`@EnvironmentObject`***</span>引用的对象发生更改时，相关视图会自动刷新以反映最新的数据。
+* 典型用法是在 <span style="color:red; font-weight:bold;">***`@main`***</span> 函数中设置环境对象，以便在整个应用程序中共享。
 
-*在 Swift 中，`@Environment` 是一个[**属性包装器**（property wrapper）](# 属性包装器（Property Wrappers）)，用于访问环境值（Environment Values）。*
+### <span style="color:red; font-weight:bold;">***`@Environment`***</span>
+
+*在 Swift 中，<span style="color:red; font-weight:bold;">**`@Environment`**</span> 是一个[**属性包装器**（property wrapper）](# 属性包装器（Property Wrappers）)，用于访问环境值（Environment Values）。*
 *环境值是一种在应用程序中传递数据的方式，通常用于在视图层次结构中传递全局设置或共享的数据。*
 *`@Environment` 允许您在视图中声明需要从环境中获取的值，并使其在整个视图层次结构中自动传递。*
 
@@ -1030,9 +1037,9 @@ struct MyApp: App {
 ```
 在应用程序的其他地方，例如在 *AppDelegate* 中，您可以设置用户的偏好设置，然后这些设置将在整个应用程序中自动传递给使用 `@Environment(\.userDefaults)` 的视图。这是一种方便的方式，<span style="color:red; font-weight:bold;">***使得全局设置和共享数据能够轻松地在整个视图层次结构中传递。***</span> 
 
-### `@ObservedObject`
+### <span style="color:red; font-weight:bold;">***`@ObservedObject`***</span>
 
-*是 SwiftUI 中的一个[**属性包装器**（property wrapper）](# 属性包装器（Property Wrappers）)，用于将一个对象标记为可观察的。当被 `@ObservedObject` 标记的对象发生变化时，相关视图将会被刷新以反映这些变化。通常情况下，`@ObservedObject` 用于关联可观察对象和视图，使得 SwiftUI 能够自动响应对象的变化并更新 UI。*
+*是 SwiftUI 中的一个[**属性包装器**（property wrapper）](# 属性包装器（Property Wrappers）)，用于将一个对象标记为可观察的。当被 <span style="color:red; font-weight:bold;">**`@ObservedObject`**</span> 标记的对象发生变化时，相关视图将会被刷新以反映这些变化。通常情况下，<span style="color:red; font-weight:bold;">**`@ObservedObject`**</span> 用于关联可观察对象和视图，使得 SwiftUI 能够自动响应对象的变化并更新 UI。*
 
 ```swift
 import SwiftUI
@@ -1063,15 +1070,15 @@ struct MyView: View {
 */
 ```
 **主要用途和特点：**
-* 可观察对象： 通过 `@ObservedObject` 标记的对象必须符合 `ObservableObject` 协议，这通常是一个具有可发布属性的类。
-* 刷新视图： 当 `@ObservedObject` 标记的对象的可发布属性发生变化时，相关视图将会自动刷新以反映最新的数据。
-* 局部订阅： `@ObservedObject` 用于局部的、在视图层次结构中的某个特定位置进行数据绑定，而 `@EnvironmentObject` 用于全局的、在整个应用程序范围内传递数据。
+* 可观察对象： 通过 <span style="color:red; font-weight:bold;">***`@ObservedObject`***</span> 标记的对象必须符合 <span style="color:red; font-weight:bold;">***`@ObservedObject`***</span> 协议，这通常是一个具有可发布属性的类。
+* 刷新视图： 当 <span style="color:red; font-weight:bold;">***`@ObservedObject`***</span> 标记的对象的可发布属性发生变化时，相关视图将会自动刷新以反映最新的数据。
+* 局部订阅： <span style="color:red; font-weight:bold;">***`@ObservedObject`***</span> 用于局部的、在视图层次结构中的某个特定位置进行数据绑定，而 <span style="color:red; font-weight:bold;">***`@EnvironmentObject`***</span> 用于全局的、在整个应用程序范围内传递数据。
 
 <span style="color:red; font-weight:bold;">***总的来说，`@ObservedObject` 是 SwiftUI 中用于观察对象变化并刷新视图的关键属性包装器。它通常用于将可观察对象与特定视图关联，以便在对象变化时更新相关 UI。***</span> 
 
-### `@Published`
+### <span style="color:red; font-weight:bold;">***`@Published`***</span>
 
-*是 Swift 中的[**属性包装器**（property wrapper）](# 属性包装器（Property Wrappers）)，通常用于标记可观察对象的属性。在 SwiftUI 中，`@Published` 通常与 `ObservableObject` 协议一起使用，以提供一种简单的方式来发布属性的变化，从而让相关视图能够及时地更新。需要`import Combine`*
+*是 Swift 中的[**属性包装器**（property wrapper）](# 属性包装器（Property Wrappers）)，通常用于标记可观察对象的属性。在 SwiftUI 中，<span style="color:red; font-weight:bold;">**`@Published`**</span> 通常与 `ObservableObject` 协议一起使用，以提供一种简单的方式来发布属性的变化，从而让相关视图能够及时地更新。需要`import Combine`* 
 
 ```swift
 import SwiftUI
@@ -1104,21 +1111,25 @@ struct MyView: View {
 
 <span style="color:red; font-weight:bold;">***它与 `ObservableObject` 协议一起使用，使得 SwiftUI 能够在数据发生变化时自动刷新相关的视图。***</span> 
 
-## `@main`和`@UIApplicationMain`的区别
+## <span style="color:red; font-weight:bold;">***`@main`***</span>和<span style="color:red; font-weight:bold;">***`@UIApplicationMain`***</span>的区别
 
-`@main` 和 `@UIApplicationMain` 都是在 *Swift* 中用于标识应用程序入口的属性，但它们有一些不同之处：
+<span style="color:red; font-weight:bold;">**`@main`**</span> 和 <span style="color:red; font-weight:bold;">**`@UIApplicationMain`**</span> 都是在 *Swift* 中用于标识应用程序入口的属性，但它们有一些不同之处：
+
 1. **平台差异：**
    
-   * `@main` 是 *Swift 5.3* 及更高版本引入的属性，用于iOS、macOS、tvOS等所有平台。它是一种通用的属性，用于标识应用程序的入口。
-   - `@UIApplicationMain` 是在较早的Swift版本中引入的，主要用于iOS开发。它是在*AppDelegate*中标识应用程序的主入口。
+   * <span style="color:red; font-weight:bold;">***`@main`***</span>是 *Swift 5.3* 及更高版本引入的属性，用于iOS、macOS、tvOS等所有平台。它是一种通用的属性，用于标识应用程序的入口。
+   - <span style="color:red; font-weight:bold;">***`@UIApplicationMain`***</span> 是在较早的Swift版本中引入的，主要用于iOS开发。它是在*AppDelegate*中标识应用程序的主入口。
+   
 2. **使用方式：**
    
-   - `@main` 用于标识遵循 `App` 协议的类型，表示整个应用程序的入口。在该类型中，通过实现 `body` 属性来定义应用程序的场景（Scene）；
-   - `@UIApplicationMain` 用于标识一个包含 `UIApplication` 子类的文件，该子类充当应用程序的代理并定义应用程序的入口点。在这种情况下，`main.swift` 文件是不必要的，因为入口点由 `@UIApplicationMain` 属性标识的类的 `main` 方法提供。
-3. **Flexibility：**
-   - `@main` 更加灵活，允许您使用 `App` 协议自定义应用程序的入口，使其适用于不同的场景和平台；
-   - `@UIApplicationMain` 相对较死板，主要用于传统的iOS应用程序入口点的定义；
-   综上所述，如果您在Swift 5.3及更高版本上进行跨平台开发，推荐使用 `@main`。如果您在较早的Swift版本上仅进行iOS开发，可以使用 `@UIApplicationMain`。在实践中，大多数新的Swift项目会选择使用 `@main`，因为它提供更大的灵活性，并且在未来的Swift版本中可能会成为标准的应用程序入口点标识方式。
+   - <span style="color:red; font-weight:bold;">***`@main`***</span> 用于标识遵循 `App` 协议的类型，表示整个应用程序的入口。在该类型中，通过实现 `body` 属性来定义应用程序的场景（Scene）；
+   - <span style="color:red; font-weight:bold;">***`@UIApplicationMain`***</span> 用于标识一个包含 *UIApplication* 子类的文件，该子类充当应用程序的代理并定义应用程序的入口点。在这种情况下，`main.swift` 文件是不必要的，因为入口点由 <span style="color:red; font-weight:bold;">***`@UIApplicationMain`***</span> 属性标识的类的 `main` 方法提供。
+   
+3. **灵活性：**
+   
+   - <span style="color:red; font-weight:bold;">***`@main`***</span>更加灵活，允许您使用 `App` 协议自定义应用程序的入口，使其适用于不同的场景和平台；
+   - <span style="color:red; font-weight:bold;">***`@UIApplicationMain`***</span> 相对较死板，主要用于传统的iOS应用程序入口点的定义；
+   综上所述，如果您在Swift 5.3及更高版本上进行跨平台开发，推荐使用 <span style="color:red; font-weight:bold;">***`@main`***</span>。如果您在较早的Swift版本上仅进行iOS开发，可以使用 <span style="color:red; font-weight:bold;">***`@UIApplicationMain`***</span>。在实践中，大多数新的Swift项目会选择使用 <span style="color:red; font-weight:bold;">***`@main`***</span>，因为它提供更大的灵活性，并且在未来的Swift版本中可能会成为标准的应用程序入口点标识方式。
 
 ## Swift中，***Any***和***Anyobject***的区别？
 
@@ -1172,10 +1183,10 @@ struct MyView: View {
     }
 }
 ```
-## `#available` 和 `@available `在Swift中有什么区别？
+## `#available` 和 <span style="color:red; font-weight:bold;">***`@available`***</span>在Swift中有什么区别？
 
-*在Swift中，`#available` 和 `@available` 都用于处理平台和版本的可用性检查，但它们在语法上和用途上有一些不同。*
-**`#available`：**
+*在Swift中，`#available`和 <span style="color:red; font-weight:bold;">**`@available`**</span>都用于处理平台和版本的可用性检查，但它们在语法上和用途上有一些不同。*
+**`#available`：** 
 
 - `#available` 是一个条件编译指令，用于在编译时检查代码的可用性。
 - 你可以使用 `#available` 来检查某个特定平台上是否可用某个特定版本的API，以便在编译时做出相应的决策。这在编写跨平台应用时很有用。
@@ -1186,9 +1197,10 @@ if #available(iOS 15, *) {
     // 使用 iOS 15 以下版本的备用代码
 }
 ```
-**`@available`：**
-- `@available` 是一个属性包装器，用于在运行时检查代码的可用性。
-- 可以使用 `@available` 来标记特定的函数、类、结构体等，并指定它们在不同平台和版本上的可用性。这允许编译器在运行时检查代码的使用情况，并在不支持的平台或版本上引发警告或错误。
+<span style="color:red; font-weight:bold;">***`@available`***</span>
+
+- <span style="color:red; font-weight:bold;">***`@available`***</span> 是一个属性包装器，用于在运行时检查代码的可用性。
+- 可以使用 <span style="color:red; font-weight:bold;">***`@available`***</span>来标记特定的函数、类、结构体等，并指定它们在不同平台和版本上的可用性。这允许编译器在运行时检查代码的使用情况，并在不支持的平台或版本上引发警告或错误。
 ```swift
 @available(iOS 15, *)
 func myFunction() {
@@ -1196,15 +1208,15 @@ func myFunction() {
 }
 ```
 **总体来说**
-1、`#available` 用于条件编译，而 `@available` 用于标记在运行时检查的实体；
+1、`#available` 用于条件编译，而 <span style="color:red; font-weight:bold;">***`@available`***</span> 用于标记在运行时检查的实体；
 
 2、在实际编码中，它们经常一起使用，以确保代码在编译和运行时都考虑到平台和版本的差异；
 
-##  ***Swift.`extension`***
+##  ***Swift***.<span style="color:red; font-weight:bold;">***`extension`***</span>
 
 1、<span style="color:red; font-weight:bold;">***类似于OC中的分类***</span>；
 2、***允许你在不修改原始类型定义的情况下，向已有的类（Class）、结构体（Struct）、枚举（enum）或协议（Protocol）添加新的功能。***；
-3、`extension` 可以用于添加新的计算属性、方法、初始化方法、下标等；
+3、<span style="color:red; font-weight:bold;">***`extension`***</span> 可以用于添加新的计算属性、方法、初始化方法、下标等；
 
 ***扩展添加新方法***：
 
@@ -1255,7 +1267,7 @@ extension Double: Describable {
 let value: Double = 3.14
 print(value.description)  // 输出 "Value: 3.14"
 ```
-**请注意，`extension` 中不能添加存储属性，只能添加计算属性。**
+**请注意，<span style="color:red; font-weight:bold;">*`extension`*</span> 中不能添加存储属性，只能添加计算属性。**
 
 ## <span style="color:red; font-weight:bold;">***在Swift中，有两种类型不允许定义存储属性***</span>：
 
@@ -1288,7 +1300,7 @@ extension String {
 *Swift的初始化方法具有灵活性，可以包含多个参数、默认值、可选值，以及各种初始化阶段的操作。*
 *以下是一些关于Swift初始化方法的重要概念：*
 
-* **指定初始化方法（Designated Initializer）**：是一个类中的主要初始化方法，用于初始化类的所有存储属性，并最终调用父类的初始化方法；
+* **指定初始化方法（*Designated Initializer*）**：是一个类中的主要初始化方法，用于初始化类的所有存储属性，并最终调用父类的初始化方法；
 ```swift
 class MyClass {
     var property: Int
@@ -1298,7 +1310,7 @@ class MyClass {
     }
 }
 ```
-*  **便利初始化方法（Convenience Initializer）**：是一个辅助方法，用于在指定初始化方法内部调用其他初始化方法，提供更多的初始化选项；
+*  **便利初始化方法（*Convenience Initializer*）**：是一个辅助方法，用于在指定初始化方法内部调用其他初始化方法，提供更多的初始化选项；
 ```swift
 class MyClass {
     var property: Int
@@ -1324,7 +1336,7 @@ class Person {
     }
 }
 ```
-*  **可选初始化方法（Failable Initializer）**：允许初始化过程失败，返回一个可选值（初始化失败返回`nil`）；
+*  **可选初始化方法（*Failable Initializer*）**：允许初始化过程失败，返回一个可选值（初始化失败返回`nil`）；
 
 ```swift
 class MyObject {

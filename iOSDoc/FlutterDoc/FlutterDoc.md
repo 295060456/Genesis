@@ -4,20 +4,22 @@
 ## 相关资料
 [***Flutter 面试知识点集锦· GitBook***](https://guoshuyu.cn/home/wx/Flutter-msjj.html)
 [***Dart/Flutter社区生态：Pub.dev***](https://pub.dev/)
-## <span style="color:red; font-weight:bold;">***var***</span>、<span style="color:red; font-weight:bold;">***dynamic***</span>、<span style="color:red; font-weight:bold;">***object***</span>
+## <span style="color:red; font-weight:bold;">***`var`***</span>、<span style="color:red; font-weight:bold;">***`dynamic`***</span>、<span style="color:red; font-weight:bold;">***`object`***</span>
 
-* <span style="color:red; font-weight:bold;">***var***</span>定义的类型是不可变的；
-* <span style="color:red; font-weight:bold;">***dynamic***</span>和<span style="color:red; font-weight:bold;">***object***</span>类型是可以变的，而<span style="color:red; font-weight:bold;">***dynamic***</span>与<span style="color:red; font-weight:bold;">***object***</span>的区别是在静态类型检查上；
-  * <span style="color:red; font-weight:bold;">***dynamic***</span>：编译时**不**进行静态类型检查的类型（更灵活），而是在运行期间进行类型检查。（被编译后，实际是一个<span style="color:red; font-weight:bold;">***object***</span>类型）
-  * <span style="color:red; font-weight:bold;">***object***</span>：编译时会进行类型检查（更安全）
-## <span style="color:red; font-weight:bold;">***const***</span>和<span style="color:red; font-weight:bold;">***final***</span>
-* ***相同点***  <span style="color:red; font-weight:bold;">***final***</span>
-  * <span style="color:red; font-weight:bold;">***final***</span>、<span style="color:red; font-weight:bold;">***const***</span>必须初始化；
-  *  <span style="color:red; font-weight:bold;">***final***</span>、<span style="color:red; font-weight:bold;">***const***</span>只能赋值一次；
+* <span style="color:red; font-weight:bold;">***`var`***</span>定义的类型是不可变的；
+* <span style="color:red; font-weight:bold;">***`dynamic`***</span>和<span style="color:red; font-weight:bold;">***`object`***</span>类型是可以变的，而<span style="color:red; font-weight:bold;">***`dynamic`***</span>与<span style="color:red; font-weight:bold;">***`object`***</span>的区别是在静态类型检查上；
+  * <span style="color:red; font-weight:bold;">***`dynamic`***</span>：编译时**不**进行静态类型检查的类型（更灵活），而是在运行期间进行类型检查。（被编译后，实际是一个<span style="color:red; font-weight:bold;">***`object`***</span>类型）
+  * <span style="color:red; font-weight:bold;">***`object`***</span>：编译时会进行类型检查（更安全）
+## <span style="color:red; font-weight:bold;">***`const`***</span>和<span style="color:red; font-weight:bold;">***`final`***</span>
+
+* ***相同点***  
+  
+  * <span style="color:red; font-weight:bold;">***`final`***</span>、<span style="color:red; font-weight:bold;">***`const`***</span>必须初始化；
+  *  <span style="color:red; font-weight:bold;">***`final`***</span>、<span style="color:red; font-weight:bold;">***`const`***</span>只能赋值一次；
   * 均表示不可被修改  
 *  ***不同点***
-  * <span style="color:red; font-weight:bold;">***final***</span>可修饰实例变量、<span style="color:red; font-weight:bold;">***const***</span>不可以修饰实例变量；
-  * 访问类中<span style="color:red; font-weight:bold;">***const***</span>修饰的变量需要<span style="color:red; font-weight:bold;">***static***</span>修饰；
+  * <span style="color:red; font-weight:bold;">***`final`***</span>可修饰实例变量、<span style="color:red; font-weight:bold;">***`const`***</span>不可以修饰实例变量；
+  * 访问类中<span style="color:red; font-weight:bold;">***`const`***</span>修饰的变量需要<span style="color:red; font-weight:bold;">***`static`***</span>修饰；
   ```dart
   class MyClass {
     // 如果要声明一个类中的静态变量，并且希望它是编译时常量，可以使用 static const：
@@ -56,10 +58,10 @@
     print('Final List: $finalList');
   }
   ```
-  *  <span style="color:red; font-weight:bold;">***const***</span>用来修饰变量 只能被赋值一次，在**编译**时赋值；**仅用于标识编译时常量**
-     <span style="color:red; font-weight:bold;">***final***</span>用来修饰变量 只能被赋值一次，在**运行**时赋值；
-  *  <span style="color:red; font-weight:bold;">***final***</span>**只可用来修饰变量**；
-  * <span style="color:red; font-weight:bold;">***const***</span>关键字即可修饰变量也可用来修饰常量构造函数；当<span style="color:red; font-weight:bold;">***const***</span>修饰类的构造函数时，它要求该类的所有成员都必须是<span style="color:red; font-weight:bold;">***final***</span>的；
+  *  <span style="color:red; font-weight:bold;">***`const`***</span>用来修饰变量 只能被赋值一次，在**编译**时赋值；**仅用于标识编译时常量**
+     <span style="color:red; font-weight:bold;">***`final`***</span>用来修饰变量 只能被赋值一次，在**运行**时赋值；
+  *  <span style="color:red; font-weight:bold;">***`final`***</span>**只可用来修饰变量**；
+  * <span style="color:red; font-weight:bold;">***`const`***</span>关键字即可修饰变量也可用来修饰常量构造函数；当<span style="color:red; font-weight:bold;">***const***</span>修饰类的构造函数时，它要求该类的所有成员都必须是<span style="color:red; font-weight:bold;">***final***</span>的；
    ```dart
    class MyClass {
      final int x;
@@ -127,13 +129,13 @@ void main() {
 gcc -shared -o libexample.so example.c
 ```
 然后运行Dart代码，确保Dart可以找到并加载生成的共享库。请注意，这只是一个简单的示例，实际应用可能需要更复杂的接口定义和错误处理。
-## ***Dart*.<span style="color:red; font-weight:bold;">*part*</span>**
+## ***Dart*.<span style="color:red; font-weight:bold;">*`part`*</span>**
 
-* 用于将一个源文件分割成多个部分，每个部分被称为一个<span style="color:red; font-weight:bold;">*part*</span>。通常情况下，一个库（库是Dart中代码组织的单元）可以由多个源文件组成，这些源文件通过<span style="color:red; font-weight:bold;">*part*</span>关键字进行引入;
+* 用于将一个源文件分割成多个部分，每个部分被称为一个<span style="color:red; font-weight:bold;">*`part`*</span>。通常情况下，一个库（库是Dart中代码组织的单元）可以由多个源文件组成，这些源文件通过<span style="color:red; font-weight:bold;">*`part`*</span>关键字进行引入;
 * 注意事项：
   * 一个库可以有多个部分文件，但是每个部分文件只能属于一个库；
-  * <span style="color:red; font-weight:bold;">*part*</span>关键字只能在源文件的最顶部使用，并且必须是文件的第一个非空白、非注释行；
-* 使用<span style="color:red; font-weight:bold;">*part*</span>关键字的两个关键点：
+  * <span style="color:red; font-weight:bold;">*`part`*</span>关键字只能在源文件的最顶部使用，并且必须是文件的第一个非空白、非注释行；
+* 使用<span style="color:red; font-weight:bold;">*`part`*</span>关键字的两个关键点：
   * **主文件**：包含库的声明以及引入其他部分的声明。通常以`.dart`作为文件扩展名。主文件使用<span style="color:red; font-weight:bold;">*library*</span>关键字声明库；
   ```dart
   // main.dart
@@ -145,8 +147,8 @@ gcc -shared -o libexample.so example.c
   // 主文件中的其他代码
   ```
   * **部分文件**：
-    * 部分文件包含库的一部分代码，它们不包含库的声明，而是使用<span style="color:red; font-weight:bold;">*part of*</span>关键字引入到主文件中。通常也以`.dart`作为文件扩展名；
-    * 使用<span style="color:red; font-weight:bold;">*part of*</span>关键字，将部分文件与主文件关联起来，形成一个完整的库；
+    * 部分文件包含库的一部分代码，它们不包含库的声明，而是使用<span style="color:red; font-weight:bold;">*`part of`*</span>关键字引入到主文件中。通常也以`.dart`作为文件扩展名；
+    * 使用<span style="color:red; font-weight:bold;">*`part of`*</span>关键字，将部分文件与主文件关联起来，形成一个完整的库；
     * 这种方式可以将大型代码库拆分成更小的模块，提高代码的可维护性和可读性；
   ```dart
   // part1.dart
@@ -155,22 +157,22 @@ gcc -shared -o libexample.so example.c
   ```
 ## ***Dart.反射***
 
-* 在Dart中，反射是指在运行时检查、访问和操作程序的结构，比如类、方法、字段等；
+* 在Dart中，反射是指在***运行时***检查、访问和操作程序的结构，比如类、方法、字段等；
 * Dart提供了一组反射API，允许你**在运行时动态地获取有关程序结构的信息并与之交互**。这包括获取类的信息、调用对象的方法、访问字段等；
 * 反射在某些情况下非常有用，但在一般情况下，推荐**尽量避免使用反射**；
   * 因为它可能会导致性能损失；
   * 并且使代码更难以理解和维护；
 
-##  <span style="color:red; font-weight:bold;">***Dart.mixin（with）***</span>
+##  <span style="color:red; font-weight:bold;">***Dart.mixin.with.on（混入）***</span>
 
-* *Mixin* 是一个广泛存在于各种编程语言中的概念，但在某些语言中可能会以不同的形式或名称出现；
-* *Mixin* 是Dart 2.1 加入的特性，以前版本通常使用*abstract class*代替；
+* <span style="color:red; font-weight:bold;">*`Mixin`*</span>是一个广泛存在于各种编程语言中的概念，但在某些语言中可能会以不同的形式或名称出现；
+* <span style="color:red; font-weight:bold;">*`Mixin`*</span>是Dart 2.1 加入的特性，以前版本通常使用*abstract class*代替；
 * 为了解决继承方面的问题而引入的机制，Dart为了支持多重继承；
-* *Mixin*的对象是类，*Mixin*绝不是继承，也不是接口，而是一种全新的特性，可以*Mixin*多个类，*Mixin*的使用需要满足一定条件；
-  * **不支持构造函数**（<span style="color:red; font-weight:bold;">***最大的特殊处***</span>）：*Mixin* 类***不能有构造函数***，因为它们**不能被实例化**（可以避免继承多个类而产生的父类构造方法冲突）。如果需要在 *Mixin* 中初始化状态，则可以使用初始化列表或<span style="color:red; font-weight:bold;">*on*</span>关键字来解决；
-  * **可以有字段**：*Mixin* 类可以有字段，但只能是**静态字段**；
-  * **可以调用父类方法**：*Mixin* 类可以调用目标类的父类的方法，这使得 *Mixin* 更加灵活；
-  * **可以组合多个 Mixin**：一个类可以同时使用多个 *Mixin*，通过逗号分隔。*Mixin* 的组合顺序很重要，因为如果多个 *Mixin* 中有相同的方法或属性，那么最后一个 *Mixin* 中的方法或属性会覆盖前面的；
+* <span style="color:red; font-weight:bold;">*`Mixin`*</span>的对象是类，<span style="color:red; font-weight:bold;">*`Mixin`*</span>绝不是继承，也不是接口，而是一种全新的特性，可以<span style="color:red; font-weight:bold;">*`Mixin`*</span>多个类，<span style="color:red; font-weight:bold;">*`Mixin`*</span>的使用需要满足一定条件；
+  * **不支持构造函数**（<span style="color:red; font-weight:bold;">***最大的特殊处***</span>）：<span style="color:red; font-weight:bold;">*`Mixin`*</span> 类***不能有构造函数***，因为它们**不能被实例化**（可以避免继承多个类而产生的父类构造方法冲突）。如果需要在 <span style="color:red; font-weight:bold;">*`Mixin`*</span> 中初始化状态，则可以使用初始化列表或<span style="color:red; font-weight:bold;">*`on`*</span>关键字来解决；
+  * **可以有字段**：<span style="color:red; font-weight:bold;">*`Mixin`*</span> 类可以有字段，但只能是**静态字段**；
+  * **可以调用父类方法**：<span style="color:red; font-weight:bold;">*`Mixin`*</span> 类可以调用目标类的父类的方法，这使得 <span style="color:red; font-weight:bold;">*`Mixin`*</span> 更加灵活；
+  * **可以组合多个** <span style="color:red; font-weight:bold;">*`Mixin`*</span>：一个类可以同时使用多个 <span style="color:red; font-weight:bold;">*`Mixin`*</span>，通过逗号分隔。<span style="color:red; font-weight:bold;">*`Mixin`*</span> 的组合顺序很重要，因为如果多个 <span style="color:red; font-weight:bold;">*`Mixin`*</span> 中有相同的方法或属性，那么最后一个 <span style="color:red; font-weight:bold;">*`Mixin`*</span> 中的方法或属性会覆盖前面的；
 ```dart
 // 定义一个 Mixin
 mixin Swimming {
@@ -192,9 +194,128 @@ void main() {
   duck.swim();  // 输出: Swimming...
 }
 ```
+* 知识扩充：C++ 虚函数
+
+  * 是一种用于实现运行时多态性的机制；
+  * 通过使用虚函数，可以在基类和派生类之间建立一个多态的关系，这意味着可以在运行时根据对象的实际类型来调用相应的函数；
+  * 在 C++ 中，通过在基类中声明虚函数，并在派生类中进行覆盖（重写），可以实现多态；
+  * 当基类指针或引用指向派生类对象时，调用虚函数时将根据对象的实际类型来确定要调用的函数；
+* 知识扩充：C++ 多继承
+
+  * 这意味着一个派生类可以从多个基类中继承属性和行为；
+  * <span style="color:red; font-weight:bold;">*多继承也可能导致一些复杂性和潜在的问题（[**菱形继承问题**](# 菱形继承问题（Diamond Inheritance Problem）)、命名冲突），因此在使用多继承时需要谨慎（Dart.Mixin.with）*</span>;
+* 知识扩充：C++ 虚继承
+  * 解决<span style="color:red; font-weight:bold;">[***菱形继承问题***](# 菱形继承问题（Diamond Inheritance Problem）)</span>的一种机制；
+  * 可以确保在多继承中共享的基类子对象<u>**只被继承一次**</u>，从而避免菱形继承问题所带来的二义性和不确定性；
+  * 使用 <span style="color:red; font-weight:bold;">*`virtual`*</span> 关键字；
+
+```c++
+#include <iostream>
+// 基类 Animal
+class Animal {
+public:
+    void eat() {
+        std::cout << "Animal is eating\n";
+    }
+};
+// 虚继承 Dog
+class Dog : virtual public Animal {
+public:
+    void bark() {
+        std::cout << "Dog is barking\n";
+    }
+};
+// 虚继承 Cat
+class Cat : virtual public Animal {
+public:
+    void meow() {
+        std::cout << "Cat is meowing\n";
+    }
+};
+// Pet 类虚继承 Dog 和 Cat
+class Pet : public Dog, public Cat {
+public:
+    void play() {
+        std::cout << "Pet is playing\n";
+    }
+};
+
+int main() {
+    Pet pet;
+
+    pet.eat();  // 正确，由于虚继承，只有一份 Animal 对象
+    pet.bark(); // 正确，Pet 继承自 Dog，因此可以调用 Dog 的成员函数
+    pet.meow(); // 正确，Pet 继承自 Cat，因此可以调用 Cat 的成员函数
+    pet.play(); // 正确，Pet 自身定义的成员函数
+
+    return 0;
+}
+/**
+  在这个例子中，Dog 和 Cat 类都使用了虚继承，而 Pet 类则继承自 Dog 和 Cat。
+  通过使用虚继承，Pet 类只继承了一份 Animal 对象，因此可以确保在继承链中只有一份 Animal 对象，避免了菱形继承问题。
+
+  虚继承在解决菱形继承问题时非常有用，但需要谨慎使用，因为它可能导致派生类的构造函数和析构函数变得更加复杂。
+*/
+```
+
+* ### <span style="color:red; font-weight:bold;">***菱形继承问题（Diamond Inheritance Problem）***</span>
+
+在多继承中，如果一个类同时继承了两个类，而这两个类又分别继承自同一个基类，那么派生类将会拥有两份来自共同基类的成员变量和函数，这***可能导致二义性和不确定性***；
+
+```c++
+#include <iostream>
+
+// 基类 Animal
+class Animal {
+public:
+    void eat() {
+        std::cout << "Animal is eating\n";
+    }
+};
+// 中间类 Dog 继承自 Animal
+class Dog : public Animal {
+public:
+    void bark() {
+        std::cout << "Dog is barking\n";
+    }
+};
+// 中间类 Cat 继承自 Animal
+class Cat : public Animal {
+public:
+    void meow() {
+        std::cout << "Cat is meowing\n";
+    }
+};
+// 派生类 Pet 继承自 Dog 和 Cat
+class Pet : public Dog, public Cat {
+public:
+    void play() {
+        std::cout << "Pet is playing\n";
+    }
+};
+
+int main() {
+    Pet pet;
+    
+    // pet.eat();  // 这里会出现编译错误，因为不清楚是调用 Dog 的 eat 还是 Cat 的 eat
+    pet.bark(); // 正确，由于 Pet 继承自 Dog，因此可以调用 Dog 的成员函数
+    pet.meow(); // 正确，由于 Pet 继承自 Cat，因此可以调用 Cat 的成员函数
+    pet.play(); // 正确，Pet 自身定义的成员函数
+    
+    return 0;
+}
+/**
+这个例子中，Pet 类同时继承自 Dog 和 Cat，而 Dog 和 Cat 类都继承自 Animal 类。
+当我们在 main() 函数中创建 Pet 类的对象 pet 时，我们会发现调用 pet.eat() 会出现编译错误;
+因为编译器不知道应该调用 Dog 类的 eat() 函数还是 Cat 类的 eat() 函数。
+
+这就是菱形继承问题，因为 Pet 类间接继承了两份 Animal 类的成员变量和函数，导致不确定性和二义性。解决这个问题的方法之一是使用虚继承。
+*/
+```
+
 ## 懒加载（Dart.Flutter vs Swift）
 
-* Dart.Flutter懒加载关键字<span style="color:red; font-weight:bold;">*late*</span>
+* Dart.Flutter懒加载关键字<span style="color:red; font-weight:bold;">*`late`*</span>
 ```dart
 import 'package:flutter/material.dart';
 
@@ -236,7 +357,7 @@ class MyApp extends StatelessWidget {
   }
 }
 ```
-* Swift懒加载关键字<span style="color:red; font-weight:bold;">*lazy*</span>
+* Swift懒加载关键字<span style="color:red; font-weight:bold;">*`lazy`*</span>
 ```swift
 class MyClass {
     // 使用懒加载延迟初始化 x 变量
@@ -1130,21 +1251,21 @@ class ChildWidget extends StatelessWidget {
 * **状态管理**：将状态和 UI 描述分离可以更好地管理状态的生命周期。*StatefulWidget* 和 *State* 之间的分离允许状态在 UI 生命周期中保持一致，并在需要时通知框架更新 UI；
 * **框架要求**：***Dart.Flutter 框架本身也要求 StatefulWidget 和其关联的 State 必须是分开的，这是 Dart.Flutter 设计的一部分。***Dart.Flutter 的设计哲学是将 UI 描述和状态管理分开，以便更好地实现代码的组织和管理；
   <span style="color:red; font-weight:bold;">**综上所述，尽管在某些情况下将 *Widget* 和其关联的 *State* 写在同一个类中是可行的，但是将它们分开定义通常更利于代码的组织、可读性和维护性。**</span>
-### 关于<span style="color:red; font-weight:bold;">*const*</span> *MyApp({Key? key})* : <span style="color:red; font-weight:bold;">*super*</span> *(key: key)*;
+### 关于<span style="color:red; font-weight:bold;">*`const`*</span> *MyApp({Key? key})* : <span style="color:red; font-weight:bold;">*`super`*</span> *(key: key)*;
 
 * 是一个常量构造函数，用于创建一个名为*MyApp*的小部件，并将一个可选的`Key`作为参数传递给父类的构造函数；
-* 在某些情况下，可以省略`const MyApp({Key? key}) : super(key: key);`，具体取决于你的需求和代码结构。这取决于以下几个因素：
+* 在某些情况下，可以省略<span style="color:red; font-weight:bold;">*`const`*</span> ***MyApp({Key? key})*** : <span style="color:red; font-weight:bold;">*`super`*</span> ***(key: key)***，具体取决于你的需求和代码结构。这取决于以下几个因素：
   * **默认行为：** 如果你的 *MyApp* 小部件不需要任何特殊的构造函数行为，并且不需要传递`key`参数给父类构造函数，那么你可以省略这个构造函数，因为Dart会提供一个默认构造函数；
   * **Key的需要：** 如果你的小部件需要在小部件树中唯一标识自己，那么你通常需要传递一个`Key`给父类构造函数。在这种情况下，你可能需要保留这个构造函数，并传递`key`参数给父类；
-  * **const构造函数的需求：** 如果你的小部件需要作为常量构造函数使用（例如，当你希望在编译时计算小部件时），那么你需要保留<span style="color:red; font-weight:bold;">*const*</span>关键字并保留该构造函数；
-* <span style="color:red; font-weight:bold;">*const*</span> *MyApp({Key? key})*：这是构造函数的名称，表示创建一个名为 *MyApp* 的*Widget*；
+  * **const构造函数的需求：** 如果你的小部件需要作为常量构造函数使用（例如，当你希望在编译时计算小部件时），那么你需要保留<span style="color:red; font-weight:bold;">*`const`*</span>关键字并保留该构造函数；
+* <span style="color:red; font-weight:bold;">*`const`*</span> ***MyApp({Key? key})***：这是构造函数的名称，表示创建一个名为 *MyApp* 的*Widget*；
   * <span style="color:red; font-weight:bold;">*const*</span>关键字表示此构造函数是一个**常量**构造函数，即在编译时将其计算为常量；
   * 这意味着如果 *MyApp*的实例在代码中的多个位置都是相同的，那么Dart.Flutter**只会创建一个实例**，并在需要时重复使用它。
-* `({Key? key})`：这是构造函数的**参数列表**；
+* ***({Key? key})***：这是构造函数的**参数列表**；
   * 在这种情况下，它只有一个参数`key`，它是一个`Key`类型的可选参数；
   * `Key`是Dart.Flutter中**用于识别小部件的一种方式**；
   * `key`参数通常用于在小部件树中唯一标识小部件，以便在更新小部件树时进行识别和比较。在这里，`Key?`表示`key`参数可以是空值。
-* <span style="color:red; font-weight:bold;">*super*</span> *(key: key)*：这表示调用父类构造函数，并将`key`参数传递给父类构造函数；
+* <span style="color:red; font-weight:bold;">*`super`*</span> ***({Key: key})***：这表示调用父类构造函数，并将`key`参数传递给父类构造函数；
   * 在这里，<span style="color:red; font-weight:bold;">*super*</span>关键字用于调用父类的构造函数；
   * 这里的父类可能是*StatefulWidget*或其子类。这是因为通常在Dart.中，自定义小部件会继承自*StatefulWidget*或其子类以便管理状态；
   * 传递`key`参数给父类构造函数是为了让父类能够正确地处理此小部件的唯一标识符；
@@ -3482,9 +3603,9 @@ getFuture(){
   return Future.value(100);
 }
 ```
-#### ***Dart***.<span style="color:red; font-weight:bold;">*await*</span> 和 ***Dart***.<span style="color:red; font-weight:bold;">*async*</span>
+#### ***Dart***.<span style="color:red; font-weight:bold;">*`await`*</span> 和 ***Dart***.<span style="color:red; font-weight:bold;">*`async`*</span>
 
-* 通过<span style="color:red; font-weight:bold;">*async*</span>关键字标记的函数可以使用<span style="color:red; font-weight:bold;">*await*</span>关键字来等待*Future*的完成，而不必使用`then()`方法注册回调函数
+* 通过<span style="color:red; font-weight:bold;">*`async`*</span>关键字标记的函数可以使用<span style="color:red; font-weight:bold;">*`await`*</span>关键字来等待*Future*的完成，而不必使用`then()`方法注册回调函数
 *  <span style="color:red; font-weight:bold;">***`await`是`async`的反义词***</span>
 
 ```dart
