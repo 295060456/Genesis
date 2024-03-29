@@ -1,6 +1,85 @@
 # Flutter 经验
+- [Flutter 经验](#flutter-经验)
+  - [相关资料](#相关资料)
+  - [***`var`***、***`dynamic`***、***`object`***](#vardynamicobject)
+  - [***`const`***和***`final`***](#const和final)
+  - [***Dart.级联操作符***](#dart级联操作符)
+  - [***Dart.调用C***](#dart调用c)
+  - [***Dart***.***`part`***](#dartpart)
+  - [***Dart.反射***](#dart反射)
+  - [***Dart.mixin.with.on（混入）***](#dartmixinwithon混入)
+  - [懒加载（Dart.Flutter vs Swift）](#懒加载dartflutter-vs-swift)
+  - [***Dart.Flutter.Widget 树***](#dartflutterwidget-树)
+  - [***Dart.Flutter.依赖注入***](#dartflutter依赖注入)
+  - [***Dart.Flutter.State***](#dartflutterstate)
+  - [***Dart.Flutter.`setState`***](#dartfluttersetstate)
+  - [***Dart.Flutter.状态管理***](#dartflutter状态管理)
+    - [scoped\_model](#scoped_model)
+    - [BloC：*B*usiness *Lo*gic *C*omponent](#blocbusiness-logic-component)
+    - [flutter\_redux](#flutter_redux)
+    - [fish\_redux](#fish_redux)
+  - [***Dart.Flutter.对象间传值***](#dartflutter对象间传值)
+  - [***Dart.Flutter.key***](#dartflutterkey)
+  - [***Dart.Flutter.UI***](#dartflutterui)
+    - [***Dart.Flutter.MaterialApp*** 和 ***Dart.Flutter.CupertinoApp*** 的生命周期方法](#dartfluttermaterialapp-和-dartfluttercupertinoapp-的生命周期方法)
+    - [`MyHomePage`和`_MyHomePageState`的分离](#myhomepage和_myhomepagestate的分离)
+    - [关于*`const`* *MyApp({Key? key})* : *`super`* *(key: key)*;](#关于const-myappkey-key--super-key-key)
+    - [`Diff` 算法](#diff-算法)
+    - [系统.其他](#系统其他)
+    - [相对布局](#相对布局)
+    - [一些常用的UI库](#一些常用的ui库)
+    - [***Dart.Flutter.动画***](#dartflutter动画)
+  - [***Dart.Flutter.database***](#dartflutterdatabase)
+  - [***Dart.Flutter***.*Provider*](#dartflutterprovider)
+  - [***Dart.Flutter.手势✋🏻***](#dartflutter手势)
+    - [（轻触）点击手势（Tap Gesture）](#轻触点击手势tap-gesture)
+    - [长按手势（Long Press Gesture）](#长按手势long-press-gesture)
+    - [拖动手势（Drag Gesture）](#拖动手势drag-gesture)
+    - [缩放手势（Scale Gesture）](#缩放手势scale-gesture)
+    - [滑动手势（Swipe Gesture）](#滑动手势swipe-gesture)
+    - [***解决手势冲突（控制手势的响应范围以及触发条件）***](#解决手势冲突控制手势的响应范围以及触发条件)
+  - [***Dart.Flutter.GetX***](#dartfluttergetx)
+    - [资料来源](#资料来源)
+    - [作用](#作用)
+    - [安装](#安装)
+    - [***`Obx`***](#obx)
+    - [***`GetxController`***](#getxcontroller)
+  - [***Dart.Flutter.网络请求***](#dartflutter网络请求)
+  - [***Dart.Flutter.数据解析***](#dartflutter数据解析)
+  - [***Dart.事件循环（Event Loop）***](#dart事件循环event-loop)
+  - [***Dart.线程处理***](#dart线程处理)
+    - [***Dart.Isolate***](#dartisolate)
+    - [***Dart.Future***](#dartfuture)
+      - [快速入手：](#快速入手)
+      - [异步操作的结果：](#异步操作的结果)
+      - [代码执行优先级：](#代码执行优先级)
+      - [`then()`方法](#then方法)
+      - [***Dart.async***](#dartasync)
+      - [***Dart***.*`await`* 和 ***Dart***.*`async`*](#dartawait-和-dartasync)
+      - [***Dart.error***](#darterror)
+      - [***Dart.Flutter.FutureBuilder***](#dartflutterfuturebuilder)
+    - [***Dart.Stream***](#dartstream)
+    - [资料来源](#资料来源-1)
+      - [相关细节](#相关细节)
+      - [***StreamBuilder***](#streambuilder)
+      - [***StreamController***](#streamcontroller)
+  - [***Dart.Flutter.InheritedWidget***](#dartflutterinheritedwidget)
+  - [***Dart.Flutter.路由***](#dartflutter路由)
+  - [***Dart.Flutter.音视频***](#dartflutter音视频)
+  - [***Dart.Flutter.原生Api调用交互***（未完）](#dartflutter原生api调用交互未完)
+  - [***Dart.Flutter.其他功能***](#dartflutter其他功能)
+    - [***返回按键监听***](#返回按键监听)
+    - [***前后台监听***](#前后台监听)
+    - [***键盘焦点处理***](#键盘焦点处理)
+    - [***启动页***](#启动页)
+    - [***Dart.Flutter.调取系统摄像头***（未完）](#dartflutter调取系统摄像头未完)
+    - [***Dart.Flutter.调取系统相册***（未完）](#dartflutter调取系统相册未完)
+  - [其他](#其他)
+    - [***新建Dart.Flutter工程*** （在Mac平台，使用 ***VSCode*** 编译器）](#新建dartflutter工程-在mac平台使用-vscode-编译器)
+    - [***Dart.Flutter.DevTools***](#dartflutterdevtools)
+    - [***RESTful API***](#restful-api)
+    - [***Retrofit***](#retrofit)
 
-[toc]
 ## 相关资料
 [***Flutter 面试知识点集锦· GitBook***](https://guoshuyu.cn/home/wx/Flutter-msjj.html)
 [***Dart/Flutter社区生态：Pub.dev***](https://pub.dev/)
@@ -126,7 +205,8 @@ void main() {
 gcc -shared -o libexample.so example.c
 ```
 然后运行Dart代码，确保Dart可以找到并加载生成的共享库。请注意，这只是一个简单的示例，实际应用可能需要更复杂的接口定义和错误处理。
-## ***Dart*.<span style="color:red; font-weight:bold;">*`part`*</span>**
+## ***Dart***.<span style="color:red; font-weight:bold;">***`part`***</span>
+
 * 用于将一个源文件分割成多个部分，每个部分被称为一个<span style="color:red; font-weight:bold;">*`part`*</span>。通常情况下，一个库（库是Dart中代码组织的单元）可以由多个源文件组成，这些源文件通过<span style="color:red; font-weight:bold;">*`part`*</span>关键字进行引入;
 * 注意事项：
   * 一个库可以有多个部分文件，但是每个部分文件只能属于一个库；
@@ -2948,9 +3028,11 @@ class MyApp extends StatelessWidget {
   }
 }
 ```
-### `Obx`
+### ***`Obx`***
+
 * `Obx`：数据的**单向绑定**（数据的改变👉🏻UI更新）。是用于观察**可观察对象**（通常是`Rx`变量或`GetxController`中的`Rx`变量）的小部件。
 * ***三种***声明响应式：<span style="color:blue; font-weight:bold;">***只有当响应式变量的值发生变化时，才会会执行刷新操作，如当变量从“a”再变为“a”，是不会执行刷新操作***</span>
+  
   * <span style="color:red; font-weight:bold;">使用 `Rx{Type}`</span>
   ```dart
   // 建议使用初始值，但不是强制性的
@@ -3077,7 +3159,8 @@ class Demo1 extends StatelessWidget {
   }
 }
 ```
-### `GetxController`
+### ***`GetxController`***
+
 * `GetxController `提供了三种使用方式： <span style="color:blue; font-weight:bold;">使用`Get.put()`实例化类，使用对当下所有子路由可用（在整个应用程序的生命周期内保持存在）。后续也可以通过`Get.find()`找到对应的`GetxController `；</span><span style="color:green; font-weight:bold;">前提是没有显式地调用 `Get.delete()` 方法将其销毁为止</span>
   * `Obx`：响应式状态管理，当数据源变化时，将**自动**执行刷新组件的方法
   * `GetX`：响应式状态管理，当数据源变化时，将**自动**执行刷新组件的方法
