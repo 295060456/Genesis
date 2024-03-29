@@ -1,4 +1,5 @@
 # Flutter 经验
+
 - [Flutter 经验](#flutter-经验)
   - [相关资料](#相关资料)
   - [***`var`***、***`dynamic`***、***`object`***](#vardynamicobject)
@@ -79,7 +80,6 @@
     - [***Dart.Flutter.DevTools***](#dartflutterdevtools)
     - [***RESTful API***](#restful-api)
     - [***Retrofit***](#retrofit)
-
 ## 相关资料
 [***Flutter 面试知识点集锦· GitBook***](https://guoshuyu.cn/home/wx/Flutter-msjj.html)
 [***Dart/Flutter社区生态：Pub.dev***](https://pub.dev/)
@@ -1453,7 +1453,114 @@ class MyApp extends StatelessWidget {
   }
 }
 ```
+* 改变*FloatingActionButton*的位置：
+
+  * 可以使用 *Scaffold* 的 `floatingActionButtonLocation`属性；
+
+  ```dart
+  import 'package:flutter/material.dart';
+  
+  void main() {
+    runApp(MyApp());
+  }
+  
+  class MyApp extends StatelessWidget {
+    @override
+    Widget build(BuildContext context) {
+      return MaterialApp(
+        home: Scaffold(
+          appBar: AppBar(
+            title: Text('FloatingActionButton 示例'),
+          ),
+          body: Center(
+            child: Text('这是一个示例页面'),
+          ),
+          floatingActionButton: FloatingActionButton(
+            onPressed: () {
+              // 点击按钮时的操作
+            },
+            child: Icon(Icons.add),
+          ),
+          // ❤️关键代码❤️
+          floatingActionButtonLocation: FloatingActionButtonLocation.endFloat, // 设置 FloatingActionButton 的位置
+        ),
+      );
+    }
+  }
+  /**
+    FloatingActionButtonLocation.endFloat：右下角
+    FloatingActionButtonLocation.centerFloat：屏幕中间
+    FloatingActionButtonLocation.startFloat：左下角
+  */
+  ```
+
+  *  你完全控制*FloatingActionButton*的位置（自定义位置）；
+
+  ```dart
+  import 'package:flutter/material.dart';
+  
+  class CustomFloatingActionButtonLocation extends FloatingActionButtonLocation {
+    final double offsetX;
+    final double offsetY;
+  
+    CustomFloatingActionButtonLocation(this.offsetX, this.offsetY);
+  
+    @override
+    Offset getOffset(ScaffoldPrelayoutGeometry scaffoldGeometry) {
+      // 返回一个偏移量，以控制 FloatingActionButton 的位置
+      return Offset(
+        scaffoldGeometry.scaffoldSize.width - offsetX,
+        scaffoldGeometry.scaffoldSize.height - offsetY,
+      );
+    }
+  
+    @override
+    String toString() => 'CustomFloatingActionButtonLocation';
+  }
+  /**
+    在这个示例中，我们创建了一个名为 CustomFloatingActionButtonLocation 的自定义位置类。
+    它接受两个参数：offsetX 和 offsetY，用于指定 FloatingActionButton 相对于屏幕右下角的偏移量。
+    然后，我们重写了 getOffset 方法，该方法返回一个 Offset 对象，指定 FloatingActionButton 的位置。
+  */
+  ```
+
+  ```dart
+  import 'package:flutter/material.dart';
+  
+  void main() {
+    runApp(MyApp());
+  }
+  
+  class MyApp extends StatelessWidget {
+    @override
+    Widget build(BuildContext context) {
+      return MaterialApp(
+        home: Scaffold(
+          appBar: AppBar(
+            title: Text('FloatingActionButton 示例'),
+          ),
+          body: Center(
+            child: Text('这是一个示例页面'),
+          ),
+          floatingActionButton: FloatingActionButton(
+            onPressed: () {
+              // 点击按钮时的操作
+            },
+            child: Icon(Icons.add),
+          ),
+          floatingActionButtonLocation: CustomFloatingActionButtonLocation(50, 100), // 使用自定义位置
+        ),
+      );
+    }
+  }
+  /**
+    在这个示例中，我们创建了一个 CustomFloatingActionButtonLocation 实例，并将其作为 floatingActionButtonLocation 属性的值。
+    通过调整 offsetX 和 offsetY 的值，你可以控制 FloatingActionButton 的位置。
+  */
+  ```
+
 ### 相对布局
+
 * 相对布局可以通过 ***Positioned*** 小部件结合 ***Stack*** 小部件来实现；
 * ***Positioned*** 小部件允许您根据父部件的四个角来定位子部件，而 ***Stack*** 小部件则允许子部件堆叠在一起；
 ```dart
