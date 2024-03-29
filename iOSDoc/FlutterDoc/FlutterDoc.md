@@ -80,6 +80,7 @@
     - [***Dart.Flutter.DevTools***](#dartflutterdevtools)
     - [***RESTful API***](#restful-api)
     - [***Retrofit***](#retrofit)
+    - [***Dart.其他用途***](#dart其他用途)
 ## 相关资料
 [***Flutter 面试知识点集锦· GitBook***](https://guoshuyu.cn/home/wx/Flutter-msjj.html)
 [***Dart/Flutter社区生态：Pub.dev***](https://pub.dev/)
@@ -4830,3 +4831,16 @@ Dart.Flutter提供了一些调试工具来帮助开发者调试应用程序的�
 * *Retrofit* 是一个针对 *Android* 平台的 [***RESTful API***](# RESTful API)客户端库，由 Square 公司开发和维护；
 * 它提供了一种简单、强大的方式来执行网络请求和处理 API 响应；
 * *Retrofit* 基于 *OkHttp* 库构建，可以与其无缝集成，提供了许多便捷的功能和特性；
+### ***Dart.其他用途***
+* Flutter.Dart 语言是多用途的，它不仅可以用于移动应用开发，还可以用于Web开发和服务器端开发；
+
+* Dart 提供了一些用于编写服务器端应用程序的库和框架，其中最知名的是 Dart 的服务器端框架之一：Aqueduct。
+  * ***Aqueduct*** 是一个基于 Dart 的 HTTP 框架，用于构建高性能的、可扩展的 Web 应用程序和服务端 API。
+  
+* 另外，Dart 还有其他用于服务器端开发的库和框架，例如：
+  
+  * ***Angel Framework***：一个功能丰富的、模块化的 Web 框架。
+  
+  * ***Shelf***：一个轻量级的、模块化的 Web 服务器框架；
+  * ***Redstone***：一个注解驱动的 Web 框架，类似于 Flask；
+  * ***RPC***：Dart的远程过程调用库，用于构建分布式系统；
