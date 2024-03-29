@@ -5,15 +5,12 @@
 [***Flutter 面试知识点集锦· GitBook***](https://guoshuyu.cn/home/wx/Flutter-msjj.html)
 [***Dart/Flutter社区生态：Pub.dev***](https://pub.dev/)
 ## <span style="color:red; font-weight:bold;">***`var`***</span>、<span style="color:red; font-weight:bold;">***`dynamic`***</span>、<span style="color:red; font-weight:bold;">***`object`***</span>
-
 * <span style="color:red; font-weight:bold;">***`var`***</span>定义的类型是不可变的；
 * <span style="color:red; font-weight:bold;">***`dynamic`***</span>和<span style="color:red; font-weight:bold;">***`object`***</span>类型是可以变的，而<span style="color:red; font-weight:bold;">***`dynamic`***</span>与<span style="color:red; font-weight:bold;">***`object`***</span>的区别是在静态类型检查上；
   * <span style="color:red; font-weight:bold;">***`dynamic`***</span>：编译时**不**进行静态类型检查的类型（更灵活），而是在运行期间进行类型检查。（被编译后，实际是一个<span style="color:red; font-weight:bold;">***`object`***</span>类型）
   * <span style="color:red; font-weight:bold;">***`object`***</span>：编译时会进行类型检查（更安全）
 ## <span style="color:red; font-weight:bold;">***`const`***</span>和<span style="color:red; font-weight:bold;">***`final`***</span>
-
 * ***相同点***  
-  
   * <span style="color:red; font-weight:bold;">***`final`***</span>、<span style="color:red; font-weight:bold;">***`const`***</span>必须初始化；
   *  <span style="color:red; font-weight:bold;">***`final`***</span>、<span style="color:red; font-weight:bold;">***`const`***</span>只能赋值一次；
   * 均表示不可被修改  
@@ -130,7 +127,6 @@ gcc -shared -o libexample.so example.c
 ```
 然后运行Dart代码，确保Dart可以找到并加载生成的共享库。请注意，这只是一个简单的示例，实际应用可能需要更复杂的接口定义和错误处理。
 ## ***Dart*.<span style="color:red; font-weight:bold;">*`part`*</span>**
-
 * 用于将一个源文件分割成多个部分，每个部分被称为一个<span style="color:red; font-weight:bold;">*`part`*</span>。通常情况下，一个库（库是Dart中代码组织的单元）可以由多个源文件组成，这些源文件通过<span style="color:red; font-weight:bold;">*`part`*</span>关键字进行引入;
 * 注意事项：
   * 一个库可以有多个部分文件，但是每个部分文件只能属于一个库；
@@ -156,15 +152,12 @@ gcc -shared -o libexample.so example.c
   // 部分文件中的代码
   ```
 ## ***Dart.反射***
-
 * 在Dart中，反射是指在***运行时***检查、访问和操作程序的结构，比如类、方法、字段等；
 * Dart提供了一组反射API，允许你**在运行时动态地获取有关程序结构的信息并与之交互**。这包括获取类的信息、调用对象的方法、访问字段等；
 * 反射在某些情况下非常有用，但在一般情况下，推荐**尽量避免使用反射**；
   * 因为它可能会导致性能损失；
   * 并且使代码更难以理解和维护；
-
 ##  <span style="color:red; font-weight:bold;">***Dart.mixin.with.on（混入）***</span>
-
 * <span style="color:red; font-weight:bold;">*`Mixin`*</span>是一个广泛存在于各种编程语言中的概念，但在某些语言中可能会以不同的形式或名称出现；
 * <span style="color:red; font-weight:bold;">*`Mixin`*</span>是Dart 2.1 加入的特性，以前版本通常使用*abstract class*代替；
 * 为了解决继承方面的问题而引入的机制，Dart为了支持多重继承；
@@ -195,20 +188,17 @@ void main() {
 }
 ```
 * 知识扩充：C++ 虚函数
-
   * 是一种用于实现运行时多态性的机制；
   * 通过使用虚函数，可以在基类和派生类之间建立一个多态的关系，这意味着可以在运行时根据对象的实际类型来调用相应的函数；
   * 在 C++ 中，通过在基类中声明虚函数，并在派生类中进行覆盖（重写），可以实现多态；
   * 当基类指针或引用指向派生类对象时，调用虚函数时将根据对象的实际类型来确定要调用的函数；
 * 知识扩充：C++ 多继承
-
   * 这意味着一个派生类可以从多个基类中继承属性和行为；
   * <span style="color:red; font-weight:bold;">*多继承也可能导致一些复杂性和潜在的问题（[**菱形继承问题**](# 菱形继承问题（Diamond Inheritance Problem）)、命名冲突），因此在使用多继承时需要谨慎（Dart.Mixin.with）*</span>;
 * 知识扩充：C++ 虚继承
   * 解决<span style="color:red; font-weight:bold;">[***菱形继承问题***](# 菱形继承问题（Diamond Inheritance Problem）)</span>的一种机制；
   * 可以确保在多继承中共享的基类子对象<u>**只被继承一次**</u>，从而避免菱形继承问题所带来的二义性和不确定性；
   * 使用 <span style="color:red; font-weight:bold;">*`virtual`*</span> 关键字；
-
 ```c++
 #include <iostream>
 // 基类 Animal
@@ -257,11 +247,8 @@ int main() {
   虚继承在解决菱形继承问题时非常有用，但需要谨慎使用，因为它可能导致派生类的构造函数和析构函数变得更加复杂。
 */
 ```
-
 * ### <span style="color:red; font-weight:bold;">***菱形继承问题（Diamond Inheritance Problem）***</span>
-
 在多继承中，如果一个类同时继承了两个类，而这两个类又分别继承自同一个基类，那么派生类将会拥有两份来自共同基类的成员变量和函数，这***可能导致二义性和不确定性***；
-
 ```c++
 #include <iostream>
 
@@ -312,9 +299,7 @@ int main() {
 这就是菱形继承问题，因为 Pet 类间接继承了两份 Animal 类的成员变量和函数，导致不确定性和二义性。解决这个问题的方法之一是使用虚继承。
 */
 ```
-
 ## 懒加载（Dart.Flutter vs Swift）
-
 * Dart.Flutter懒加载关键字<span style="color:red; font-weight:bold;">*`late`*</span>
 ```dart
 import 'package:flutter/material.dart';
@@ -373,7 +358,6 @@ let obj = MyClass()
 print(obj.x) // 输出: 10
 ```
 ## ***Dart.Flutter.Widget 树***
-
 * 在 Dart.Flutter 中，*Widget* 树是由各种 *Widget* 组成的**层次结构**，用于描述应用程序的用户界面；
 * *Widget* 树是 Dart.Flutter 中**构建用户界面的基本概念**，它由 *Widget* 对象组成，**每个 *Widget* 对象代表一个 UI 元素**，比如文本、按钮、布局等；
 * *Widget* 树是一个**不可变的树结构**，其中每个节点都是一个 *Widget* 对象，它们描述了应用程序界面的**布局、外观和交互**；
@@ -386,10 +370,8 @@ print(obj.x) // 输出: 10
   * **重用已构建的部分**：为了提高性能，Dart.Flutter 会尽可能地重用已构建的部分 *Widget* 树。如果某些节点在新旧 *Widget* 树中是相同的（例如，它们具有相同的类型和属性），Dart.Flutter 将重用已构建的节点，而不是重新创建它们；
     *虽然重新构建 Widget 树看起来像是创建一个全新的树，但实际上 Flutter 会**尽可能地重用已有的节点**，并仅在必要时更新变化的部分，以提高性能和效率*
 ## ***Dart.Flutter.依赖注入***
-
 * ***Dart.Flutter 框架本身没有内置的依赖注入机制***，但由于依赖注入在 Dart.Flutter 开发中非常常见，因此有许多第三方库提供了依赖注入的功能：
   * [***GetX***](# Dart.Flutter.GetX)：[***GetX***](# Dart.Flutter.GetX)的依赖注入功能通常与 `GetxController`、`GetxService` 和 `Get.put()` 方法一起使用：
-    
     * 需要在 *pubspec.yaml* 文件中添加 [***GitHub.GetX***](https://github.com/jonataslaw/getx)  包的依赖：
     ```yaml
     dependencies:
@@ -448,7 +430,6 @@ print(obj.x) // 输出: 10
     }
     ```
   * [***get_it***](https://github.com/fluttercommunity/get_it)：是其中一个流行的依赖注入库，它提供了一种简单的、易于使用的方式来管理依赖关系。虽然它不是官方的 Dart.Flutter 库，但由于其简洁和灵活的设计，以及在社区中的广泛应用；
-    
     * 在 *pubspec.yaml* 文件中添加 `get_it` 依赖：
     ```yaml
     dependencies:
@@ -506,9 +487,8 @@ print(obj.x) // 输出: 10
       ));
     }
     ```
-
 ## <span style="color:red; font-weight:bold;">***Dart.Flutter.State***</span>
-
+* 状态（<span style="color:red; font-weight:bold;">***State***</span>）是指在应用程序生命周期内可能发生变化的数据（**可以是任意数据类型**，包括布尔值、整数、字符串、列表、对象等等）；
 * ***Widget***=> ***Element***（*BuildContext*）=>***RenderObject*** =>***Layer***=>***Layer Tree***
 * ***Layer***的组成由*RenderObject*中的 `isRepaintBoundary` 标志位决定；
 * 相关的*RenderObject*在一起组成了***Layer***，而由***Layer***构成的***Layer Tree***最后会被提交到 Flutter Engine 绘制出画面；
@@ -526,9 +506,8 @@ print(obj.x) // 输出: 10
   * 这样*Element*每次调用 `Widget build()` 时，是通过 `state.build(this)`； 
   * 得到的新*Widget* ，所以写在*State*的数据就得以复用了；
 * ***StatefulWidget* 的 `createState` 是在*StatefulElement*的构建方法里创建的**。这就保证了只要*Element*不被重新创建，*State*就一直被复用；
-* `setState` ，其实是调用了 `markNeedsBuild` ，**`markNeedsBuild` 内部会标记 `element` 为 `diry`，然后在下一帧 `WidgetsBinding.drawFrame` 才会被绘制，这可以也看出**<span style="color:red; font-weight:bold;">**`setState` 并不是立即生效的**</span>；
-* 要避免每次进入数据时都刷新`build`，可以使用`StatefulWidget`来保存状态，并在需要更新时手动调用`setState`方法来触发更新。另外，还可以使用一些状态管理库（如[***Provider***](# Dart.Flutter.Provider)、[***GetX***]( # Dart.Flutter.GetX)、[***Bloc***](# BloC：<span style="color:red; font-weight:bold;">*B*</span>usiness <span style="color:red; font-weight:bold;">*Lo*</span>gic <span style="color:red; font-weight:bold;">*C*</span>omponent)等）来帮助管理状态，以便在需要时更新UI而不必刷新整个`build`。❤️
-
+* [***`setState`***](# Dart.Flutter.`setState`) ，其实是调用了 `markNeedsBuild` ，**`markNeedsBuild` 内部会标记 `element` 为 `diry`，然后在下一帧 `WidgetsBinding.drawFrame` 才会被绘制，这可以也看出**<span style="color:red; font-weight:bold;">**`setState` 并不是立即生效的**</span>；
+* 要避免每次进入数据时都刷新`build`，可以使用`StatefulWidget`来保存状态，并在需要更新时手动调用[***`setState`***](# Dart.Flutter.`setState`) 方法来触发更新。另外，还可以使用一些状态管理库（如[***Provider***](# Dart.Flutter.Provider)、[***GetX***]( # Dart.Flutter.GetX)、[***Bloc***](# BloC：<span style="color:red; font-weight:bold;">*B*</span>usiness <span style="color:red; font-weight:bold;">*Lo*</span>gic <span style="color:red; font-weight:bold;">*C*</span>omponent)等）来帮助管理状态，以便在需要时更新UI而不必刷新整个`build`。❤️
 ```dart
 import 'package:flutter/material.dart';
 
@@ -585,7 +564,6 @@ class _CounterWidgetState extends State<CounterWidget> {
   因为状态被保存在 StatefulWidget 中，而不是每次重新创建
 */
 ```
-
 * ***Dart.Flutter.State***的生命周期：<span style="color:red; font-weight:bold;">**是指 *StatefulWidget* 对象的状态变化和生命周期方法调用的过程**</span>；
   * `createState()`
     - 调用时机：在 *StatefulWidget* 首次被创建时调用。
@@ -609,12 +587,15 @@ class _CounterWidgetState extends State<CounterWidget> {
     - 调用时机：在 *State* 对象从 *Widget* 树中被永久移除时调用。
     - 作用：通常用于执行一些清理操作，比如取消订阅、释放资源等。
 * [***InheritedWidget***](# Dart.Flutter.InheritedWidget)
-
+## ***Dart.Flutter.`setState`***
+* 于 Flutter 的单向数据流模型。当调用一个 *Widget* 的 `setState` 方法时，Flutter 将会标记该 *Widget* 为***dirty***，表示该 *Widget* 及其子树需要被重新构建；
+* 重新构建时，Flutter 会调用该 *Widget* 的 `build` 方法来生成新的 UI 树，从而实现 UI 的更新；
+* `setState` 方法只会重新构建其调用的 *Widget* 及其子树，并不会影响到其他部分的 UI；
+* 如果需要**更新全局状态**或者**在不同*Widget*之间共享状态**，可能需要使用一些状态管理工具。比如：[***Provider***](# Dart.Flutter.Provider)、[***GetX***]( # Dart.Flutter.GetX)、[***Bloc***](# BloC：<span style="color:red; font-weight:bold;">*B*</span>usiness <span style="color:red; font-weight:bold;">*Lo*</span>gic <span style="color:red; font-weight:bold;">*C*</span>omponent) 、Riverpod等；
 ## ***Dart.Flutter.状态管理***
 * 在所有 **响应式编程** 中，状态管理一直老生常谈的话题，而在 Flutter 中，目前主流的有[***scope_mode***](# scoped_model) 、[***BloC 设计模式***](# BloC：<span style="color:red; font-weight:bold;">*B*</span>usiness <span style="color:red; font-weight:bold;">*Lo*</span>gic <span style="color:red; font-weight:bold;">*C*</span>omponent) 、[***flutter_redux***](# flutter_redux) 、[***fish_redux***](# fish_redux) 等四种设计；
 * 它们的 *复杂度* 和 *上手难度* 是逐步递增的，但同时 **可拓展性** 、**解耦度** 和 **复用能力** 也逐步提升。
 ### scoped_model
-
 * 是 Dart.Flutter 最为简单的状态管理框架，它充分利用了 Dart.Flutter 中的一些特性，只有一个 `.dart` 文件的它，极简的实现了一般场景下的状态管理；
 * 内部实现借助***AnimatedBuildler***利用了[***InheritedWidget***](# Dart.Flutter.InheritedWidget)：
   * 在 `scoped_model` 中，可以通过 `ScopedModel.of<CountModel>(context)` 获取我们的 Model 。其中最主要是因为其内部的 build 的时候，包裹了一个 `_InheritedModel` 控件，而它继承了 `InheritedWidget` 
@@ -683,7 +664,6 @@ class CountModel extends Model {
 }
 ```
 ### BloC：<span style="color:red; font-weight:bold;">*B*</span>usiness <span style="color:red; font-weight:bold;">*Lo*</span>gic <span style="color:red; font-weight:bold;">*C*</span>omponent
-
 * 它属于一种设计模式，在 Dart.Flutter 中它主要是通过 `Stream` 与 `SteamBuilder` 来实现设计的，所以 ***BloC*** 实现起来也相对简单；
 * 当然，如果和 `rxdart` 结合可以简化 `StreamController` 的一些操作，同时如果你需要利用 `BloC` 模式实现状态共享，那么自己也可以封装多一层 `InheritedWidgets` 的嵌套；
 * **BloC**没实现路由管理；
@@ -747,12 +727,9 @@ class PageBloc {
   }
 }
 ```
-
 ### flutter_redux
-
 *redux：【adj.】被带回的；复活的*
 *reducer：【n.】[助剂] 还原剂；减径管*
-
 *  可以看做是利用了 ***Stream*** 特性的 ***scope_model*** 升级版，通过 ***redux*** 设计模式来完成解耦和拓展；
 * 在 *Redux* 架构中，***Store***、***Action*** 、***Reducer***以及 ***Middleware***。它们分别承担着不同的角色，协同工作**以实现状态管理和数据流控制**；
   * **Store**：
@@ -901,7 +878,6 @@ class MyHomePage extends StatelessWidget {
 }
 ```
 ### fish_redux
-
 * 基于*Redux*架构，旨在简化复杂应用程序的状态管理和 UI 构建过程；
 * 支持插件化架构：持久化插件、路由插件、国际化插件等；
 * 提供异步支持：Effect 的机制。可以在 ***Action***的生命周期中执行异步操作，并将结果发送回***Reducer***进行状态更新
@@ -1094,9 +1070,7 @@ class ChildWidget extends StatelessWidget {
   }
 }
 ```
-
 ## ***Dart.Flutter.key***
-
 * key是***Widgets***，***Elements***和***SemanticsNodes***的标识符；
 * key有**`LocalKey`** 和 **`GlobalKey`**两种；
   * **`LocalKey`**  是一个*抽象类*，用于标识和区分[***Widget树***](# Widget 树)中的不同节点。它是***所有用于本地（局部）标识的关键类的基类***。常见的用法是在需要在同一父级下修改控件顺序或数量时使用 `LocalKey`
@@ -1269,10 +1243,7 @@ class ChildWidget extends StatelessWidget {
   * 在这里，<span style="color:red; font-weight:bold;">*super*</span>关键字用于调用父类的构造函数；
   * 这里的父类可能是*StatefulWidget*或其子类。这是因为通常在Dart.中，自定义小部件会继承自*StatefulWidget*或其子类以便管理状态；
   * 传递`key`参数给父类构造函数是为了让父类能够正确地处理此小部件的唯一标识符；
-  
-
-<span style="color:red; font-weight:bold;">*使用`key`的demo*</span>
-
+  <span style="color:red; font-weight:bold;">*使用`key`的demo*</span>
 ```dart
 import 'package:flutter/material.dart';
 
@@ -1320,7 +1291,6 @@ class _MyWidgetState extends State<MyWidget> {
 }
 ```
 ### `Diff` 算法
-
 * 在 Dart.Flutter 中，`Diff` 算法指的是用于**比较新旧 *Widget* 树的差异，并确定哪些部分需要更新**的算法。这个算法被称为 "Diff" 是因为它会找出两个树之间的差异，并尽可能地最小化更新的成本，**只更新必要的部分**。
 * `Diff` 算法的基本思想是递归地比较新旧 *Widget* 树的每个节点，找出它们之间的差异。这个比较是根据节点的类型、属性、以及子节点的情况来进行的。当发现节点之间存在差异时，`Diff` 算法会尝试**尽可能地复用已有的节点，并更新其属性**，而不是直接销毁和重建节点。
 * 以下是 `Diff` 算法的基本步骤：
@@ -1330,9 +1300,7 @@ class _MyWidgetState extends State<MyWidget> {
   * **更新差异部分**：根据比较的结果，确定哪些部分需要更新，并执行相应的更新操作；
   通过这种方式，`Diff` 算法可以高效地找出新旧 *Widget* 树之间的差异，并尽可能地减少更新的成本。这种优化可以帮助 Flutter 在处理复杂 UI 结构时保持良好的性能。
 ### 系统.其他
-
 * 键盘的弹出和收起都会触发页面 `build`
-
 * 获取手机可视化区域
 ```dart
 // 获取屏幕宽高
@@ -1519,18 +1487,15 @@ class MyApp extends StatelessWidget {
 */
 ```
 ### 一些常用的UI库
-
 * [***flutter_staggered_grid_view***](https://github.com/letsar/flutter_staggered_grid_view): 这个库提供了一个瀑布流布局的实现，可以让您以不规则的方式显示列表项。它允许您指定列数和每个列表项的高度，并自动适应布局。
 * [***flutter_layout_grid***](https://github.com/shyndman/flutter_layout_grid): 这是一个类似于 `CSS Grid` 的库，允许您使用网格布局来排列子部件。您可以定义网格中的行和列，并使用简单的属性来指定子部件的位置和大小。
 * [***flutter_flow***](https://github.com/Darren-chenchen/flutter_flowermusic): 这个库提供了一种基于流式布局（Flow Layout）的方式来排列子部件。它允许您在水平和垂直方向上动态调整子部件的位置和大小，以适应不同的屏幕尺寸和方向。
 * [***flutter_sliver_grid***](https://github.com/himdeve/flutter-tutorials-1-9-gridview-slivergrid-gallery): 这是一个用于实现网格布局的库，可以与 ***SliverAppBar*** 和 ***CustomScrollView*** 一起使用，以创建具有自定义滚动效果的网格布局。
 ### ***Dart.Flutter.动画***
-
 * 隐式动画（Implicit Animations）：
   * Dart.Flutter提供了一系列的隐式动画组件，如*AnimatedContainer*、*AnimatedOpacity*、*AnimatedAlign*等；
   * 当这些***组件的属性发生变化***时，它们会自动执行动画效果，而不需要开发者显式地控制动画过程；
-
-***使用了`AnimatedContainer`组件来实现一个简单的颜色和大小变化的动画效果***
+  ***使用了`AnimatedContainer`组件来实现一个简单的颜色和大小变化的动画效果***
 
 ```dart
 import 'package:flutter/material.dart';
@@ -1598,9 +1563,7 @@ class _ImplicitAnimationDemoState extends State<ImplicitAnimationDemo> {
   AnimatedContainer组件会根据这些值的变化，自动执行动画效果，使容器的大小和颜色在1秒内平滑地过渡。
 */
 ```
-
 ***使用了`AnimatedOpacity`组件来实现透明度变化的动画效果***
-
 ```dart
 import 'package:flutter/material.dart';
 
@@ -1675,7 +1638,6 @@ class _ExplicitAnimationDemoState extends State<ExplicitAnimationDemo> {
   AnimatedOpacity组件根据_visible的值变化，自动执行动画效果，使容器的透明度在1秒内平滑地过渡。
 */
 ```
-
 * 显式动画（Explicit Animations）：
   * 需要开发者***显式地控制动画的开始、结束和中间状态***；
   * Dart.Flutter提供了一些显式动画的类，如*Animation*、*AnimationController*等；
@@ -1755,7 +1717,6 @@ class _ExplicitAnimationDemoState extends State<ExplicitAnimationDemo> with Sing
   _controller.repeat(reverse: true)指定了动画会循环播放，并在每次播放完成后反向播放，从而使方形在屏幕上来回移动。
 */
 ```
-
 * 物理动画（Physics-based Animations）：
   * 物理动画是一种模拟物理效果的动画，可以使动画看起来更加真实和自然；
   * Dart.Flutter提供了一些物理动画的类，如*SpringSimulation*、*ScrollSimulation*等；
@@ -1867,7 +1828,6 @@ class _PhysicsAnimationDemoState extends State<PhysicsAnimationDemo> with Single
   当用户在屏幕上拖动时，方块会跟随手指移动，同时应用物理模拟来实现弹簧效果。
 */
 ```
-
 * Hero动画（Hero Animations）：
   * 用于在页面间实现元素的平滑过渡效果；
   * 当一个元素从一个页面过渡到另一个页面时，可以使用Hero动画使元素的位置、大小和外观平滑地过渡，从而提升用户体验；
@@ -1943,19 +1903,16 @@ class SecondPage extends StatelessWidget {
   在这个示例中，当用户点击第一个页面上的蓝色方块时，会跳转到第二个页面，并且通过Hero动画将方块平滑地过渡到第二个页面上，并且自动调整大小以适应目标大小。
 */
 ```
-
 * Flare动画（Flare Animations）：
   * Flare是一种***矢量动画格式***，可以在Dart.Flutter应用中使用；
   * Dart.Flutter提供了一个`flare_flutter`包，可以使用该包来加载和播放Flare动画，从而实现更加复杂和生动的动画效果；
   * 需要将Flare文件导入到项目中
-
 ```yaml
 dependencies:
   flutter:
     sdk: flutter
   flare_flutter: ^3.0.0
 ```
-
 **将Flare文件（例如`animation.flr`）放置在项目的`assets`目录中**
 
 ```dart
@@ -1999,11 +1956,8 @@ class FlareAnimationDemo extends StatelessWidget {
   确保将Flare文件的路径正确地指定为您项目中的实际路径，并将动画名称设置为您要播放的实际动画名称。
 */
 ```
-
 ## ***Dart.Flutter.database***
-
 <span style="color:red; font-weight:bold;">**Dart.Flutter 官方目前没有提供一个 Dart.Flutter 原生自带的数据库解决方案。**</span>Dart.Flutter 团队的重点是提供一个灵活、高性能的 UI 框架，以便开发人员可以构建跨平台的用户界面。对于数据存储和管理，Dart.Flutter 官方更多地依赖于第三方库和平台特定的解决方案
-
 ```
 SQLite 是一种跨平台的关系型数据库管理系统 (RDBMS)，它是由 D. Richard Hipp 在 2000 年开发的，最初是为了满足其他项目的需求。
 SQLite 是一个开源项目，它的代码被放在公共域中，允许任何人免费使用、修改和分发。
@@ -2321,24 +2275,167 @@ class MyApp extends StatelessWidget {
   }
 }
 ```
-## ***Dart.Flutter.Provider***
-* 主要用于解决 Flutter 应用程序中的***数据共享和管理***问题；
-* [***Scoped Model***](# scoped_model)： *Provider* 提供了一种称为 [***Scoped Model***](# scoped_model) 的模式，允许开发者将状态和逻辑组织成可重用的模块，并将其嵌入到应用程序的组件树中；
-* *ChangeNotifier*： ChangeNotifier是一个Dart.Flutter提供的***用于管理状态并通知侦听器的类***；
-* *ChangeNotifierProvider*：用于在Dart.Flutter应用程序中向子部件传递一个*ChangeNotifier*对象，并在该对象发生更改时重新构建依赖于它的子部件；
-* `Provider.of`：从任何位置获取已提供的值（通常是状态），而不需要将*Widget* 。`Build`方法作为中间人。
-  * 工作原理是查找 *Widget* 树中最近的一个匹配类型的*Provider*，并返回其值。如果找不到匹配的*Provider*，则会引发异常。因此，使用`Provider.of` 时，确保在 *Widget* 树中存在匹配的*Provider*；
-  * 过度使用`Provider.of`可能会导致代码难以理解和维护，因为它使得部件的依赖关系不明确；
-* *Consumer*：在Dart.Flutter应用程序中监听***特定的*** *Provider*，并在*Provider*的值发生变化时重新构建部件树的一部分；
-  * 使用*Consumer*是一种更加推荐的方法，特别是当您需要在*Provider*的值发生变化时只重新构建部分部件树时；
-
+## ***Dart.Flutter***.<span style="color:red; font-weight:bold;">*Provider*</span>
+* 主要用于解决 Dart.Flutter 应用程序中的***数据共享和管理***问题；
+* 第三方，需要引入包；
 ```yaml
 dependencies:
   flutter:
     sdk: flutter
   provider: ^5.0.0
 ```
+* *Dart.Flutter.Provider* 提供了一种称为 [***Scoped Model***](# scoped_model) 的模式，允许开发者将状态和逻辑组织成**可重用**的模块，并将其嵌入到应用程序的组件树中；
+* *Dart.Flutter.Provider*.<span style="color:red; font-weight:bold;">*ChangeNotifierProvider*</span>：用于向子部件传递一个继承自 *ChangeNotifier* 类的状态，并在该对象发生更改时*重新构建依赖于它的子部件*；（**用于包裹目标*Widget***）
+  * *Dart.Flutter.Provider*.<span style="color:red; font-weight:bold;">*ChangeNotifier*</span>： *ChangeNotifier*是一个Dart.Flutter提供的**用于管理状态并通知侦听器的类**；
+  * 通常用于管理可变状态，是一个轻量级的状态管理工具；
+  * **自动更新 UI**：当状态发生变化时，*ChangeNotifierProvider* 会自动重新构建其子部件树，以反映状态的最新值；
+  * 遵循了**提供者模式**：它将状态提供给 *Widget* 树中的子部件，并且在状态发生变化时自动通知相关的部件进行更新；
+  * **依赖注入**：*ChangeNotifierProvider* 使用依赖注入的方式将状态提供给 *Widget* 树中的子部件。通过调用 `Provider.of<MyModel>(context)`，子部件可以获取与其关联的状态，并在需要时订阅其变化；
+  * **性能优化**：<span style="color:red; font-weight:bold;">*ChangeNotifierProvider* 使用了*Dart.Flutter.Provider*包中的 `listen: false` 参数来避免不必要的重建。从而提高性能</span>；
+```dart
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
+void main() {
+  runApp(MyApp());
+}
+// ❤️关键代码❤️
+class Counter with ChangeNotifier {
+  int _count = 0;
+  int get count => _count;
+  void increment() {
+    _count++;
+    notifyListeners();
+  }
+}
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    // ❤️关键代码❤️
+    return ChangeNotifierProvider.value(
+      value: Counter(), // 提供 Counter 实例
+      child: MaterialApp(
+        title: 'Flutter Demo',
+        home: MyHomePage(),
+      ),
+    );
+  }
+}
+
+class MyHomePage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    // ❤️关键代码❤️
+    final counter = Provider.of<Counter>(context); // 使用 Provider.of 获取 Counter 实例
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Flutter Provider Demo'),
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Text(
+              'Count:',
+            ),
+            Text(
+              '${counter.count}', // 显示当前计数器值
+              style: Theme.of(context).textTheme.headline4,
+            ),
+          ],
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          counter.increment(); // 按下按钮时增加计数器值
+        },
+        tooltip: 'Increment',
+        child: Icon(Icons.add),
+      ),
+    );
+  }
+}
+/**
+  在这个示例中，我们创建了一个简单的 Counter 类，它包含一个整型 _count 和一个 increment 方法来增加计数器的值。
+  Counter 类扩展了 ChangeNotifier，这使得我们可以在值发生变化时通知监听器。
+
+  在 MyApp 中，我们使用 ChangeNotifierProvider.value 来提供 Counter 实例，并将它作为应用的根组件。
+  然后，在 MyHomePage 中，我们使用 Provider.of<Counter>(context) 来获取 Counter 实例，并在 UI 中使用它来显示计数器的当前值。
+  每当按下 FloatingActionButton 时，会调用 counter.increment() 来增加计数器的值，这将触发 UI 的更新。
+*/
+```
+* *Dart.Flutter.Provider*.<span style="color:red; font-weight:bold;">*value*</span>：提供不变的值、提供构建开销低的数据；
+  * **提供单个值**：只能用来提供单个值，而不是像 *ChangeNotifierProvider* 那样提供一个实例；
+  * **不会重新构建子树**：一旦值被提供，相关子部件不会因值的更改而重建。这在某些情况下可以提高性能；
+  * **不监听值变化**：与 *ChangeNotifierProvider* 不同，*provider.value* 不会监听其值的变化。因此，如果提供的值发生变化，相关的子部件不会自动重新构建。如果你需要监听值的变化并触发更新，你可能需要使用其他提供者；
+```dart
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+void main() {
+  runApp(MyApp());
+}
+
+class MyData {
+  final String message;
+  MyData(this.message);
+}
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    // ❤️关键代码❤️
+    return Provider<MyData>.value(// 这里可以使用泛型
+      value: MyData('Hello, world!'), // 提供一个不变的 MyData 实例
+      child: MaterialApp(
+        title: 'Provider.value Demo',
+        home: MyHomePage(),
+      ),
+    );
+  }
+}
+
+class MyHomePage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    // ❤️关键代码❤️
+    final myData = Provider.of<MyData>(context); // 使用 Provider.of 获取 MyData 实例
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Provider.value Demo'),
+      ),
+      body: Center(
+        child: Text(
+          myData.message, // 显示静态字符串
+          style: TextStyle(fontSize: 24.0),
+        ),
+      ),
+    );
+  }
+}
+```
+* *Dart.Flutter.provider*.<span style="color:red; font-weight:bold;">*`Provider.of<MyModel>(context)`*</span>：从任何位置获取已提供的值（通常是状态），而不需要将*Widget* `.Build`方法作为中间人。
+  * **工作原理**：查找 *Widget* 树中**最近的一个匹配类型**的*Provider*，并返回其值。如果找不到匹配的*Provider*，则会引发异常；
+  * **依赖注入**：使用依赖注入的方式将状态提供给*Widget*树中的子部件；
+  * **获取提供的状态**：可以获取与*MyModel*类关联的*Provider*中提供的状态，并在 UI 中使用该状态；
+  * **监听状态变化**：通过调用 `Provider.of` 获取的状态会自动订阅状态变化，当状态发生变化时，与之关联的部件将会重新构建以反映最新的状态值。这使得在状态发生变化时更新 UI 成为一种简单的任务，无需手动管理更新逻辑。
+  * **与 Consumer 的比较**：<span style="color:red; font-weight:bold;">与*Consumer*不同，`Provider.of` 不接收`builder`函数作为参数，而是直接返回提供的状态。因此，当使用 `Provider.of` 时，需要手动处理 UI 的构建逻辑。而 `Consumer` 会自动调用 builder 函数来构建 UI，以反映最新的状态值</span>；
+  * **局部状态管理**：允许在*Widget*树的任何位置获取提供的状态，并在需要时使用它。这使得状态管理更加灵活，能够根据需求将状态与 UI 组件进行分离；
+  * 过度使用`Provider.of<MyModel>(context)`可能会导致代码难以理解和维护，因为它使得部件的依赖关系不明确；
+* *Dart.Flutter.Widget*.<span style="color:red; font-weight:bold;">*Consumer*</span>：*provider* 包提供的一个 *Widget*，监听***特定的*** *Provider*，特别是当需要在*Provider*的值发生变化时**只重新构建部分部件树时**；
+  * **订阅状态**：接收一个 `builder` 函数作为参数，当状态发生变化时，*builder*函数将被调用，并根据最新的状态值构建相应的部件；
+  * **精确订阅**：可以将*Consumer*包裹在具体依赖的状态上，只有该状态发生变化时，*Consumer*才会重新构建；
+  * **避免重建**：在接收到通知时只会重新构建其子部件，而不会重新构建整个部件树，提高了性能；
+  * **局部刷新**：由于*Consumer*只重新构建其子部件，因此可以将其放置在需要局部刷新的部件上，以实现局部刷新的效果。这对于性能敏感的应用程序尤其有用；
+  * **灵活性**：可以根据需要在任何位置使用，它可以包裹在任何*Widget*树的任何位置；
+```yaml
+dependencies:
+  flutter:
+    sdk: flutter
+  provider: ^5.0.0
+```
 ```dart
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -2379,7 +2476,7 @@ class MyHomePage extends StatelessWidget {
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
+          children: <Widget>[ 
             Text(
               'Counter:',
               style: TextStyle(fontSize: 24),
@@ -2408,9 +2505,7 @@ class MyHomePage extends StatelessWidget {
 }
 ```
 ## ***Dart.Flutter.手势✋🏻***
-
 [***全面深入了解Flutter的触摸和滑动原理***](https://guoshuyu.cn/home/wx/Flutter-13.html)
-
 * 无论是 Android 还是 IOS ，Dart原生层都只是将所有事件打包下发；
 * Dart：
   * 是从 `_dispatchPointerDataPacket` 开始的，之后会通过 `Zone` 判断环境回调，会执行 `GestureBinding` 这个胶水类中的 `_handlePointerEvent` 方法；
@@ -2418,11 +2513,8 @@ class MyHomePage extends StatelessWidget {
   * 所有的事件都是起原生源于*io.flutter.view.FlutterView ： SurfaceView*
   * 整个触摸手势事件实质上经历了 **JAVA => C++ => Dart** 的一个流程；
   * 手势信息打包成**ByteBuffer**进行传递，最后在 Dart 层的 `_dispatchPointerDataPacket` 方法中，通过 `_unpackPointerDataPacket` 方法解析成可用的 `PointerDataPacket` 对象使用。
-
 ### （轻触）点击手势（Tap Gesture）
-
 * ***GestureDetector***：更通用的手势识别器，可以处理更多类型的手势，如拖动、缩放等；
-
 ```dart
 import 'package:flutter/material.dart';
 
@@ -2460,7 +2552,6 @@ void main() {
 * ***InkWell***
   * 只能响应轻触事件；
   * 触摸时产生涟漪效果；
-
 ```dart
 import 'package:flutter/material.dart';
 
@@ -2495,7 +2586,6 @@ void main() {
   ));
 }
 ```
-
 * ***InkResponse***：
   * 触摸时产生涟漪效果；
   * 与 `InkWell` 类似，但具有更多的自定义选项（`highlightColor`、`splashColor`、`radius`...）;
@@ -2573,7 +2663,6 @@ void main() {
 }
 ```
 ### 拖动手势（Drag Gesture）
-
 ```dart
 import 'package:flutter/material.dart';
 
@@ -2633,7 +2722,6 @@ class DraggableDemo extends StatelessWidget {
 }
 ```
 ### 缩放手势（Scale Gesture）
-
 ```dart
 import 'package:flutter/material.dart';
 
@@ -2687,7 +2775,6 @@ class _ScaleGestureDemoState extends State<ScaleGestureDemo> {
 }
 ```
 ### 滑动手势（Swipe Gesture）
-
 * ***GestureDetector***
 ```dart
 import 'package:flutter/material.dart';
@@ -2787,9 +2874,7 @@ void main() {
   ));
 }
 ```
-
 ### ***解决手势冲突（控制手势的响应范围以及触发条件）***
-
 * `GestureDetector`
 ```dart
 GestureDetector(
@@ -2821,7 +2906,6 @@ AbsorbPointer(
   child: // Your child widget here
 )
 ```
-
 * `IgnorePointer`：也可以用于阻止其子树接收指针事件，但与`AbsorbPointer`不同，它不会影响手势识别；
 
 ```dart
@@ -2830,7 +2914,6 @@ IgnorePointer(
   child: // Your child widget here
 )
 ```
-
 ## ***Dart.Flutter.GetX***
 ### 资料来源
 [***Flutter状态管理GetX使用详解***](https://juejin.cn/post/7020598013986865182)
@@ -3251,7 +3334,6 @@ class MyApp extends StatelessWidget {
 }
 ```
 ## ***Dart.Flutter.数据解析***
-
 <span style="color:red; font-weight:bold;">**将从网络请求或本地存储中获取的原始数据转换为 Dart 对象或数据模型的过程**</span>
 ```
 在 Dart.Flutter 中，json 序列化是有些特殊的，不同与 JS ，比如使用上述 Dio 网络请求返回，如果配置了返回数据格式为 json ，实际上的到会是一个Map。
@@ -3287,7 +3369,6 @@ void main() {
 }
 ```
 * **使用第三方库:** [***json_serializable***](https://github.com/google/json_serializable.dart)、[***built_value***](https://github.com/google/built_value.dart)、[***freezed***](https://github.com/rrousselGit/freezed) 来**自动生成数据模型类，并且提供方便的 JSON 序列化和反序列化功能**。这些工具通常需要通过注解来标记数据模型类，并且会自动生成对应的序列化/反序列化代码；
-  
   * [***json_serializable***](https://github.com/google/json_serializable.dart)
   ```yaml
   dependencies:
@@ -3343,7 +3424,6 @@ void main() {
   }
   ```
 ## ***Dart.事件循环（Event Loop）***
-
 * Microtask Queue（微服务队列）
   * 优先级别高于Event Queue（事件队列）<span style="color:red; font-weight:bold;">***等于VIP***</span>；
   * 只有当Microtask Queue（微服务队列）全部执行完成以后，系统才会有机会执行Event Queue（事件队列）里面的代码；
@@ -3358,17 +3438,12 @@ void main() {
 ## ***Dart.线程处理***
 
 <span style="color:red; font-weight:bold;">***值得注意的是：在Dart中，异步操作不是多线程（有别于Java）***</span>
-
 ### ***Dart.Isolate***
-
 * 在Dart 2.6 版本中引入。Isolate 是 Dart 中的<u>并发执行单元</u>，<span style="color:red; font-weight:bold;">***类似于线程***</span>（即，***Dart的线程是被封装在Isolate里面的***）。但具有独立的内存堆；
 * Isolate 之间通过消息传递进行通信，这种模型<u>有助于避免共享内存的并发问题</u>。( JS里面也是模拟多线程，因为总共才一个线程)
 ### ***Dart.Future***
-
 ***Future*** 是一个***用于表示异步操作结果的对象***。*通常用于处理需要等待一段时间才能完成的操作。它表示一个在某个未来时刻会产生值或错误的计算过程*；
-
 #### 快速入手：
-
 * 示例一：以下这三种方式等价
 ```dart
 /// 用async和await
@@ -3516,7 +3591,6 @@ void _incrementCounter() {
   flutter: event 3
   ```
 #### `then()`方法
-
 * 你可以使用***Future对象的`then()`方法注册回调函数*** 
 * <span style="color:red; font-weight:bold;">**在正常情况下，等待中的*Future*在完成时的瞬间，`then()`方法会被立即执行，而不会产生Microtask事件**</span>。
 ```dart
@@ -3588,7 +3662,6 @@ Continuing Execution...
 Error Fetching Number: Exception: Failed To Fetch Number
 ```
 #### ***Dart.async***
-
 *以下3种写法等价*
 ```dart
 Future<int> getFuture(){
@@ -3604,7 +3677,6 @@ getFuture(){
 }
 ```
 #### ***Dart***.<span style="color:red; font-weight:bold;">*`await`*</span> 和 ***Dart***.<span style="color:red; font-weight:bold;">*`async`*</span>
-
 * 通过<span style="color:red; font-weight:bold;">*`async`*</span>关键字标记的函数可以使用<span style="color:red; font-weight:bold;">*`await`*</span>关键字来等待*Future*的完成，而不必使用`then()`方法注册回调函数
 *  <span style="color:red; font-weight:bold;">***`await`是`async`的反义词***</span>
 
@@ -3647,7 +3719,6 @@ flutter: 200
   flutter: oops 
   ```
 #### ***Dart.error***
-
 ```dart
 Future<String> getFuture(){
   return Future.error(Exception("Something went wrong"));
@@ -3697,7 +3768,6 @@ flutter: 5
 flutter: complete
 ```
 #### ***Dart.Flutter.FutureBuilder***
-
 *  *Future* 提供了一个名为 *FutureBuilder* 的*Widget*，<span style="color:red; font-weight:bold;">***用于在Future完成后构建UI***</span>。使用 *FutureBuilder*，你可以轻松地根据 *Future* 的状态（未完成、完成并成功返回结果、完成但返回错误）来构建不同的UI；
   
   ```dart
@@ -3777,14 +3847,10 @@ flutter: complete
   // 运行效果：设备屏幕正中央，先出现72，等待2秒以后，出现错误图标
   ```
 ### ***Dart.Stream***
-
 ### 资料来源
-
 [***在 Flutter 里使用 Stream***](https://juejin.cn/post/6844904131287580685)
 [***Flutter 教程 Async***](https://www.youtube.com/watch?v=qBksSix4qj0&list=PLDD3xNHFJjoob3GCF1JqaDxwrOTmpGGbe&index=1)
-
 #### 相关细节
-
 * 在使用[***GetX***](# Dart.Flutter.GetX)框架时，通常可以避免使用显式的***Stream***；
 * 在 Dart.Flutter 中有两种处理异步操作的方式 ***Future*** 和 ***Stream***； 
   * ***Future*** 用于处理单个异步操作（***以后给我们一个值***）， ***Stream***用来处理连续的异步操作（***给我们一连串的值***）。
@@ -3792,7 +3858,6 @@ flutter: complete
 ![Flutter.Stream](./assets/Flutter.Stream.png)
 
 <span style="color:red; font-weight:bold;">*比如，往水杯倒水，将一个水杯倒满为一个 **Future**，连续的将多个水杯倒满就**Stream***</span>
-
 ```dart
 final future = Future.delayed(Duration(seconds: 1), () => 42);
 final stream = Stream.periodic(Duration(seconds: 1), (_) => 42);
@@ -3911,9 +3976,7 @@ class _RandomNumberScreenState extends State<RandomNumberScreen> {
   在这个示例中，我们创建了一个名为 RandomNumberScreen 的 StatefulWidget，其中包含一个 StreamController<int> 用于生成随机数，并使用 StreamBuilder 来监听这个 Stream。StreamBuilder 根据 Stream 的状态自动构建 Widget，并在 UI 中显示随机数的变化。当 Stream 中有新数据到达时，StreamBuilder 会自动重新构建 UI，显示最新的随机数。
 */
 ```
-
 #### ***StreamController***
-
 * 借助***StreamController***实现更精确的控制。创建一个***StreamController***的时候，系统会自动帮我们生成一个***水龙头（sink）***和***水流（stream）***，他们是一一对应的关系；
 ```dart
 // 创建
@@ -4220,11 +4283,8 @@ class DetailsScreen extends StatelessWidget {
   * 使用 *flutter_exoplayer*，您可以方便地在 Dart.Flutter 应用程序中实现高性能的音视频播放功能；
 ## ***Dart.Flutter.原生Api调用交互***（未完）
 * 设备判定
-
 ## ***Dart.Flutter.其他功能***
-
 ### ***返回按键监听***
-
 * Dart.Flutter 中 ，通过`WillPopScope` 嵌套，可以用于监听处理 Android 返回键的逻辑；
 * 其实 `WillPopScope` 并不是监听返回按键，如名字一般，是当前页面将要被pop时触发的回调；
 * 通过`onWillPop`回调返回的`Future`，判断是否响应 pop 。下方代码实现按下返回键时，弹出提示框，按下确定退出App；
@@ -4263,7 +4323,6 @@ class HomePage extends StatelessWidget {
 }
 ```
 ### ***前后台监听***
-
 * `WidgetsBindingObserver` 包含了各种控件的生命周期通知，其中的 `didChangeAppLifecycleState` 就可以用于做前后台状态监听。
 ```dart
 /// WidgetsBindingObserver 包含了各种控件的生命周期通知
@@ -4285,7 +4344,6 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
 }
 ```
 ### ***键盘焦点处理***
-
 * 一般触摸收起键盘也是常见需求，如下代码所示， `GestureDetector` + `FocusScope` 可以满足这一需求。
 ```dart
 class _LoginPageState extends State<LoginPage> {
@@ -4306,17 +4364,12 @@ class _LoginPageState extends State<LoginPage> {
 }
 ```
 ### ***启动页***
-
 * IOS启动页，在`ios/Runner/Assets.xcassets/LaunchImage.imageset/`下， 有 **Contents.json** 文件和启动图片，将你的启动页放置在这个目录下，并且修改 **Contents.json** 即可，具体尺寸自行谷歌即可。
 * Android启动页，在 `android/app/src/main/res/drawable/launch_background.xml` 中已经有写好的启动页，`<item><bitmap>` 部分被屏蔽，只需要打开这个屏蔽，并且将你启动图修改为`launch_image`并放置到各个 **mipmap** 文件夹即可，记得各个文件夹下提供相对于大小尺寸的文件。
 ### ***Dart.Flutter.调取系统摄像头***（未完）
-
 ### ***Dart.Flutter.调取系统相册***（未完）
-
 ## 其他
-
 ### ***新建Dart.Flutter工程*** <span style="color:red; font-weight:bold;">（在Mac平台，使用 ***VSCode*** 编译器）</span>
-
 * 下载并正确配置[***VSCode***](https://code.visualstudio.com/)： 配置好了这个以后，在终端就可以用 *code .* 的形式唤起 ***[VSCode](https://code.visualstudio.com/)***
   * 打开VSCode –> `command+shift+p` –> 输入`shell command` –> 点击提示`Shell Command: Install ‘code’ command in PATH`运行
 * 将***Dart.Flutter.SDK*** 与[***VSCode***](https://code.visualstudio.com/)和 ***MacOS*** 进行关联
@@ -4504,21 +4557,15 @@ class _LoginPageState extends State<LoginPage> {
   Try `flutter pub outdated` for more information.
   exit code 0
   ```
-  
 * 一些报错的处理经验记录
-  
   * <span style="color:red; font-weight:bold;">***[ERROR:flutter/shell/platform/darwin/graphics/FlutterDarwinContextMetalImpeller.mm(42)] Using the Impeller rendering backend.***</span> 
-  
   ```shell
   Launching lib/main.dart on iPhone Xs in debug mode...
   Xcode build done.                                            9.0s
   [ERROR:flutter/shell/platform/darwin/graphics/FlutterDarwinContextMetalImpeller.mm(42)] Using the Impeller rendering backend.
   ```
-  
   ***产生这个Error的原因是：在Dart.Flutter 3.10.0后iOS默认使用开始使用 Impeller 。在 3.7 版本中 Impeller 就被引入用于未来替换 Skia ，Flutter 团队面对 Skia 上越来越多的问题无法有效快速推进，所以走上了自研 Impeller 的道路。***
-  
    [***解决方案***](https://blog.csdn.net/wangzhongITger/article/details/130661361)：关闭这个提示，只需把 plist 里的 `FLTEnableImpeller` 设置为 false，如下👇🏻
-  
   ```xml
   <?xml version="1.0" encoding="UTF-8"?>
   <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
@@ -4531,7 +4578,7 @@ class _LoginPageState extends State<LoginPage> {
   </dict>
   </plist>
   ```
-  
+
   * <span style="color:red; font-weight:bold;">***Target debug_unpack_ios failed: Exception: Failed to codesign***</span> 
   
   [***解决方案***](https://www.cnblogs.com/cappuccino/p/17777342.html)：关闭iCloud同步
@@ -4541,9 +4588,7 @@ class _LoginPageState extends State<LoginPage> {
     Error (Xcode): Target debug_unpack_ios failed: Exception: Failed to codesign
   ```
   * <span style="color:red; font-weight:bold;">***Don't invoke 'print' in production code.***</span> 
-    
     * Dart.Flutter 中的常见警告，它指出在生产代码中调用 `print` 不是一个好的实践。在生产环境中，`print` 语句会输出到控制台，这可能会暴露应用程序的敏感信息，并且会降低应用程序的性能；
-    
     * 在生产代码中，你可以使用日志记录工具，如 `logger` 包，来代替 `print` 语句。这些工具可以帮助你记录应用程序的运行日志，并提供更多的控制和功能，如记录级别、日志过滤等；
       * **logger**: 这是一个轻量级的日志记录框架，易于集成和使用。它支持记录级别、日志过滤等功能，可以输出到控制台、文件、甚至远程服务器。可以通过在 `pubspec.yaml` 文件中添加依赖来使用它：
       ```yaml
@@ -4578,14 +4623,11 @@ class _LoginPageState extends State<LoginPage> {
       logger.v('Verbose message');
       ```
 ### ***Dart.Flutter.DevTools***
-
 Dart.Flutter提供了一些调试工具来帮助开发者调试应用程序的代码和性能，其中包括以下工具：
 * **Flutter DevTools**: 是一个功能强大的调试工具，可以***在浏览器中***查看Dart.Flutter应用程序的各种信息，包括*Widget*树、布局、性能、日志等。它提供了诸如内存、CPU使用情况等信息，可以帮助开发者定位和解决性能问题；
   * **Flutter Inspector**: 是Flutter DevTools的一部分，它允许开发者在应用程序运行时查看*Widget*树、检查布局、查看UI层级结构等。通过Flutter Inspector，开发者可以在运行时查看应用程序的UI状态，并且可以在代码中设置断点来调试应用程序的逻辑；
 * **Flutter Debugger Extension**: 是***Visual Studio Code（VS Code）的一个扩展***，提供了在[***VSCode***](https://code.visualstudio.com/) 中调试Dart.Flutter应用程序的功能。开发者可以在[***VSCode***](https://code.visualstudio.com/) 中设置断点、单步执行代码、查看变量值等，以实现对Dart.Flutter应用程序的调试；
-
 ### ***RESTful API***
-
 * *REST*（**RE**presentational **S**tate **T**ransfer，表征状态转移）***是一种设计网络应用程序的软件架构风格或理念***，它<span style="color:red; font-weight:bold;">**强调利用 HTTP 协议中的各种方法（GET、POST、PUT、DELETE 等）对资源进行操作，并通过资源的表现形式（通常是 JSON 或 XML 格式）来传输数据**</span>；
 * *RESTful API* 是一种基于 *REST* 架构风格设计的 API 接口；
 * *RESTful API* 并不是特定编程语言或技术的名称，而是一种设计风格或理念。它可以用于任何支持 HTTP 协议的平台和语言，包括但不限于 *Java*、*Python*、*JavaScript*、*PHP*、*Dart* 等。因此，您可以在任何编程语言中实现符合 *RESTful* 设计风格的 API 接口。
