@@ -4493,6 +4493,53 @@ class DetailsScreen extends StatelessWidget {
   }
 }
 ```
+*定义路由表*
+
+```dart
+// 定义路由表
+Map<String, WidgetBuilder> routes = {
+  '/': (context) => HomePage(),
+  '/profile': (context) => ProfilePage(),
+  '/settings': (context) => SettingsPage(),
+};
+```
+
+*使用路由表*
+
+```dart
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Flutter 路由示例',
+      // 设置初始路由
+      initialRoute: '/',
+      // 使用路由表
+      routes: routes,
+    );
+  }
+}
+
+class HomePage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Home'),
+      ),
+      body: Center(
+        child: ElevatedButton(
+          child: Text('Go to Profile'),
+          onPressed: () {
+            Navigator.pushNamed(context, '/profile');
+          },
+        ),
+      ),
+    );
+  }
+}
+```
+
 * 动态路由：
   * 是在程序运行时根据需要创建的路由，通常用于实现基于用户输入或其他动态条件的导航。
   * 在动态路由中，可以灵活地根据需要创建新的路由，并可以将参数传递给新创建的路由。

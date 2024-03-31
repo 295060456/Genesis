@@ -1,6 +1,70 @@
 # Swift 相关经验
 
-[toc]
+- [Swift 相关经验](#swift-相关经验)
+  - [一些相关文献](#一些相关文献)
+  - [Swift视频教学](#swift视频教学)
+  - [网络分层](#网络分层)
+    - [OSI 参考模型](#osi-参考模型)
+    - [参考模型和 TCP/IP 协议族](#参考模型和-tcpip-协议族)
+  - [内存区域分类](#内存区域分类)
+  - [堆和栈](#堆和栈)
+    - [*堆(**Heap**)*](#堆heap)
+    - [*栈(**Stack**)*](#栈stack)
+  - [在Swift中，一个结构体（*struct*），占据多大的内存？](#在swift中一个结构体struct占据多大的内存)
+  - [***Copy-On-Write***](#copy-on-write)
+  - [【Swift vs Java vs C/C++】***static*** 和 ***final***的区别](#swift-vs-java-vs-ccstatic-和-final的区别)
+  - [Swift里面可否用*var*来接受一个*func*？](#swift里面可否用var来接受一个func)
+  - [为什么在Swift里面新建一个*view*要用*struct*，而不用*class*](#为什么在swift里面新建一个view要用struct而不用class)
+  - [元组（***Tuples***）和结构体（***Struct***）](#元组tuples和结构体struct)
+  - [***Swift.Closure（闭包）***](#swiftclosure闭包)
+  - [***Swift.初始化方法***](#swift初始化方法)
+  - [***Swift.`map` 和 Swift.`joined`***](#swiftmap-和-swiftjoined)
+  - [***Swift.where***](#swiftwhere)
+  - [***Swift.yield***](#swiftyield)
+  - [***Swift***.*mutating*](#swiftmutating)
+    - [对比 ***Swift***.*mutating* 和 ***Swift***.*inout*](#对比-swiftmutating-和-swiftinout)
+  - [内联函数。内联这两个字，我怎么去理解？](#内联函数内联这两个字我怎么去理解)
+  - [当前函数的***上下文***。这个***上下文***是什么意思？](#当前函数的上下文这个上下文是什么意思)
+  - [***Swift.依赖注入***](#swift依赖注入)
+  - [*SwiftUI.UIHostingController* 和一般的控制器，有何特别之处？（向下兼容）](#swiftuiuihostingcontroller-和一般的控制器有何特别之处向下兼容)
+  - [*UIKit.UIViewRepresentable* 干嘛的？（向上兼容）](#uikituiviewrepresentable-干嘛的向上兼容)
+  - [属性修饰符（*Property Attributes*）≠ 属性包装器（*Property Wrappers*）](#属性修饰符property-attributes-属性包装器property-wrappers)
+  - [***Swift.@标记***](#swift标记)
+    - [***`@frozen`***](#frozen)
+    - [***`@usableFromInline`***](#usablefrominline)
+    - [***`@discardableResult`***](#discardableresult)
+    - [***`@available`***](#available)
+    - [***`@MainActor`***](#mainactor)
+    - [***`@objc`***](#objc)
+    - [***`@Binding`***](#binding)
+    - [***`@escaping`***](#escaping)
+    - [***`@inline`***](#inline)
+    - [***`@Main`***](#main)
+    - [***`@UIApplicationMain`***](#uiapplicationmain)
+    - [***`@State`***](#state)
+    - [***`@EnvironmentObject`***](#environmentobject)
+    - [***`@Environment`***](#environment)
+    - [***`@ObservedObject`***](#observedobject)
+    - [***`@Published`***](#published)
+  - [***`@main`***和***`@UIApplicationMain`***的区别](#main和uiapplicationmain的区别)
+  - [Swift中，***Any***和***Anyobject***的区别？](#swift中any和anyobject的区别)
+  - [*var body: some View*  这里面的`some`是什么意思？](#var-body-some-view--这里面的some是什么意思)
+  - [`#available` 和 ***`@available`***在Swift中有什么区别？](#available-和-available在swift中有什么区别)
+  - [***Swift***.***`extension`***](#swiftextension)
+  - [***在Swift中，有两种类型不允许定义存储属性***：](#在swift中有两种类型不允许定义存储属性)
+  - [***Swift.`初始化方法`***](#swift初始化方法-1)
+  - [***Swift.`单例`***](#swift单例)
+  - [***Swift.`网络请求`***](#swift网络请求)
+    - [1、URLSession（原生的工具）](#1urlsession原生的工具)
+    - [2、Alamofire](#2alamofire)
+    - [3、Moya（基于Alamofire的二次封装）](#3moya基于alamofire的二次封装)
+  - [***Swift.`Json数据解析`***](#swiftjson数据解析)
+    - [1、*Codable 协议*  ***（原生.简洁.官方推荐首选）***](#1codable-协议--原生简洁官方推荐首选)
+    - [2、*SwiftyJSON*（第三方.流行）](#2swiftyjson第三方流行)
+    - [3、*ObjectMapper*（第三方.常用）](#3objectmapper第三方常用)
+  - [***SwiftUI***](#swiftui)
+  - [其他](#其他)
+
 ## 一些相关文献
 [***Swift自动布局SnapKit的详细使用介绍***](https://www.jianshu.com/p/2bad53a2a180)
 [***SwiftUI - 与UIKit集成***](https://www.jianshu.com/p/fbc920c11b0d)
@@ -12,56 +76,58 @@
 [***BBCo - iOS开发入门教程 SwiftUI 微博App项目实战 Lesson 1 (零基础学习Swift编程)***](https://www.youtube.com/watch?v=5n0qoRZ8gXA&list=PLotizAeaV0nPM7a7Yy3Uyh4rkgBvT9N_H&index=2)
 
 ## 网络分层
-最常见的网络分层是 OSI（**O**pen **S**ystems **I**nterconnection）
+最常见的网络分层是 OSI（***O**pen **S**ystems **I**nterconnection*）
 ### OSI 参考模型
-* **物理层（Physical Layer）**：
+
+* **物理层（*Physical Layer*）**：
    - 负责传输比特流（0 和 1）。
    - 包括物理介质、电压等传输媒介的规范。
-* **数据链路层（Data Link Layer）**：
+* **数据链路层（*Data Link Layer*）**：
    - 提供了物理层之上的逻辑传输，将比特流转化为数据帧。
    - 提供了数据帧的传输和错误检测。
-* **网络层（Network Layer）**：
+* **网络层（*Network Layer*）**：
    - 负责将数据包从源节点传输到目的节点，跨越不同的网络。
    - 提供了路由选择、分组转发等功能。
-* **传输层（Transport Layer）**：
+* **传输层（*Transport Layer*）**：
    - 提供端到端的数据传输服务，确保数据的可靠性和完整性。
    - 提供了流量控制、拥塞控制等功能，如 TCP 和 UDP 协议。
-* **会话层（Session Layer）**：
+* **会话层（*Session Layer*）**：
    - 管理应用程序之间的会话，建立、维护和终止会话。
    - 提供了会话管理、同步和恢复等功能。
-* **表示层（Presentation Layer）**：
+* **表示层（*Presentation Layer*）**：
    - 负责数据的格式化、加密和解密，以确保数据的可读性和安全性。
    - 提供了数据的表示、编码和解码。
-* **应用层（Application Layer）**：
+* **应用层（*Application Layer*）**：
    - 提供了网络服务和应用程序之间的接口。
    - 包括 HTTP、FTP、SMTP 等协议，以及各种应用程序。
 ### 参考模型和 TCP/IP 协议族
+
 * **应用层**：包含了 OSI 参考模型中的应用层、表示层和会话层;
 * **传输层**：类似于 OSI 参考模型的传输层，提供了端到端的数据传输，如 TCP 和 UDP 协议;
 * **网络层**：类似于 OSI 参考模型的网络层，负责数据包的传输和路由选择，如 IP 协议;
 * **链路层**：类似于 OSI 参考模型的数据链路层和物理层，负责数据帧的传输和物理介质的规范;
 ## 内存区域分类
 *在计算机中，内存可以**根据其功能和用途**划分为不同的区域。*以下是常见的内存区域分类：(7大区)
-* **代码区（Code or Text Segment）**：
+* **代码区（*Code or Text Segment*）**
   * 代码区存储程序的可执行代码，包括机器指令和只读数据（如字符串常量）；
   * 代码区**通常是只读的**，因为程序的代码在运行时不应该被修改；
-* **数据区（Data Segment）**：
+* **数据区（*Data Segment*）**
    * 数据区包含了**已初始化的全局变量和静态变量**；
    * 这些变量在程序开始时分配并初始化，存储在内存的数据段中；
-* **BSS 区（BSS Segment）**：
-   * BSS（**B**lock **S**tarted by **S**ymbol）区存储**未初始化的全局变量和静态变量**；
+* **BSS 区（*BSS Segment*）**
+   * BSS（***B**lock **S**tarted by **S**ymbol*）区存储**未初始化的全局变量和静态变量**；
    * 在程序启动时，这些变量被自动初始化为零值；
-* [***堆（Heap）***](# 堆(Heap)):
+* [***堆（Heap）***](# 堆(Heap))
    * 堆是动态分配的内存区域，用于存储**程序运行时动态分配的内存**；
    * [***堆(Heap)***](# 堆(Heap))上的内存可以通过函数如 `malloc()`、`calloc()` 或者 `new` 来分配，并通过 `free()` 或者 `delete` 函数来释放；
-* [***栈（Stack）***](# 栈(Stack)):
+* [***栈（Stack）***](# 栈(Stack))
    * [***栈***](# 栈(Stack))用于存储函数的局部变量、函数参数、函数的**返回地址**等；
    * 每次函数调用时，会在栈上分配一块称为栈帧（Stack Frame）的内存，**函数返回后，栈帧会被销毁**；
    * [***栈***](# 栈(Stack))的大小是有限的，通常比堆的大小小得多（[***栈***](# 栈(Stack))<< [***堆***](# 堆(Heap))）；
-* **常量区（Constant Segment）**：
+* **常量区（*Constant Segment*）**：
    * 常量区存储常量值，如字符串常量；
    * 这些常量**在程序运行期间是不可修改的**；
-* **全局区（Global Segment）**：
+* **全局区（*Global Segment*）**：
    * 全局区存储全局变量，但是和数据区的区别是，它包含了**未初始化的全局变量**；
    * 在程序开始时，未初始化的全局变量会被初始化为默认值；
 ```
@@ -74,22 +140,22 @@
 
 * <span style="color:red; font-weight:bold;">***程序员手动控制***</span>；
 * 堆区相对于栈区更靠内存高字节；（内存后部署堆区）
-* 在堆上分配的内存由 **ARC**（**A**utomatic **R**eference **C**ounting）管理；
+* 在堆上分配的内存由 **ARC**（***A**utomatic **R**eference **C**ounting*）管理；
 * 存储：<u>**类实例.方法**</u>、<u>**类实例.属性**</u>；
-* **存放引用类型**：Class类型、闭包和函数；
+* **存放引用类型**：*Class*类型、闭包和函数；
   * 浅拷贝；
   * **堆操作牵涉到合并、移位、重新链接等**；
 ### *栈(**Stack**)*
 * <span style="color:red; font-weight:bold;">***栈上的内存分配和释放由编译器自动管理***</span>；
 * 栈区相对于堆区更靠内存低字节；（内存先部署栈区）
 * 将*String*，*Array*，*Dictionary*设计成值类型，**大幅减少了堆上的内存分配和回收的次数**。同时[***C**opy-**O**n-**W**rite*](# Copy-On-Write)又将值传递和复制的开销降到了最低；
-* **存放值类型**：结构体（struct）、枚举（enum）、元祖（tuple）；
+* **存放值类型**：结构体（*struct*）、枚举（*enum*）、元祖（*tuple*）；
   * 深拷贝：可以确保在函数内部或者在其他变量中修改值类型的值时，不会影响到原始值；
   * 性能优势：**仅仅是单个指针的上下移动**；
   * 线程安全：直接存储于内存 ＋ 不需要引用（没有引用计数）和垃圾回收等操作 = 不会发生因为引用计数的增减而引起的竞态条件；
-## 在Swift中，一个结构体（struct），占据多大的内存？
+## 在Swift中，一个结构体（*struct*），占据多大的内存？
 
-* 在Swift中，结构体（struct）的大小取决于其包含的成员变量的大小和对齐方式；
+* 在Swift中，结构体（*struct*）的大小取决于其包含的成员变量的大小和对齐方式；
 * Swift 的内存布局是由编译器决定的，并且受到目标平台和编译器版本等因素的影响；
 * 通常情况下，***结构体的内存布局是按照其成员变量的顺序依次排列的，并且可能会进行字节对齐***。这意味着如果结构体的成员包含不同类型的数据，编译器**可能会在其间插入一些填充字节以保持对齐**。
 你可以使用Swift的`MemoryLayout`来获取结构体的大小。例如：
@@ -163,10 +229,10 @@ print("MyStruct 步幅为 \(stride) 字节")
     - 当一个类被声明为<span style="color:red; font-weight:bold;">***final***</span> 时，它**不能被其他类继承**；
     - 当一个方法或者属性被声明为<span style="color:red; font-weight:bold;">***final***</span>时，它**不能被子类重写**；
     - 在内存中，<span style="color:red; font-weight:bold;">***final***</span>方法或属性的存储位置和普通方法或属性相同，取决于具体的上下文环境；
-      * **堆（Heap）**：如果方法或属性属于类的实例，则它们通常**存储在[*堆*](# 堆(Heap))上**（ARC）；
-      * **栈（Stack）**：如果方法或属性属于结构体的实例或是局部变量，则它们通常存储在[***栈***](# 栈(Stack))上（编译器自动）；
-      * **常量池（Constant Pool）**：对于某些特定的常量或静态变量，它们可能被存储在常量池中，这取决于编译器的优化和实现方式；
-## Swift里面可否用var来接受一个func？
+      * **堆（*Heap*）**：如果方法或属性属于类的实例，则它们通常**存储在[*堆*](# 堆(Heap))上**（ARC）；
+      * **栈（*Stack*）**：如果方法或属性属于结构体的实例或是局部变量，则它们通常存储在[***栈***](# 栈(Stack))上（编译器自动）；
+      * **常量池（*Constant Pool*）**：对于某些特定的常量或静态变量，它们可能被存储在常量池中，这取决于编译器的优化和实现方式；
+## Swift里面可否用*var*来接受一个*func*？
 
 **不能直接使用<span style="color:red; font-weight:bold;">*var*</span>关键字来声明一个变量来接受一个函数。但是可以变通处理（转变为类型）👇🏻**
 
@@ -190,19 +256,16 @@ print(result)  // 输出: 5
 这是因为 SwiftUI 采用了声明式的编程范式，而结构体更符合声明式编程的特性。
 ```
 *下面是一些原因：*
-* 不可变性：结构体是值类型，而类是引用类型。值类型在传递和复制时会产生副本，这有助于保持不可变性
-```swift
-SwiftUI 的设计倾向于使用不可变的数据模型，以确保状态的一致性和可预测性
-```
+* 不可变性：结构体是值类型，而类是引用类型。值类型在传递和复制时会产生副本，这有助于保持不可变性；
+  * SwiftUI 的设计倾向于使用不可变的数据模型，以确保状态的一致性和可预测性；
+
 * 简单性和可预测性：结构体更简单，不涉及继承和引用计数等概念，使得代码更易于理解和维护。结构体通常更容易推导和预测其行为。
-* 值语义：结构体提供了值语义，这意味着它们的比较是基于值而不是引用的。
-```swift
-这有助于在 SwiftUI 中更容易管理视图层次结构和状态。
-```
-* 性能优势:结构体在一些情况下可能具有性能优势
-```swift
-由于值语义和不可变性，Swift 编译器可以进行更多的优化，例如避免不必要的副本操作。
-```
+* 值语义：结构体提供了值语义，这意味着它们的比较是基于值而不是引用的；
+  * 这有助于在 SwiftUI 中更容易管理视图层次结构和状态。
+
+* 性能优势:结构体在一些情况下可能具有性能优势；
+  * 由于值语义和不可变性，Swift 编译器可以进行更多的优化，例如避免不必要的副本操作；
+
 *综上所述：*
 
 ```swift
@@ -212,7 +275,7 @@ SwiftUI 的设计倾向于使用不可变的数据模型，以确保状态的一
 尽管 SwiftUI 偏向结构体，但在其他上下文中，仍然可能使用类，特别是在需要引用语义和共享可变状态的情况下。
 在 SwiftUI 中，这样的情况相对较少，因为 SwiftUI 本身的设计目标是通过数据驱动界面。
 ```
-## 元组（Tuples）和结构体（Struct）
+## 元组（***Tuples***）和结构体（***Struct***）
 
 * 都可以包含不同的数据类型；
 * 在 Swift 中，元组的内存结构并不一定是连续的，因为 Swift 元组的实现方式可以根据编译器的优化和其他因素而有所不同。而结构体的内存是连续的；
@@ -222,13 +285,138 @@ SwiftUI 的设计倾向于使用不可变的数据模型，以确保状态的一
   * 两个元组的元素个数必须相同
   * 对应位置的元素类型必须相同，并且支持比较操作
   * 元组的元素个数实际上是没有硬性限制的。可以创建包含任意数量元素的元组
+
+## ***Swift.Closure（闭包）***
+
+<span style="color:red; font-weight:bold;">即，C语言中的***Block***</span>
+
+* 匿名闭包（*Anonymous Closure*）
+
+```swift
+// 无参数，无返回值的匿名闭包
+let closure1 = {
+    print("This is an anonymous closure.")
+}
+// 带参数，带返回值的匿名闭包
+let closure2 = { (name: String) -> String in
+    return "Hello, \(name)!"
+}
+// 调用匿名闭包
+closure1()
+let greeting = closure2("World")
+print(greeting)
+```
+
+* 带参数的闭包（*Closure with Parameters*）
+
+```swift
+let add: (Int, Int) -> Int = { (a, b) in
+    return a + b
+}
+
+let result = add(3, 5)
+print(result) // 输出: 8
+```
+
+* 尾随闭包（*Trailing Closure*）
+
+```swift
+func performOperation(_ operation: () -> Void) {
+    // 执行闭包操作
+    operation()
+}
+// 调用函数时使用尾随闭包
+performOperation {
+    print("Performing an operation.")
+}
+```
+
+* 逃逸闭包（*Escaping Closure*）
+
+*逃逸闭包不带捕获值*
+
+```swift
+var completionHandlers: [() -> Void] = []
+
+func someFunctionWithEscapingClosure(completionHandler: @escaping () -> Void) {
+    completionHandlers.append(completionHandler)
+}
+
+func executeCompletionHandlers() {
+    for handler in completionHandlers {
+        handler()
+    }
+}
+
+someFunctionWithEscapingClosure {
+    print("Closure has escaped.")
+}
+
+executeCompletionHandlers() // 输出: Closure has escaped.
+```
+
+*逃逸闭包带捕获值（Escaping Closure with Captured Values）*
+
+```swift
+var closure: (() -> Int)?
+
+func someFunctionWithEscapingAndCapture(capture: Int, completionHandler: @escaping () -> Int) {
+    closure = completionHandler
+    print("Closure captured value: \(capture)")
+}
+
+someFunctionWithEscapingAndCapture(capture: 10) {
+    return $0 * 2
+}
+
+if let closure = closure {
+    let result = closure()
+    print("Result: \(result)") // 输出: 20
+}
+```
+
+* 自动闭包（*Autoclosure*）
+
+```swift
+func functionWithAutoclosure(closure: @autoclosure () -> Int) {
+    let result = closure()
+    print("Result is \(result)")
+}
+
+// 调用时自动包装成闭包
+functionWithAutoclosure(closure: 3 + 5) // 输出: Result is 8
+```
+
+* 带捕获值的闭包（*Closure with Captured Values*）
+
+```swift
+func makeAdder(_ x: Int) -> (Int) -> Int {
+    return { y in
+        return x + y
+    }
+}
+
+let addTwo = makeAdder(2)
+let result = addTwo(3) // 输出: 5
+```
+
+* 泛型闭包（*Generic Closure*）
+
+```swift
+func apply<T>(_ value: T, _ closure: (T) -> T) -> T {
+    return closure(value)
+}
+
+let result = apply(5) { $0 * 2 } // 输出: 10
+```
+
 ## ***Swift.初始化方法***
 
 初始化方法负责确保新创建的实例在使用之前完成所有必要的初始化工作。
 
 * 类的初始化方法
 
-  * 指定初始化方法（Designated Initializers）：用于初始化该类所定义的所有属性，并且调用父类的初始化方法确保整个类层次结构被正确初始化。
+  * 指定初始化方法（*Designated Initializers*）：用于初始化该类所定义的所有属性，并且调用父类的初始化方法确保整个类层次结构被正确初始化。
     * 指定初始化方法可以有一个或多个，但只能有一个指定初始化方法在类的继承链中最终被调用来完成初始化；
     * 其他的指定初始化方法可以提供额外的初始化路径，但它们***最终都要调用同一个指定初始化方法来保证对象完全初始化***；
     * 如果一个类有多个指定初始化方法，它们之间必须保证参数列表不同，这样编译器才能够正确地区分它们；
@@ -243,7 +431,7 @@ SwiftUI 的设计倾向于使用不可变的数据模型，以确保状态的一
   }
   ```
 
-  * 便捷初始化方法（Convenience Initializers）：用于简化类的初始化过程，必须调用同一类中的另一个初始化方法（可以是指定初始化方法或其他便捷初始化方法）作为最终的初始化点。<span style="color:red; font-weight:bold;">***convenience***</span>
+  * 便捷初始化方法（*Convenience Initializers*）：用于简化类的初始化过程，必须调用同一类中的另一个初始化方法（可以是指定初始化方法或其他便捷初始化方法）作为最终的初始化点。<span style="color:red; font-weight:bold;">***convenience***</span>
 
   ```swift
   class MyClass {
@@ -259,7 +447,7 @@ SwiftUI 的设计倾向于使用不可变的数据模型，以确保状态的一
   }
   ```
 
-  * 必要初始化方法（Required Initializers）<span style="color:red; font-weight:bold;">***required***</span>
+  * 必要初始化方法（*Required Initializers*）<span style="color:red; font-weight:bold;">***required***</span>
 
   ```swift
   class MyClass {
@@ -329,7 +517,7 @@ func someFunction<T>(value: T) where T: Equatable {
     // 函数体
 }
 ```
-<span style="color:red; font-weight:bold;">***where***</span> 子句也可以在扩展（extension）中使用，例如：
+<span style="color:red; font-weight:bold;">***where***</span> 子句也可以在[***扩展（extension）***](# Swift.extension)中使用，例如：
 
 ```swift
 extension Array where Element: Equatable {
@@ -373,7 +561,7 @@ void main() {
 * 在`main`函数中，我们使用`generateEvenNumbers`生成前10个偶数，并通过`for-in`循环逐个打印这些偶数；
 * **需要注意的是，生成器函数中的<span style="color:red; font-weight:bold;">*yield*</span> 语句并不会立即执行，而是在调用生成器函数的迭代器时才执行；**
 
-## ***Swift.mutating***
+## ***Swift***.<span style="color:red; font-weight:bold;">*mutating*</span>
 
 ***mutating***：
 
@@ -381,8 +569,8 @@ void main() {
 
 *【vt.】使突变（mutate 的现在分词）*
 
-* 用于结构体（struct）和枚举（enum）中的**方法声明**中，*表示该方法可以修改该结构体或枚举的属性值*，即使该方法在实例被声明为常量（`let`）时调用也可以；
-* 对于类（class）中的方法，不需要使用<span style="color:red; font-weight:bold;">*mutating*</span>关键字，因为类是引用类型，即使在常量类实例上调用方法，也可以修改其属性；
+* 用于结构体（*struct*）和枚举（*enum*）中的**方法声明**中，*表示该方法可以修改该结构体或枚举的属性值*，即使该方法在实例被声明为常量（`let`）时调用也可以；
+* 对于类（*class*）中的方法，不需要使用<span style="color:red; font-weight:bold;">*mutating*</span>关键字，因为类是引用类型，即使在常量类实例上调用方法，也可以修改其属性；
 ```swift
 struct Point {
     var x = 0.0
@@ -400,7 +588,7 @@ print("Before moving: \(point)")
 point.moveBy(x: 2.0, y: 3.0)
 print("After moving: \(point)")
 ```
-### 对比 Swift.mutating 和 Swift.inout
+### 对比 ***Swift***.<span style="color:red; font-weight:bold;">*mutating*</span> 和 ***Swift***.<span style="color:red; font-weight:bold;">*inout*</span>
 
 * <span style="color:red; font-weight:bold;">***inout***</span>
   
@@ -428,7 +616,7 @@ print("After moving: \(point)")
   Before increment: 5
   After increment: 6
   ```
-* **mutating**（***专修结构体和枚举***）
+* <span style="color:red; font-weight:bold;">***mutating***</span>（***专修结构体和枚举***）
   
   * <span style="color:red; font-weight:bold;">*mutating*</span>是Swift中**用于结构体和枚举中方法**的关键字。它**允许方法修改结构体或枚举的实例属性**。由于结构体和枚举是值类型，它们的属性默认是不可变的。因此，如果需要在方法中修改属性，则必须将方法标记为<span style="color:red; font-weight:bold;">*mutating*</span>；
   * <span style="color:red; font-weight:bold;">*mutating*</span>关键字仅用于值类型（结构体和枚举）的方法声明。这样的方法可以修改调用该方法的实例的属性值；
@@ -440,29 +628,22 @@ print("After moving: \(point)")
 这样可以减少函数调用的开销，提高代码的执行效率。
 ```
 *具体来说，理解内联函数涉及以下几个概念：*
-* 函数调用开销：
-```
-在程序执行期间，每次调用函数都会引入一些开销，如保存当前函数的上下文、跳转到被调用函数的位置、执行函数体等。
-对于一些小而频繁调用的函数，这些开销可能在一定程度上影响性能。
-```
-* 内联优化:
-```
-内联是一种编译器优化策略，它试图减少函数调用的开销，将函数调用处直接替换为函数体的内容。
-这样可以避免调用开销，减少了跳转和上下文保存的开销。
-```
-<span style="color:red; font-weight:bold;">***内联的适用情况： 内联适用于一些小型的、频繁调用的函数，这样可以减少函数调用的开销，提高性能。***</span>
-
-***但并不是所有函数都适合内联，因为内联会增加代码的体积，可能导致代码膨胀。***
-
-```swift
-@inlineable 和 @usableFromInline： 在 Swift 中，可以使用 @inlineable 和 @usableFromInline 属性来影响编译器对函数的内联决策。@inlineable 表示一个函数可以被内联，但具体是否内联取决于编译器的决策。@usableFromInline 则用于指示一个函数可以在同一模块的其他地方内联使用。
-
-在 Swift 中，编译器会根据具体情况决定是否内联函数，而使用 @inlineable 和 @usableFromInline 可以影响这个决策。开发者通常无需过多关注内联，因为 Swift 的编译器会自动进行相应的优化。
-```
+* 函数调用开销
+  * 在程序执行期间，每次调用函数都会引入一些开销，如保存当前函数的上下文、跳转到被调用函数的位置、执行函数体等；
+  * 对于一些小而频繁调用的函数，这些开销可能在一定程度上影响性能；
+* 内联优化
+  * 内联是一种编译器优化策略，它试图减少函数调用的开销，将函数调用处直接替换为函数体的内容；
+  * 这样可以避免调用开销，减少了跳转和上下文保存的开销；
+  <span style="color:red; font-weight:bold;">***内联的适用情况： 内联适用于一些小型的、频繁调用的函数，这样可以减少函数调用的开销，提高性能。***</span>
+  ***但并不是所有函数都适合内联，因为内联会增加代码的体积，可能导致代码膨胀。***
+  ***@inlineable*** 和 ***@usableFromInline***
+* 在 Swift 中，可以使用***@inlineable*** 和 ***@usableFromInline*** 属性来影响编译器对函数的内联决策；
+* ***@inlineable*** 表示一个函数可以被内联，但具体是否内联取决于编译器的决策；
+* ***@usableFromInline*** 则用于指示一个函数可以在同一模块的其他地方内联使用；
+* 在 Swift 中，编译器会根据具体情况决定是否内联函数，而使用 ***@inlineable*** 和 ***@usableFromInline*** 可以影响这个决策；
+* 开发者通常无需过多关注内联，因为 Swift 的编译器会自动进行相应的优化；
 ## 当前函数的<span style="color:red; font-weight:bold;">***上下文***</span>。这个<span style="color:red; font-weight:bold;">***上下文***</span>是什么意思？
-
 在计算机科学中，函数的上下文（***Context***）通常指的是<span style="color:red; font-weight:bold;">***函数执行时的运行环境，包括函数调用时的一些信息和状态***</span>。
-
 * 这个上下文包括但不限于以下内容：
   * 局部变量：
     * 函数内部声明的局部变量和参数是函数上下文的一部分；
@@ -476,10 +657,8 @@ print("After moving: \(point)")
   * 这些信息组成了函数的上下文，它在函数调用期间用于保持函数的执行状态；
   * 在函数执行完成后，这个上下文的信息通常被恢复或者销毁；
   * 函数的上下文是为了支持函数调用的正确执行而存在的，它确保了在函数调用期间可以正确地传递参数、保存执行状态，以及函数返回时恢复执行环境；
-
 ## ***Swift.依赖注入***
-
-***`UserService` 使用依赖注入的 `Logger` 对象来记录日志***
+***UserService 使用依赖注入的 Logger 对象来记录日志***
 
 ```swift
 import Foundation
@@ -514,8 +693,8 @@ let userService = UserService(logger: consoleLogger)
 // 调用 UserService 的方法
 userService.doSomething()
 ```
-*  `UserService` 类，它依赖于 `Logger` 类型的对象来记录日志；
-* 在初始化 `UserService` 实例时，我们通过构造函数将 `ConsoleLogger` 的实例传递给 `UserService`，实现了依赖注入；
+*  ***UserService*** 类，它依赖于 ***Logger*** 类型的对象来记录日志；
+* 在初始化 ***UserService***  实例时，我们通过构造函数将 ***ConsoleLogger*** 的实例传递给 ***UserService*** ，实现了依赖注入；
 
 ## *SwiftUI.UIHostingController* 和一般的控制器，有何特别之处？（向下兼容）
 
@@ -702,7 +881,7 @@ func newAPI() {
 ```
 ### <span style="color:red; font-weight:bold;">***`@MainActor`***</span>
 
-* 是一个[***属性包装器***（property wrapper）](# 属性包装器（Property Wrappers）)，它用于标记特定的属性、方法或函数在主线程上执行；
+* 是一个[***属性包装器***（*property wrapper*）](# 属性包装器（Property Wrappers）)，它用于标记特定的属性、方法或函数在主线程上执行；
 
 * 这是为了确保在 Swift 的并发编程中遵循特定的并发模型；
 * 具体来说，`@MainActor`是 Swift Concurrency 中的一部分，引入了 <span style="color:red; font-weight:bold;">***`async/await`***</span>  等新的并发编程特性；
@@ -724,8 +903,8 @@ func fetchData() async {
 ```
 ### <span style="color:red; font-weight:bold;">***`@objc`***</span>
 
-* <span style="color:red; font-weight:bold;">***`@objc`***</span> 是一个 Objective-C 的修饰符；
-* 在 Swift 中用于标记特定的声明以便与 Objective-C 代码进行交互；
+* <span style="color:red; font-weight:bold;">***`@objc`***</span> 是一个 *Objective-C* 的修饰符；
+* 在 Swift 中用于标记特定的声明以便与 *Objective-C* 代码进行交互；
 * 它可以应用于类、协议、方法、属性等；
 * 兼容 *Objective-C* 代码： 当你需要在 *Swift* 中使用*Objective-C* 的框架、类、方法等时，你可能需要使用 <span style="color:red; font-weight:bold;">***`@objc`***</span> 修饰符。*Objective-C* 使用动态消息传递，而 *Swift* 使用静态派发，因此在 *Swift* 中调用 *Objective-C* 代码时，需要一些额外的信息来确保兼容性。
 
@@ -754,7 +933,7 @@ let selector = #selector(myObjectiveCMethod)
 
 ### <span style="color:red; font-weight:bold;">***`@Binding`***</span>
 
-* <span style="color:red; font-weight:bold;">***`@Binding`***</span> 是一个[***属性包装器***（property wrapper）](# 属性包装器（Property Wrappers）)，用于在 SwiftUI 中创建**双向绑定**（two-way binding）。它允许你在视图层次结构中传递数据，并确保这些数据的改变在整个视图层次结构中传播；
+* <span style="color:red; font-weight:bold;">***`@Binding`***</span> 是一个[***属性包装器***（*property wrapper*）](# 属性包装器（Property Wrappers）)，用于在 SwiftUI 中创建**双向绑定**（*two-way binding*）。它允许你在视图层次结构中传递数据，并确保这些数据的改变在整个视图层次结构中传播；
   * 当你在一个视图中使用 <span style="color:red; font-weight:bold;">***`@Binding`***</span> 修饰符时，它表示该属性是一个引用到另一个视图层次结构中的数据的绑定；
   * 当被绑定的数据发生变化时，相关的视图会自动更新，并且对绑定属性的修改也会反映到原始数据上；
 
@@ -869,7 +1048,7 @@ print(result)
 
 ### <span style="color:red; font-weight:bold;">***`@Main`***</span>
 
-* 在Swift中，<span style="color:red; font-weight:bold;">***`@Main`***</span> 是一个属性，用于标识应用程序的入口点，指定应用程序的主入口（main entry point）；
+* 在Swift中，<span style="color:red; font-weight:bold;">***`@Main`***</span> 是一个属性，用于标识应用程序的入口点，指定应用程序的主入口（*main entry point*）；
 * 在Swift应用程序中，可以使用 <span style="color:red; font-weight:bold;">***`@Main`***</span> 属性来指定一个遵循 `App` 协议的类型，以表示应用程序的主要入口；
 
 ```swift
@@ -917,7 +1096,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 ```
 ### <span style="color:red; font-weight:bold;">***`@State`***</span>
 
-* 是 SwiftUI 中的一个[***属性包装器***（Property Wrapper）](# 属性包装器（Property Wrappers）)，用于声明和管理视图的状态；
+* 是 SwiftUI 中的一个[***属性包装器***（*Property Wrapper*）](# 属性包装器（Property Wrappers）)，用于声明和管理视图的状态；
 * <span style="color:red; font-weight:bold;">***`@State`***</span> 用于标识由视图持有和管理的可变状态，当状态发生改变时，视图会自动重新渲染以反映最新的状态；
 
 ```swift
@@ -1135,9 +1314,9 @@ struct MyView: View {
 
 ***Any***：
 
-- ***Any***可以表示任何类型，包括值类型（如结构体和枚举）和引用类型（如类）。
-- 使用***Any***可以存储任何类型的值，但在操作这些值时，你需要进行类型转换。
-- ***Any***是一个协议（protocol），所有类型都实现了 ***Any***。因此，可以使用***Any***来表示任何值，而不管是值类型还是引用类型。
+- ***Any***可以表示任何类型，包括值类型（如结构体和枚举）和引用类型（如类）；
+- 使用***Any***可以存储任何类型的值，但在操作这些值时，你需要进行类型转换；
+- ***Any***是一个协议（*protocol*），所有类型都实现了 ***Any***。因此，可以使用***Any***来表示任何值，而不管是值类型还是引用类型；
 ```swift
 var value: Any
 value = 42
@@ -1150,9 +1329,9 @@ if let intValue = value as? Int {
 ```
 ***AnyObject:***
 
-- ***Anyobject*** 是一个协议（protocol），用于表示类类型（class types）。
-- 只有类（class）可以遵循 ***Anyobject*** 协议，而值类型（value types）不能。
-- 对于使用 ***Anyobject*** 存储的值，你可以直接调用类的方法和属性，而无需进行类型转换。
+- ***Anyobject*** 是一个协议（*protocol*），用于表示类类型（*class types*）；
+- 只有类（*class*）可以遵循 ***Anyobject*** 协议，而值类型（*value types*）不能；
+- 对于使用 ***Anyobject*** 存储的值，你可以直接调用类的方法和属性，而无需进行类型转换；
 ```swift
 var object: AnyObject
 object = NSString(string: "Hello, AnyObject!")
@@ -1168,7 +1347,7 @@ let length = object.length
 ## *var body: some View*  这里面的`some`是什么意思？
 
 * 这是 Swift 5.1 引入的一项功能，用于简化泛型代码中的类型表达；
-* 在 SwiftUI 中，***some View*** 是一个不透明类型（opaque type）；
+* 在 SwiftUI 中，***some View*** 是一个不透明类型（*opaque type*）；
 * 在 SwiftUI 中，***some View***  的主要作用是表示返回的视图类型是不透明的，即编译器知道它是一种 View 类型，但不需要具体指定是哪一种 View；
 * **不透明类型的优势在于它允许隐藏具体的实现细节，这在复杂的视图层次结构中非常有用**；
 * 在编写 SwiftUI 代码时，通常不需要知道具体的视图类型，只需要知道它们是 View 协议的实现即可；
@@ -1271,7 +1450,7 @@ print(value.description)  // 输出 "Value: 3.14"
 
 ## <span style="color:red; font-weight:bold;">***在Swift中，有两种类型不允许定义存储属性***</span>：
 
-* **协议（Protocol）：** 协议本身不能包含存储属性。协议可以定义计算属性，以及方法、下标等，但它不支持直接定义存储属性。**和OC一致**
+* **协议（*Protocol*）：** 协议本身不能包含存储属性。协议可以定义计算属性，以及方法、下标等，但它不支持直接定义存储属性。**和OC一致**
 ```
 protocol MyProtocol {
     // 不允许在协议中定义存储属性
@@ -1281,7 +1460,7 @@ protocol MyProtocol {
     var myComputedProperty: Int { get }
 }
 ```
-* **扩展（Extension）中的存储属性：** 在使用扩展为现有类型添加新功能时，不允许添加存储属性。扩展只能添加计算属性，而不能添加存储属性。**和OC一致**
+* **扩展（*Extension*）中的存储属性：** 在使用扩展为现有类型添加新功能时，不允许添加存储属性。扩展只能添加计算属性，而不能添加存储属性。**和OC一致**
 
 ```
 extension String {
@@ -1784,7 +1963,7 @@ struct IntStack: Container {
 * 访问控制：<span style="color:red; font-weight:bold;">***open***</span> > <span style="color:red; font-weight:bold;">***public***</span> ><span style="color:red; font-weight:bold;">***internal***</span>（默认） > <span style="color:red; font-weight:bold;">***fileprivate***</span>（**在本文件内可见**） > <span style="color:red; font-weight:bold;">***private***</span>（**在最近的一个定义域区间内可见**）
   * <span style="color:red; font-weight:bold;">***open***</span>只针对模块化的文件（被打成二进制的`.a`、`.o`、`.framework`）。所以<span style="color:red; font-weight:bold;">***对于源代码：open === public***</span>；
   * <span style="color:red; font-weight:bold;">***open***</span> - <span style="color:red; font-weight:bold;">***public***</span> = 允许类及其成员在其他模块中被继承和被重写；
-* protocol：
-  * Swift中的protocol还可以对接口进行抽象；
-  * Swift中的protocol还可以实现面向协议；
-  * Swift中的protocol还可以用于值类型、结构体（Struct）、枚举（enum）；
+* *protocol*
+  * Swift中的*protocol*还可以对接口进行抽象；
+  * Swift中的*protocol*还可以实现面向协议；
+  * Swift中的*protocol*还可以用于值类型、结构体（*Struct*）、枚举（*enum*）；
