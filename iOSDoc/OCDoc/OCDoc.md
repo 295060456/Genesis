@@ -460,7 +460,8 @@ NSLog(@"Sum: %ld", (long)sum); // 输出: Sum: 30
 
 方法的重载（Overloading）是指在<span style="color:Blue; font-weight:bold;">***同一个类中***</span>定义<span style="color:Blue; font-weight:bold;">***多个同名但参数列表不同的方法***</span>
 方法重载的关键是***方法的参数列表必须不同***。参数列表包括参数的类型、数量和顺序。
-* Swift 支持方法的重载：***仅仅参数顺序不一致，Swift 不会将其视为方法重载***。因为 Swift 方法的标识符是由方法名和参数类型构成的，**参数顺序不会影响方法的标识符<span style="color:red; font-weight:bold;">（相对于Java语言，更加的严格）</span>
+
+* Swift 支持方法的重载：***仅仅参数顺序不一致，Swift 不会将其视为方法重载***。因为 Swift 方法的标识符是由方法名和参数类型构成的，**参数顺序不会影响方法的标识符**<span style="color:red; font-weight:bold;">（相对于Java语言，更加的严格）</span>
 ```swift
 class MathFunctions {
     // 方法重载：参数为两个整数

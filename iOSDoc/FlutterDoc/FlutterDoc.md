@@ -767,10 +767,10 @@ class _CounterWidgetState extends State<CounterWidget> {
     - 作用：通常用于执行一些清理操作，比如取消订阅、释放资源等。
 * [***InheritedWidget***](# Dart.Flutter.Widget.InheritedWidget)
 ## ***Dart.Flutter.`setState`***
-* 于 Flutter 的单向数据流模型。当调用一个 *Widget* 的 `setState` 方法时，Flutter 将会标记该 *Widget* 为***dirty***，表示该 *Widget* 及其子树需要被重新构建；
+* 是 Flutter 的单向数据流模型。当调用一个 *Widget* 的 `setState` 方法时，Flutter 将会标记该 *Widget* 为***dirty***，表示该 *Widget* 及其子树需要被重新构建；
 * 重新构建时，Flutter 会调用该 *Widget* 的 `build` 方法来生成新的 UI 树，从而实现 UI 的更新；
 * `setState` 方法只会重新构建其调用的 *Widget* 及其子树，并不会影响到其他部分的 UI；
-* 如果需要**更新全局状态**或者**在不同*Widget*之间共享状态**，可能需要使用一些状态管理工具。比如：[***Provider***](# Dart.Flutter.Provider)、[***GetX***]( # Dart.Flutter.GetX)、[***Bloc***](# BloC：<span style="color:red; font-weight:bold;">*B*</span>usiness <span style="color:red; font-weight:bold;">*Lo*</span>gic <span style="color:red; font-weight:bold;">*C*</span>omponent) 、Riverpod等；
+* 如果需要**更新全局状态**或者**在不同*Widget*之间共享状态**，可能需要使用一些状态管理工具。比如：[***Provider***](# Dart.Flutter.Provider)、[***GetX***]( # Dart.Flutter.GetX)、[***Bloc***](# BloC：<span style="color:red; font-weight:bold;">*B*</span>usiness <span style="color:red; font-weight:bold;">*Lo*</span>gic <span style="color:red; font-weight:bold;">*C*</span>omponent) 、***Riverpod***等；
 ## ***Dart.Flutter.状态管理***
 * 在所有 **响应式编程** 中，状态管理一直老生常谈的话题，而在 Flutter 中，目前主流的有[***scope_mode***](# scoped_model) 、[***BloC 设计模式***](# BloC：<span style="color:red; font-weight:bold;">*B*</span>usiness <span style="color:red; font-weight:bold;">*Lo*</span>gic <span style="color:red; font-weight:bold;">*C*</span>omponent) 、[***flutter_redux***](# flutter_redux) 、[***fish_redux***](# fish_redux) 等四种设计；
 * 它们的 *复杂度* 和 *上手难度* 是逐步递增的，但同时 **可拓展性** 、**解耦度** 和 **复用能力** 也逐步提升。
@@ -4336,7 +4336,7 @@ controller.stream.map((event) => event * 2).where((event) => event is int).disti
 * <span style="color:red; font-weight:bold;">优点：当没有对象进行监听***stream***的时候，数据是有所缓存的</span>（案例：5秒以后发起监听，之前点按的数据可以进行输出）
 * 默认情况下，一个数据流，只允许一个对象进行监听；
 * 如果需要多对象监听数据流，那么需要把***stream***变成广播***broadcast***；
-  * <span style="color:red; font-weight:bold;">缺点：当没有对象进行监**broadcast***的时候，数据是不会有所缓存的</span>案例：5秒以后发起监听，之前点按的数据不能进行输出）
+  * <span style="color:red; font-weight:bold;">缺点：当没有对象进行监听***broadcast***的时候，数据是不会有所缓存的</span>案例：5秒以后发起监听，之前点按的数据不能进行输出）
 ```dart
 final controller = StreamController.broadcast();
 ```
@@ -4435,8 +4435,8 @@ void main() {
 ## ***Dart.Flutter.路由***
 用于导航到不同的屏幕或页面。主要区别在于路由的创建方式和传递参数的方式。
 * 静态路由：
-  * 是指在应用程序启动时就确定好的路由映射关系，通常在应用程序的主要入口处（例如`MaterialApp`的`routes`属性）设置好路由表。
-  * 这种方式下，每个路由都有一个唯一的名称，当需要导航到某个路由时，只需提供该路由的名称即可。
+  * 是指在应用程序启动时就确定好的路由映射关系，通常在应用程序的主要入口处（例如`MaterialApp`的`routes`属性）设置好路由表；
+  * 这种方式下，每个路由都有一个唯一的名称，当需要导航到某个路由时，只需提供该路由的名称即可；
 ```dart
 import 'package:flutter/material.dart';
 
@@ -4566,8 +4566,7 @@ class MyApp extends StatelessWidget {
               return DetailsScreen(data: args['data']);
             },
           );
-        }
-        return null;
+        }return null;
       },
       home: HomeScreen(),
     );
