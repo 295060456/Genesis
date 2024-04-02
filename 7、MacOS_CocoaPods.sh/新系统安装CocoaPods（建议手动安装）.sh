@@ -174,7 +174,7 @@ which -a ruby
 echo "如果您使用的是Mac OS系统自带的Ruby环境，OS X将回应： /usr/bin/ruby  || 如果您使用的是Gem环境安装的Ruby环境，OS X将回应： /usr/local/opt/ruby/bin/ruby"
 which ruby
 # 某些时候因使用 brew 安装工具导致 ruby 环境错乱，执行 pod install 时报错提示找不到 gem 可执行文件的解决方案👇🏻
-echo "重新安装 Ruby 环境（默认安装最新版本）"
+echo "重新安装（升级） Ruby 环境（默认安装最新版本）"
 rvm reinstall ruby --disable-binary
 # Ruby环境变量设置
 echo 'export PATH="/usr/local/opt/ruby/bin:$PATH"' >> ~/.bash_profile
