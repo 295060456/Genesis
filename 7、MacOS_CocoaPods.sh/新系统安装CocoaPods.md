@@ -54,6 +54,31 @@ sudo spctl --master-disable
 
 ### ***Xcode Command Line Tools***
 
+*检查是否安装了 **xcode** 和 **Xcode Command Line Tools***
+
+```shell
+#!/bin/bash
+
+# 检查是否安装了完整版的 Xcode
+if ! command -v xcodebuild &> /dev/null; then
+    echo "Xcode 未安装，正在前往 App Store 下载并安装 Xcode，请按照提示进行安装。"
+    # 打开 App Store 下载页面
+    open -a "App Store" "macappstore://apps.apple.com/app/xcode/id497799835"
+    exit 1
+fi
+
+# 检查是否安装了 Xcode Command Line Tools
+if ! xcode-select -p &> /dev/null; then
+    echo "Xcode Command Line Tools 未安装，正在尝试安装..."
+    # 安装 Xcode Command Line Tools
+    xcode-select --install
+    echo "请按照提示进行安装，安装完成后再次运行此脚本。"
+    exit 1
+fi
+
+echo "Xcode 和 Xcode Command Line Tools 均已安装。"
+```
+
 *查看当前**Xcode Command Line Tools**的版本*
 
 ```shell
@@ -79,30 +104,43 @@ softwareupdate --install -a
 
 ### [***Homebrew***](# https://brew.sh/)
 
-<span style="color:red; font-weight:bold;">**Homebrew 不会自动移除旧版本的软件包**</span>
+<span style="color:red; font-weight:bold;">**[*Homebrew*](# https://brew.sh/)不会自动移除旧版本的软件包**</span>
 
 *检测是否已经安装了[**Homebrew**](# https://brew.sh/)*
 
 ```bash
+#!/bin/bash
+
 if ! command -v brew &> /dev/null
 then
     echo "brew 未安装，开始安装..."
     open https://brew.sh/
     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-    ## brew环境变量设置
-    # echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> /Users/$(whoami)/.zprofile
-    # open /Users/$(whoami)/.zprofile
-    # eval "$(/opt/homebrew/bin/brew shellenv)"
 else
-    echo "brew 已经安装，跳过安装步骤。"
-    ## brew 升级
+    echo "Homebrew 已经安装，跳过安装步骤。"
+    echo "检查更新 Homebrew..."
     brew update
+    echo "升级 Homebrew 和由 Homebrew 管理的程序包..."
+    brew upgrade
+    echo "正在执行 Homebrew 清理工作..."
+    brew cleanup
+    echo "完成更新和清理。"
     brew doctor
     brew -v
 fi
 ```
 
-*安装一些由brew管理的包*
+*[**Homebrew**](# https://brew.sh/)环境变量设置*
+
+```shell
+#!/bin/bash
+
+echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> /Users/$(whoami)/.zprofile
+open /Users/$(whoami)/.zprofile
+eval "$(/opt/homebrew/bin/brew shellenv)"
+```
+
+*安装一些由[**Homebrew**](# https://brew.sh/)管理的包*
 
 ```shell
 brew install llvm
@@ -117,7 +155,7 @@ brew install cake
 #brew install yarn
 ```
 
-*移除旧版本的软件包*
+*移除旧版本的[**Homebrew**](# https://brew.sh/)软件包*
 
 ```shell
 brew cleanup
@@ -150,7 +188,7 @@ brew cleanup
 brew install ruby
 ```
 
-* [***RVM***](# https://rvm.io/)官方的安装方式
+* [***RVM***](# https://rvm.io/)官方推荐的安装方式
 
 *此种安装方式，针对当前用户。只有安装了 RVM 的用户才能够使用*
 
@@ -178,6 +216,41 @@ brew install ruby
   source ~/.rvm/scripts/rvm
   open ~/.rvm/scripts/rvm
   ```
+
+### 检查当前系统Ruby环境的安装方式
+
+*检查当前Ruby环境是否是通过RVM官方推荐的方式（非[**Homebrew**](# Homebrew)方式）安装的*
+
+```shell
+#!/bin/bash
+
+if [[ -e "$HOME/.rvm/scripts/rvm" ]]; then
+    echo "当前Ruby环境是通过RVM官方推荐的方式安装的。"
+fi
+```
+
+*检查当前Ruby环境是否是通过[**Homebrew**](# Homebrew)安装的*
+
+```shell
+#!/bin/bash
+
+if brew list --formula | grep -q ruby; then
+    echo "当前Ruby环境是通过HomeBrew的方式安装的。"
+    brew upgrade ruby
+fi
+```
+
+*检查当前Ruby环境是否是MacOS自带的*
+
+```shell
+#!/bin/bash
+
+if [[ $(which ruby) == "/usr/bin/ruby" ]]; then
+    echo "MacOS自带的Ruby环境，请安装HomeBrew或使用其他方式安装Ruby。"
+    # 必须停下来，因为系统自带的Ruby环境是阉割版，无法往下进行
+    exit 0
+fi
+```
 
 #### 通过手动输入版本号来切换Ruby环境
 
@@ -455,6 +528,46 @@ pod repo update
 
 ```shell
 pod search Masonry
+```
+
+*卸载[**CocoaPods**](# https://cocoapods.org/)*
+
+* 如果出现root用户没有`/user/bin`权限,那是由于系统启用了SIP（**S**ystem **I**ntegerity **P**rotection）导致root用户也没有修改权限，所以我们需要屏蔽掉这个功能
+
+  * 重启电脑
+
+  * `command + R `进入recover模式
+
+  * 点击最上方菜单使用工具，选择终端，并运行命令👇🏻
+
+  * ```
+    csrutil disable
+    ```
+
+  * 重新启动电脑
+
+```shell
+echo "查看本地安装过的cocopods相关东西"
+gem list --local | grep cocoapods
+
+echo "确认删除CocoaPods？确认请回车" # 参数-n的作用是不换行，echo默认换行
+read sure                           # 把键盘输入放入变量sure
+
+if [[ $sure = "" ]];then
+echo "开始卸载CocoaPods"
+#sudo gem uninstall cocoapods
+
+for element in `gem list --local | grep cocoapods`
+    do
+        echo $"正在卸载CocoaPods子模块："$element$"......"
+        # 使用命令逐个删除
+        sudo gem uninstall $element
+    done
+else
+    echo "取消卸载CocoaPods"
+fi
+
+exit 0
 ```
 
 *手动安装*
