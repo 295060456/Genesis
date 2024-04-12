@@ -455,7 +455,7 @@ print(obj.x) // 输出: 10
 * *Widget* 树是一个**不可变的树结构**，其中每个节点都是一个 *Widget* 对象，它们描述了应用程序界面的**布局、外观和交互**；
 * *Widget* 树中的**每个节点都可以有一个或多个子节点**，这些子节点也是 *Widget* 对象；
 * Dart.Flutter 使用 *Widget* 树来构建应用程序的用户界面，并在需要时重新构建部分或全部界面；
-* 当 *Widget* 树中的任何一个节点发生变化时（比如属性变化、状态变化等），Dart.Flutter 会根据变化情况重新构建 *Widget* 树，并更新应用程序的用户界面。**重新构建不是在原有的基础上直接修改，而是重新创建整个 *Widget* 树**。这种重新构建的方式有以下几个特点：
+* 当 *Widget* 树中的任何一个节点发生变化时（比如属性变化、状态变化等），Dart.Flutter 会根据变化情况重新构建 *Widget* 树，并更新应用程序的用户界面。**重新构建不是在原有的基础上直接修改，而是重新创建整个（局部的） *Widget* 树**。这种重新构建的方式有以下几个特点：
   * **不可变性**：***Widget* 树中的节点是不可变的，一旦创建就不能被修改**。因此，当节点的属性变化时，Dart.Flutter 不会直接修改原有的节点，而是**创建一个新的节点来替换旧的节点**；
   * [***Diff 算法***](# Diff 算法)：Dart.Flutter 使用一种称为 `Diff` 算法的技术来**比较新旧 *Widget* 树的差异**，并仅在**必要时更新** UI。`Diff` 算法会逐级比较新旧 *Widget* 树的节点，找出需要更新的部分，并仅重新构建和更新这部分节点，而不是重新构建整个 *Widget* 树；
   * **重建顶级节点**：虽然 *Widget* 树中的大部分节点可能保持不变，但在某些情况下，比如状态变化或路由导航等，顶级节点可能会发生变化。在这种情况下，Dart.Flutter 会重新构建整个 *Widget* 树，从根节点开始，而不是从变化的节点开始；
@@ -526,7 +526,7 @@ print(obj.x) // 输出: 10
     ```
   * [***get_it***](https://github.com/fluttercommunity/get_it)：是其中一个流行的依赖注入库，它提供了一种简单的、易于使用的方式来管理依赖关系。虽然它不是官方的 Dart.Flutter 库，但由于其简洁和灵活的设计，以及在社区中的广泛应用；
     
-    *在 *pubspec.yaml* 文件中添加 `get_it` 依赖：*
+    *在 **pubspec.yaml**文件中添加 `get_it` 依赖：*
     
     ```yaml
     dependencies:
@@ -588,7 +588,7 @@ print(obj.x) // 输出: 10
 
 ## ***Dart***.<span style="color:red; font-weight:bold;">***Context***</span>（上下文）
 
-* 在计算机科学中，上下文（Context）是指一个***程序运行时的环境信息***，其中包括了程序执行所需的各种条件（背景信息）、状态和设置，帮助程序正确地执行任务或处理事件；上下文可以包括但不限于以下内容：
+* 在计算机科学中，上下文（*Context*）是指一个***程序运行时的环境信息***，其中包括了程序执行所需的各种条件（背景信息）、状态和设置，帮助程序正确地执行任务或处理事件；上下文可以包括但不限于以下内容：
 
   * **执行环境信息**：包括程序执行的硬件平台、操作系统、编程语言版本等；
   * **执行状态**：描述程序执行时的当前状态，例如变量的值、对象的状态等；
@@ -673,19 +673,19 @@ print(obj.x) // 输出: 10
 * 相关的*RenderObject*在一起组成了***Layer***，而由***Layer***构成的***Layer Tree***最后会被提交到 Flutter Engine 绘制出画面；
 * 用于管理*Widget*状态的类（实例对象）；
 * 每个*Widget*状态都代表了一帧。在每次*Widget*重绘的时候，通过*State*重新赋予*Widget*需要的绘制信息；
-* [**BuildContext**](# Dart.Context（上下文）)：有关当前*Widget*及其祖先*Widget*的一些元数据（比如位置信息）；
-  * **Element**：是构建*Widget*树的基本单位（具体部件实例）。它负责管理该部件及其子部件的生命周期、布局、绘制等操作；
+* [***BuildContext***](# Dart.Context（上下文）)：有关当前*Widget（*及其祖先*Widget*）的一些元数据（比如位置信息）；
+  * ***Element***：是构建*Widget*树的基本单位（具体部件实例）。它负责管理该部件及其子部件的生命周期、布局、绘制等操作；
     * *RenderObject*：通过*Element*转化为*RenderObject*去实现*Widget*绘制；
     * *Widget*：每个*Widget*对应一个*Element*；
     * *Element*是不可变的。当*Widget*需要更新时，Dart.Flutter 会销毁旧的*Element*，并创建一个新的*Element*来代表更新后的部件；
     * *Element* 是**BuildContext**的实现类，同时*Element*持有*RenderObject*和*Widget*；
     * `Widget build(BuildContext context) {}` ，就是被 `Element` 调用的；
-  * **RenderObjectElement**：管理渲染对象的*Element*类型；
+  * ***RenderObjectElement***：管理渲染对象的*Element*类型；
 * 事实上*State*实现跨帧共享，就是将*State*保存在*Element*中；
   * 这样*Element*每次调用 `Widget build()` 时，是通过 `state.build(this)`； 
   * 得到的新*Widget* ，所以写在*State*的数据就得以复用了；
 * ***StatefulWidget* 的 `createState` 是在*StatefulElement*的构建方法里创建的**。这就保证了只要*Element*不被重新创建，*State*就一直被复用；
-* [***`setState`***](# Dart.Flutter.`setState`) ，其实是调用了 `markNeedsBuild` ，**`markNeedsBuild` 内部会标记 `element` 为 `diry`，然后在下一帧 `WidgetsBinding.drawFrame` 才会被绘制，这可以也看出**<span style="color:red; font-weight:bold;">**`setState` 并不是立即生效的**</span>；
+* [***`setState`***](# Dart.Flutter.`setState`) ，其实是调用了 `markNeedsBuild` 。**`markNeedsBuild` 内部会标记 `element` 为 `diry`，然后在下一帧 `WidgetsBinding.drawFrame` 才会被绘制，这可以也看出**<span style="color:red; font-weight:bold;">**`setState` 并不是立即生效的**</span>；
 * 要避免每次进入数据时都刷新`build`，可以使用`StatefulWidget`来保存状态，并在需要更新时手动调用[***`setState`***](# Dart.Flutter.`setState`) 方法来触发更新。另外，还可以使用一些状态管理库（如[***Provider***](# Dart.Flutter.Provider)、[***GetX***]( # Dart.Flutter.GetX)、[***Bloc***](# BloC：<span style="color:red; font-weight:bold;">*B*</span>usiness <span style="color:red; font-weight:bold;">*Lo*</span>gic <span style="color:red; font-weight:bold;">*C*</span>omponent)等）来帮助管理状态，以便在需要时更新UI而不必刷新整个`build`。❤️
 ```dart
 import 'package:flutter/material.dart';
@@ -777,7 +777,7 @@ class _CounterWidgetState extends State<CounterWidget> {
 
 ### scoped_model
 
-* 是 Dart.Flutter 最为简单的状态管理框架，它充分利用了 Dart.Flutter 中的一些特性，只有一个 `.dart` 文件的它，极简的实现了一般场景下的状态管理；
+* 是 Dart.Flutter 最为简单的状态管理框架，它充分利用了 Dart.Flutter 中的一些特性，只有一个 `.dart` 文件的它，极简的实现了一般场景下的状态管理；<span style="color:red; font-weight:bold;">***（观察模型，发送/接受通知）***</span>
 * 内部实现借助***AnimatedBuildler***利用了[***InheritedWidget***](# Dart.Flutter.InheritedWidget)：
   * 在 `scoped_model` 中，可以通过 `ScopedModel.of<CountModel>(context)` 获取我们的 Model 。其中最主要是因为其内部的 `build` 的时候，包裹了一个 `_InheritedModel` 控件，而它继承了 `InheritedWidget` 
   * 业务处理流程总结：
@@ -911,45 +911,7 @@ class PageBloc {
 ### flutter_redux
 *redux：【adj.】被带回的；复活的*
 *reducer：【n.】[助剂] 还原剂；减径管*
-*  可以看做是利用了 ***Stream*** 特性的 ***scope_model*** 升级版，通过 ***redux*** 设计模式来完成解耦和拓展；
-* 在 *Redux* 架构中，***Store***、***Action*** 、***Reducer***以及 ***Middleware***。它们分别承担着不同的角色，协同工作**以实现状态管理和数据流控制**；
-  * ***Store***
-    - ***Store***是整个 **Redux 应用程序的核心**。<span style="color:red; font-weight:bold;">*它负责存储应用程序的状态，并提供了一种方式来访问和更新这个状态*</span>；
-    - ***Store*** 保存了应用程序的状态树，并通过 `getState()` 方法提供对当前状态的访问。它还提供了 `dispatch(action)` 方法来分发（*dispatch*）操作（*Action*）到 ***Reducer*** 中进行处理，并更新状态；
-    - 在 *Redux* 中，只能有一个全局的 ***Store*** 存在，这使得整个应用程序的状态变得易于管理和追踪；
-  * ***Action***
-    - 一个**普通的 JavaScript 对象，描述了发生了什么事情**。<span style="color:red; font-weight:bold;">*它是改变应用程序状态的唯一途径*</span>；
-    - ***Action*** 对象必须包含一个 `type` 属性，用来表示操作类型，通常以***字符串***的形式表示。除了 `type` 属性外，***Action*** 对象还可以携带一些附加数据，这些数据会传递给 ***`Reducer`*** 来更新状态。
-  * ***`Reducer`*** 
-    - ***`Reducer`***  是一个**纯函数**，负责处理来自 ***Action*** 的操作，<span style="color:red; font-weight:bold;">*更新应用程序的状态，并返回一个新的状态*</span>；
-    - ***`Reducer`***  接收当前的状态和一个操作（***Action***）作为参数，并根据操作的类型来决定如何更新状态。它应该返回一个全新的状态对象，而不是修改原始的状态对象；
-    - 在 *Redux* 中，可能有多个***`Reducer`*** ，但每个 ***`Reducer`***  只负责管理状态树的一部分，它们一起构成了应用程序的整体状态管理；
-  * ***Middleware***
-    * 中间件（ 是一个函数链），允许你在发送一个 `action` 到 ***`Reducer`*** 之前，对 ***Action*** 进行一些处理。***Middleware*** 提供了一个扩展 *Redux* 功能的机制，例如日志记录、异步操作、路由导航等；
-    * 它接收 *Redux* ***Store*** 的 `dispatch` 和 `getState` 函数作为参数，并返回一个函数，这个函数接收 `next`（下一个 ***Middleware*** 的 `dispatch` 方法）和 ***action*** 作为参数，并返回一个函数，这个函数接收 ***action*** 作为参数；
-    * 通过使用 ***Middleware***，可以轻松地添加各种功能到 *Redux* 应用程序中，而不需要修改 ***`Reducer`***  或者组件代码，
-    *用于在每次分派（dispatch）action 时打印日志👇🏻*
-  ```dart
-  void loggingMiddleware(Store<AppState> store, action, NextDispatcher next) {
-    print('Action: $action');
-    print('Current State: ${store.state}');
-  
-    // 调用下一个 Middleware 或者 reducer
-    next(action);
-  
-    print('Next State: ${store.state}');
-  }
-  ```
 
-  *在创建 Redux store 时，可以将 Middleware 添加到 Middleware 链中👇🏻*
-
-  ```dart
-  final store = Store<AppState>(
-    reducer,
-    initialState: AppState.initial(),
-    middleware: [loggingMiddleware],
-  );
-  ```
 ```yaml
 dependencies:
   flutter:
@@ -957,6 +919,68 @@ dependencies:
   redux: ^5.0.0
   flutter_redux: ^0.8.2
 ```
+
+*  可以看做是利用了 ***Stream*** 特性的 ***scope_model*** 升级版，通过 ***redux*** 设计模式来完成解耦和拓展；
+* 在 *Redux* 架构中，***Store***、***Action*** 、***Reducer***以及 ***Middleware***。它们分别承担着不同的角色，协同工作**以实现状态管理和数据流控制**；
+  * ***Store***
+    - ***Store***是整个 **Redux 应用程序的核心**。<span style="color:red; font-weight:bold;">*它负责存储应用程序的状态，并提供了一种方式来访问和更新这个状态*</span>；
+    - ***Store*** 保存了应用程序的状态树，并通过 `getState()` 方法提供对当前状态的访问。它还提供了 `dispatch(action)` 方法来分发（*dispatch*）操作（*Action*）到 ***Reducer*** 中进行处理，并更新状态；
+    - 在 *Redux* 中，只能有一个全局的 ***Store*** 存在，这使得整个应用程序的状态变得易于管理和追踪；
+  
+  *在创建 Redux store 时，可以将 Middleware 添加到 Middleware 链中👇🏻*
+  
+  ```dart
+  final store = Store<AppState>(
+    reducer,
+    initialState: AppState.initial(),
+    middleware: [loggingMiddleware],
+  );
+  ```
+  
+  * ***Action***
+    - 一个**普通的 JavaScript 对象，描述了发生了什么事情**。<span style="color:red; font-weight:bold;">*它是改变应用程序状态的唯一途径*</span>；
+    - ***Action*** 对象必须包含一个 `type` 属性，用来表示操作类型，通常以***字符串***的形式表示。除了 `type` 属性外，***Action*** 对象还可以携带一些附加数据，这些数据会传递给 ***`Reducer`*** 来更新状态。
+  
+  ```dart
+  // Action:表示操作类型
+  enum ActionType { increment, decrement }
+  ```
+  
+  * ***Action***.***`Reducer`*** 
+    - ***`Reducer`***  是一个**纯函数**， <span style="color:blue; font-weight:bold;">负责处理来自 ***Action*** 的操作</span>，<span style="color:red; font-weight:bold;">*更新应用程序的状态，并返回一个新的状态*</span>；
+    - ***`Reducer`***  接收当前的状态和一个操作（***Action***）作为参数，并根据操作的类型来决定如何更新状态。它应该返回一个全新的状态对象，而不是修改原始的状态对象；
+    - 在 *Redux* 中，可能有多个***`Reducer`*** ，但每个 ***`Reducer`***  只负责管理状态树的一部分，它们一起构成了应用程序的整体状态管理；
+  
+  ```dart
+  // Reducer:处理不同的操作类型，并更新状态。
+  AppState reducer(AppState state, dynamic action) {
+    if (action == ActionType.increment) {
+      return AppState(counter: state.counter + 1);
+    } else if (action == ActionType.decrement) {
+      return AppState(counter: state.counter - 1);
+    }return state;
+  }
+  ```
+  
+  * ***Middleware***
+    * 中间件（ 是一个函数链），允许你在发送一个 ***Action*** 到 ***`Reducer`*** 之前，对 ***Action*** 进行一些处理。***Middleware*** 提供了一个扩展 *Redux* 功能的机制，例如日志记录、异步操作、路由导航等；
+    * 它接收 *Redux* ***Store*** 的 `dispatch` 和 `getState` 函数作为参数，并返回一个函数，这个函数接收 `next`（下一个 ***Middleware*** 的 `dispatch` 方法）和 ***Action*** 作为参数，并返回一个函数，这个函数接收 ***Action*** 作为参数；
+    * 通过使用 ***Middleware***，可以轻松地添加各种功能到 *Redux* 应用程序中，而不需要修改 ***`Reducer`***  或者组件代码，
+    *用于在每次分派（dispatch）action 时打印日志👇🏻*
+  
+  ```dart
+  void loggingMiddleware(Store<AppState> store, action, NextDispatcher next) {
+    print('Action: $action');
+    print('Current State: ${store.state}');
+    // 调用下一个 Middleware 或者 reducer
+    next(action);
+    print('Next State: ${store.state}');
+  }
+  ```
+  
+
+*完整调用*
+
 ```dart
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
@@ -1157,12 +1181,14 @@ Widget buildView(CounterState state, Dispatch dispatch, ViewService viewService)
       crossAxisAlignment: CrossAxisAlignment.end,
       children: <Widget>[
         FloatingActionButton(
+          // 关键代码
           onPressed: () => dispatch(CounterActionCreator.increment()),
           tooltip: 'Increment',
           child: Icon(Icons.add),
         ),
         SizedBox(height: 10),
         FloatingActionButton(
+          // 关键代码
           onPressed: () => dispatch(CounterActionCreator.decrement()),
           tooltip: 'Decrement',
           child: Icon(Icons.remove),
@@ -1337,6 +1363,9 @@ class ChildWidget extends StatelessWidget {
     * 与 `LocalKey` 不同，`GlobalKey` 不仅能够**在同一父级下修改控件顺序或数量**，还可以在**整个应用程序中引用一个** *Widget* **的状态**；
     * 允许 *Widget* 在应用中的**任何位置更改父级而不会丢失 ** *State*；
     *演示了如何使用 `GlobalKey` 来引用 `TextField` 控件的状态，并在按下按钮时清除文本框中的文本*
+    
+    *核心思想：将数据进行📌标记，而非对控件进行📌标记*
+    
     ```dart
     import 'package:flutter/material.dart';
     
@@ -2723,12 +2752,6 @@ class MyHomePage extends StatelessWidget {
   * **避免重建**：在接收到通知时只会重新构建其子部件，而不会重新构建整个部件树，提高了性能；
   * **局部刷新**：由于*Consumer*只重新构建其子部件，因此可以将其放置在需要局部刷新的部件上，以实现局部刷新的效果。这对于性能敏感的应用程序尤其有用；
   * **灵活性**：可以根据需要在任何位置使用，它可以包裹在任何*Widget*树的任何位置；
-```yaml
-dependencies:
-  flutter:
-    sdk: flutter
-  provider: ^5.0.0
-```
 ```dart
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -3198,7 +3221,7 @@ Listener(
   child: // Your child widget here
 )
 ```
-* `AbsorbPointer`：可以完全吸收（拦截）所有指针事件，防止它们传递到其子树；
+* `AbsorbPointer`：可以完全**吸收**（拦截）所有指针事件，防止它们传递到其子树；
 
 ```dart
 AbsorbPointer(
@@ -3206,7 +3229,7 @@ AbsorbPointer(
   child: // Your child widget here
 )
 ```
-* `IgnorePointer`：也可以用于阻止其子树接收指针事件，但与`AbsorbPointer`不同，它不会影响手势识别；
+* `IgnorePointer`：也可以用于**阻止**其子树接收指针事件，但与`AbsorbPointer`不同，它不会影响手势识别；
 
 ```dart
 IgnorePointer(
