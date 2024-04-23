@@ -976,6 +976,10 @@ int main(int argc, const char * argv[]) {
   这样，您就成功配置了GitHub的SSH，可以通过SSH安全地与GitHub仓库通信，**而无需每次都输入用户名和密码**；
   请记住，安全性是关键，因此请**妥善保存私钥**，并避免在不受信任的地方使用私钥。
   
+  * 其他问题支援
+  
+    [***Using SSH over the HTTPS port***](# https://docs.github.com/en/authentication/troubleshooting-ssh/using-ssh-over-the-https-port)
+  
 * <span style="color:purple; font-weight:bold;">**文件数据则可以通过 `multipart/form-data` 格式进行编码，并作为消息体的一部分发送到服务器（用POST）**</span>
 
 * <span style="color:purple; font-weight:bold;">***iOS*推送通知：**</span>**向用户设备发送消息的机制，允许开发者在用户设备上显示提醒、声音和标志等通知**
