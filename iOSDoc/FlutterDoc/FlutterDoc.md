@@ -98,6 +98,7 @@
   *  <span style="color:red; font-weight:bold;">***`final`***</span>、<span style="color:red; font-weight:bold;">***`const`***</span>只能赋值一次；
   * 均表示不可被修改  
 *  ***不同点***
+  
   * <span style="color:red; font-weight:bold;">***`final`***</span>可修饰实例变量、<span style="color:red; font-weight:bold;">***`const`***</span>不可以修饰实例变量；
   * 访问类中<span style="color:red; font-weight:bold;">***`const`***</span>修饰的变量需要<span style="color:red; font-weight:bold;">***`static`***</span>修饰；
   ```dart
@@ -335,7 +336,8 @@ int main() {
 */
 ```
 * ### <span style="color:red; font-weight:bold;">***菱形继承问题（Diamond Inheritance Problem）***</span>
-在多继承中，如果一个类同时继承了两个类，而这两个类又分别继承自同一个基类，那么派生类将会拥有两份来自共同基类的成员变量和函数，这***可能导致二义性和不确定性***；
+
+  在多继承中，如果一个类同时继承了两个类，而这两个类又分别继承自同一个基类，那么派生类将会拥有两份来自共同基类的成员变量和函数，这***可能导致二义性和不确定性***；
 ```c++
 #include <iostream>
 
@@ -2845,6 +2847,7 @@ void main() {
         title: Text('点击手势示例'),
       ),
       body: Center(
+        /// ❤️关键代码❤️
         child: GestureDetector(
           onTap: () {
             print('点击了按钮');
@@ -2882,6 +2885,7 @@ void main() {
         title: Text('InkWell示例'),
       ),
       body: Center(
+        /// ❤️关键代码❤️
         child: InkWell(
           onTap: () {
             print('点击了InkWell');
@@ -2921,6 +2925,7 @@ void main() {
         title: Text('InkResponse示例'),
       ),
       body: Center(
+        /// ❤️关键代码❤️
         child: InkResponse(
           onTap: () {
             print('点击了InkResponse');
@@ -2958,6 +2963,7 @@ void main() {
         title: Text('长按手势示例'),
       ),
       body: Center(
+        /// ❤️关键代码❤️
         child: GestureDetector(
           onLongPress: () {
             print('长按了按钮');
@@ -3001,6 +3007,7 @@ class DraggableDemo extends StatelessWidget {
         title: Text('拖动手势示例'),
       ),
       body: Center(
+        /// ❤️关键代码❤️
         child: Draggable(
           child: Container(
             width: 100.0,
@@ -3069,6 +3076,7 @@ class _ScaleGestureDemoState extends State<ScaleGestureDemo> {
   double _scale = 1.0;
   @override
   Widget build(BuildContext context) {
+    /// ❤️关键代码❤️
     return GestureDetector(
       onScaleUpdate: (ScaleUpdateDetails details) {
         setState(() {
@@ -3109,6 +3117,7 @@ void main() {
         title: Text('滑动手势示例'),
       ),
       body: Center(
+        /// ❤️关键代码❤️
         child: GestureDetector(
           // onHorizontalDragUpdate 检测水平方向的滑动手势
           // details.delta.dx 的正负值来确定滑动的方向。
@@ -3198,7 +3207,7 @@ void main() {
 }
 ```
 ### ***解决手势冲突（控制手势的响应范围以及触发条件）***
-* ***GestureDetector***
+* ***GestureDetector*** **的各种回调函数** 比如：`onTap`、`onDoubleTap`、`onLongPress`等
 ```dart
 GestureDetector(
   behavior: HitTestBehavior.deferToChild,
@@ -3208,18 +3217,94 @@ GestureDetector(
   },
 )
 ```
-* `GestureDetector.behavior`
-* `Listener`：可以监听所有指针事件，可以根据需要处理不同的事件；
+* `GestureDetector.behavior` 可以控制子组件如何响应手势事件，可以设置为`HitTestBehavior.translucent`或`HitTestBehavior.opaque`来调整子组件的触摸区域
 ```dart
-Listener(
-  onPointerDown: (PointerDownEvent event) {
-    // Handle pointer down event
-  },
-  onPointerMove: (PointerMoveEvent event) {
-    // Handle pointer move event
-  },
-  child: // Your child widget here
-)
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: Scaffold(
+        appBar: AppBar(
+          title: Text('GestureDetector Behavior Example'),
+        ),
+        body: Center(
+          child: Container(
+            width: 200,
+            height: 200,
+            color: Colors.blue,
+            /// ❤️关键代码❤️
+            child: GestureDetector(
+              behavior: HitTestBehavior.opaque,
+              onTap: () {
+                print('Container tapped');
+              },
+              child: Center(
+                child: Text(
+                  'Tap me!',
+                  style: TextStyle(color: Colors.white, fontSize: 20),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+```
+
+* `Listener`：可以监听所有指针事件，可以根据需要处理不同的事件；
+
+```dart
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: Scaffold(
+        appBar: AppBar(
+          title: Text('Listener Example'),
+        ),
+        body: Center(
+          /// ❤️关键代码❤️
+          child: Listener(
+            onPointerDown: (PointerDownEvent event) {
+              print('Pointer down');
+            },
+            onPointerMove: (PointerMoveEvent event) {
+              print('Pointer move');
+            },
+            onPointerUp: (PointerUpEvent event) {
+              print('Pointer up');
+            },
+            child: Container(
+              width: 200,
+              height: 200,
+              color: Colors.blue,
+              child: Center(
+                child: Text(
+                  'Touch me!',
+                  style: TextStyle(color: Colors.white, fontSize: 20),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
 ```
 * `AbsorbPointer`：可以完全**吸收**（拦截）所有指针事件，防止它们传递到其子树；
 
@@ -4190,6 +4275,7 @@ flutter: complete
 [***Flutter 教程 Async***](https://www.youtube.com/watch?v=qBksSix4qj0&list=PLDD3xNHFJjoob3GCF1JqaDxwrOTmpGGbe&index=1)
 
 #### 相关细节
+
 * 在使用[***GetX***](# Dart.Flutter.GetX)框架时，通常可以避免使用显式的***Stream***；
 * 在 Dart.Flutter 中有两种处理异步操作的方式 ***Future*** 和 ***Stream***； 
   * ***Future*** 用于处理单个异步操作（***以后给我们一个值***）， ***Stream***用来处理连续的异步操作（***给我们一连串的值***）。
