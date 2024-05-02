@@ -87,6 +87,7 @@
 ## 相关资料
 [***Flutter 面试知识点集锦· GitBook***](https://guoshuyu.cn/home/wx/Flutter-msjj.html)
 [***Dart/Flutter社区生态：Pub.dev***](https://pub.dev/)
+
 ## <span style="color:red; font-weight:bold;">***`var`***</span>、<span style="color:red; font-weight:bold;">***`dynamic`***</span>、<span style="color:red; font-weight:bold;">***`object`***</span>
 * <span style="color:red; font-weight:bold;">***`var`***</span>定义的类型是不可变的；
 * <span style="color:red; font-weight:bold;">***`dynamic`***</span>和<span style="color:red; font-weight:bold;">***`object`***</span>类型是可以变的，而<span style="color:red; font-weight:bold;">***`dynamic`***</span>与<span style="color:red; font-weight:bold;">***`object`***</span>的区别是在静态类型检查上；
@@ -670,7 +671,7 @@ print(obj.x) // 输出: 10
 ## <span style="color:red; font-weight:bold;">***Dart.Flutter.State***</span>
 
 * 状态（<span style="color:red; font-weight:bold;">***State***</span>）是指在应用程序生命周期内<span style="color:red; font-weight:bold;">***可能发生变化的数据***</span>（**可以是任意数据类型**，包括布尔值、整数、字符串、列表、对象等等）；
-* ***Widget***=> ***Element***（[***BuildContext***](# Dart.Context（上下文）)）=>***RenderObject*** =>***Layer***=>***Layer Tree***
+* ***Widget***=> ***Element***（[***BuildContext***](# Dart.Context（上下文）)）=>***RenderObject*** =>***Layer***=>***Layer Tree***（Werl）
 * ***Layer***的组成由*RenderObject*中的 `isRepaintBoundary` 标志位决定；
 * 相关的*RenderObject*在一起组成了***Layer***，而由***Layer***构成的***Layer Tree***最后会被提交到 Flutter Engine 绘制出画面；
 * 用于管理*Widget*状态的类（实例对象）；
@@ -745,7 +746,7 @@ class _CounterWidgetState extends State<CounterWidget> {
   因为状态被保存在 StatefulWidget 中，而不是每次重新创建
 */
 ```
-* ***Dart.Flutter.State***的生命周期：<span style="color:red; font-weight:bold;">**是指 *StatefulWidget* 对象的状态变化和生命周期方法调用的过程**</span>；
+* ***Dart.Flutter.State***的生命周期（7个）：<span style="color:red; font-weight:bold;">**是指 *StatefulWidget* 对象的状态变化和生命周期方法调用的过程**</span>；
   * `createState()`
     - 调用时机：在 *StatefulWidget* 首次被创建时调用。
     - 作用：用于创建 *StatefulWidget* 的关联 *State* 对象。
@@ -773,14 +774,15 @@ class _CounterWidgetState extends State<CounterWidget> {
 * 重新构建时，Flutter 会调用该 *Widget* 的 `build` 方法来生成新的 UI 树，从而实现 UI 的更新；
 * `setState` 方法只会重新构建其调用的 *Widget* 及其子树，并不会影响到其他部分的 UI；
 * 如果需要**更新全局状态**或者**在不同*Widget*之间共享状态**，可能需要使用一些状态管理工具。比如：[***Provider***](# Dart.Flutter.Provider)、[***GetX***]( # Dart.Flutter.GetX)、[***Bloc***](# BloC：<span style="color:red; font-weight:bold;">*B*</span>usiness <span style="color:red; font-weight:bold;">*Lo*</span>gic <span style="color:red; font-weight:bold;">*C*</span>omponent) 、***Riverpod***等；
-## ***Dart.Flutter.状态管理***
+##  <span style="color:red; font-weight:bold;">***Dart.Flutter.状态管理*** </span>
+
 * 在所有 **响应式编程** 中，状态管理一直老生常谈的话题，而在 Flutter 中，目前主流的有[***scope_mode***](# scoped_model) 、[***BloC 设计模式***](# BloC：<span style="color:red; font-weight:bold;">*B*</span>usiness <span style="color:red; font-weight:bold;">*Lo*</span>gic <span style="color:red; font-weight:bold;">*C*</span>omponent) 、[***flutter_redux***](# flutter_redux) 、[***fish_redux***](# fish_redux) 等四种设计；
 * 它们的 *复杂度* 和 *上手难度* 是逐步递增的，但同时 **可拓展性** 、**解耦度** 和 **复用能力** 也逐步提升。
 
 ### scoped_model
 
 * 是 Dart.Flutter 最为简单的状态管理框架，它充分利用了 Dart.Flutter 中的一些特性，只有一个 `.dart` 文件的它，极简的实现了一般场景下的状态管理；<span style="color:red; font-weight:bold;">***（观察模型，发送/接受通知）***</span>
-* 内部实现借助***AnimatedBuildler***利用了[***InheritedWidget***](# Dart.Flutter.InheritedWidget)：
+* 内部实现借助***AnimatedBuildler***利用了[***InheritedWidget***](# Dart.Flutter.Widget.InheritedWidget)：
   * 在 `scoped_model` 中，可以通过 `ScopedModel.of<CountModel>(context)` 获取我们的 Model 。其中最主要是因为其内部的 `build` 的时候，包裹了一个 `_InheritedModel` 控件，而它继承了 `InheritedWidget` 
   * 业务处理流程总结：
     * `AnimatedBuildler` 继承了 `AnimatedWidget` ，在 `AnimatedWidget` 的生命周期中会对 `Listenable` 接口添加监听，而 `Model` 恰好就实现了 `Listenable` 接口；
@@ -836,19 +838,21 @@ class CountWidget extends StatelessWidget {
 }
 
 class CountModel extends Model {
+  /// ❤️关键代码❤️
   static CountModel of(BuildContext context) =>
       ScopedModel.of<CountModel>(context);
   int _count = 0;
   int get count => _count;
   void add() {
     _count++;
+    /// ❤️关键代码❤️
     notifyListeners();
   }
 }
 ```
 ### BloC：<span style="color:red; font-weight:bold;">*B*</span>usiness <span style="color:red; font-weight:bold;">*Lo*</span>gic <span style="color:red; font-weight:bold;">*C*</span>omponent
 * 它属于一种设计模式，在 Dart.Flutter 中它主要是通过 [***Stream***](# Dart.Stream) 与 [***SteamBuilder***](# Dart.Flutter.SteamBuilder) 来实现设计的，所以 ***BloC*** 实现起来也相对简单；
-* 当然，如果和 `rxdart` 结合可以简化 [***StreamController***](# Dart.Flutter.StreamController)  的一些操作，同时如果你需要利用 `BloC` 模式实现状态共享，那么自己也可以封装多一层 [***InheritedWidgets***](# Dart.Flutter.InheritedWidget) 的嵌套；
+* 当然，如果和 `rxdart` 结合可以简化 [***StreamController***](# Dart.Flutter.StreamController)  的一些操作，同时如果你需要利用 `BloC` 模式实现状态共享，那么自己也可以封装多一层 [***InheritedWidgets***](# Dart.Flutter.Widget.InheritedWidget) 的嵌套；
 * **BloC**没实现路由管理；
 * 业务处理流程总结：
   * 定义一个 ***PageBloc*** 对象，利用 [***StreamController***](# Dart.Flutter.StreamController) 创建 ***Sink*** 与 [***Stream***](# Dart.Stream)；
@@ -1366,7 +1370,7 @@ class ChildWidget extends StatelessWidget {
     * 允许 *Widget* 在应用中的**任何位置更改父级而不会丢失 ** *State*；
     *演示了如何使用 `GlobalKey` 来引用 `TextField` 控件的状态，并在按下按钮时清除文本框中的文本*
     
-    *核心思想：将数据进行📌标记，而非对控件进行📌标记*
+    <span style="color:red; font-weight:bold;">*核心思想：将数据进行📌标记，而非对控件进行📌标记*</span>
     
     ```dart
     import 'package:flutter/material.dart';
@@ -1419,7 +1423,8 @@ class ChildWidget extends StatelessWidget {
       * **重建 Widget**：使用 `GlobalKey` 可以在需要时重新构建整个 *Widget*，而不必手动保存和重新创建 *Widget* 的状态。这在一些场景下可能会更加方便；
 ## ***Dart.Flutter.UI***
 ### ***Dart.Flutter.MaterialApp*** 和 ***Dart.Flutter.CupertinoApp*** 的生命周期方法
-***MaterialApp*** 和 ***CupertinoApp*** 都有各自的生命周期方法，它们继承自 ***WidgetsApp***，因此具有相似的生命周期
+***MaterialApp*** 和 ***CupertinoApp*** 都有各自的生命周期方法，它们继承自 ***WidgetsApp***，因此具有相似的生命周期（7个）
+
 * `createState()`：用于创建小部件的状态对象。这个方法在小部件第一次被创建时调用，通常用于初始化状态；
 * `initState()`：在小部件被插入到小部件树中时调用。通常在这个方法中执行一些初始化操作，比如订阅流、初始化控制器等；
 * `didChangeDependencies()`：当小部件依赖的对象发生变化时调用。***通常用于处理依赖关系发生变化时的逻辑***；
@@ -3007,7 +3012,7 @@ class DraggableDemo extends StatelessWidget {
         title: Text('拖动手势示例'),
       ),
       body: Center(
-        /// ❤️关键代码❤️
+        /// ❤️关键代码❤️ 和其他手势不一样
         child: Draggable(
           child: Container(
             width: 100.0,
@@ -3852,10 +3857,13 @@ void main() {
 <span style="color:red; font-weight:bold;">***值得注意的是：在Dart中，异步操作不是多线程（有别于Java）***</span>
 ### ***Dart.Isolate***
 * 在Dart 2.6 版本中引入。Isolate 是 Dart 中的<u>并发执行单元</u>，<span style="color:red; font-weight:bold;">***类似于线程***</span>（即，***Dart的线程是被封装在Isolate里面的***）。但具有独立的内存堆；
-* Isolate 之间通过消息传递进行通信，这种模型<u>有助于避免共享内存的并发问题</u>。( JS里面也是模拟多线程，因为总共才一个线程)
+* Isolate 之间通过消息传递进行通信，这种模型<u>有助于避免共享内存的并发问题</u>。( JS里面也是模拟多线程，<span style="color:red; font-weight:bold;">**因为总共才一个线程**</span>)
 ### ***Dart.Future***
+
 ***Future*** 是一个***用于表示异步操作结果的对象***。*通常用于处理需要等待一段时间才能完成的操作。它表示一个在某个未来时刻会产生值或错误的计算过程*；
+
 #### 快速入手：
+
 * 示例一：以下这三种方式等价
 ```dart
 /// 用async和await
@@ -3895,7 +3903,8 @@ void _incrementCounter() {
 #### 异步操作的结果：
 
 * ***Future*** 代表一个异步操作的结果。当异步操作完成时，***Future*** 将会返回一个值（data）或一个错误（error）。*错误和值不可能同时出现*；
-* 所以，***Future*** 总共有3种形态：刚进来没有完成的状态、正常完成以后得状态、异常完成以后得到的错误信息；
+* 所以，***Future*** 总共有3种形态：**刚进来没有完成的状态**、**正常完成以后得状态**、**异常完成以后得到的错误信息**；
+
 #### 代码执行优先级：
 
   * Dart代码直接Debug模式运行***立即执行的***
@@ -4029,7 +4038,7 @@ flutter: then
 flutter: then 2
 flutter: micro 
 ```
-* 在已经完成的*Future*上使用`then()`，是会被添加到Microtask；
+* <span style="color:red; font-weight:bold;">在已经完成的*Future*上使用`then()`，是会被添加到Microtask</span>；
 * `then()`方法接受两个可选参数：一个用于处理成功情况的回调函数和一个用于处理错误情况的回调函数；
 ```dart
 import 'dart:async';
@@ -4443,7 +4452,7 @@ Stream<DateTime> getTime() async* {
 controller.stream.map((event) => event * 2).where((event) => event is int).distinct();
 ```
 * <span style="color:red; font-weight:bold;">优点：当没有对象进行监听***stream***的时候，数据是有所缓存的</span>（案例：5秒以后发起监听，之前点按的数据可以进行输出）
-* 默认情况下，一个数据流，只允许一个对象进行监听；
+* **默认情况下，一个数据流，只允许一个对象进行监听**；
 * 如果需要多对象监听数据流，那么需要把***stream***变成广播***broadcast***；
   * <span style="color:red; font-weight:bold;">缺点：当没有对象进行监听***broadcast***的时候，数据是不会有所缓存的</span>案例：5秒以后发起监听，之前点按的数据不能进行输出）
 ```dart
@@ -4846,7 +4855,14 @@ class _LoginPageState extends State<LoginPage> {
 * Android启动页，在 `android/app/src/main/res/drawable/launch_background.xml` 中已经有写好的启动页，`<item><bitmap>` 部分被屏蔽，只需要打开这个屏蔽，并且将你启动图修改为`launch_image`并放置到各个 **mipmap** 文件夹即可，记得各个文件夹下提供相对于大小尺寸的文件。
 ### ***Dart.Flutter.调取系统摄像头***（未完）
 ### ***Dart.Flutter.调取系统相册***（未完）
+
+### ***Dart.Flutter.热更新***（未完）
+
+* 热更新插件：[**flutter_updater**](# https://pub.dev/packages?q=flutter_updater)、[**flutter_hot_update**](# https://pub.dev/packages?q=flutter_hot_update)
+* 
+
 ## 其他
+
 ### ***新建Dart.Flutter工程*** <span style="color:red; font-weight:bold;">（在Mac平台，使用 ***VSCode*** 编译器）</span>
 * 下载并正确配置[***VSCode***](https://code.visualstudio.com/)： 配置好了这个以后，在终端就可以用 *code .* 的形式唤起 ***[VSCode](https://code.visualstudio.com/)***
   * 打开VSCode –> `command+shift+p` –> 输入`shell command` –> 点击提示`Shell Command: Install ‘code’ command in PATH`运行
