@@ -4859,199 +4859,9 @@ class _LoginPageState extends State<LoginPage> {
 ### ***Dart.Flutter.热更新***（未完）
 
 * 热更新插件：[**flutter_updater**](# https://pub.dev/packages?q=flutter_updater)、[**flutter_hot_update**](# https://pub.dev/packages?q=flutter_hot_update)
-* 
 
 ## 其他
 
-### ***新建Dart.Flutter工程*** <span style="color:red; font-weight:bold;">（在Mac平台，使用 ***VSCode*** 编译器）</span>
-
-* 下载并正确配置[***VSCode***](https://code.visualstudio.com/)： 配置好了这个以后，在终端就可以用 *code .* 的形式唤起 ***[VSCode](https://code.visualstudio.com/)***
-  * 打开VSCode –> `command+shift+p` –> 输入`shell command` –> 点击提示`Shell Command: Install ‘code’ command in PATH`运行
-* 将***Dart.Flutter.SDK*** 与[***VSCode***](https://code.visualstudio.com/)和 ***MacOS*** 进行关联
-  * 终端执行 *open ~/.bash_profile*，对其进行编辑；
-  * #### 在*.bash_profile*文件里面，添加如下的环境变量；
-  
-  ![image-20240320205645750](./assets/image-20240320205645750.png)
-  
-  ```shell
-  # 配置终端使之识别flutter命令（最主要添加这个）
-  # 这里的路径即为Dart.Flutter.SDK名下的为bin目录（主要取决于你下载的SDK的绝对路径）
-  export PATH=/Users/jobs/Documents/GitHub/Flutter.SDK/flutter/bin:$PATH
-  # 防止域名在中国大陆互联网环境下的被屏蔽
-  export PUB_HOSTED_URL=https://pub.flutter-io.cn # 告诉了 Dart.Flutter 和 Dart 的包管理器 pub 在执行 pub get 或 pub upgrade 命令时使用备用仓库而不是默认的官方仓库。
-  export FLUTTER_STORAGE_BASE_URL=https://storage.flutter-io.cn # 告诉了 Dart.Flutter SDK 在需要下载二进制文件或工具时从备用存储库获取，而不是从默认的 Google 存储库获取。
-  # 配置Android环境
-  export ANDROID_HOME=/Users/jobs/Library/Android/sdk
-  export PATH=${PATH}:${ANDROID_HOME}/platform-tools
-  export PATH=${PATH}:${ANDROID_HOME}/cmdline-tools/latest/bin
-  # 每次打开的时候，默认当前路径为系统桌面
-  cd Desktop
-  ```
-  * 保存配置，并且使之生效
-  ```shell
-  ➜  Desktop cd ..               
-  ➜  ~ source .bash_profile
-  ```
-  * 自检命令：***flutter doctor***
-  ```shell
-  Last login: Wed Mar 20 20:53:34 on ttys002
-  ➜  Desktop flutter doctor
-  Doctor summary (to see all details, run flutter doctor -v):
-  [✓] Flutter (Channel stable, 3.19.3, on macOS 14.4 23E214 darwin-arm64, locale
-      zh-Hans-US)
-  [✓] Android toolchain - develop for Android devices (Android SDK version 34.0.0)
-  [✓] Xcode - develop for iOS and macOS (Xcode 15.3)
-  [✓] Chrome - develop for the web
-  [✓] Android Studio (version 2023.1)
-  [✓] VS Code (version 1.85.2)
-  [✓] Connected device (3 available)
-  [✓] Network resources
-  
-  • No issues found!
-  ```
-* 安装 ***Dart.Flutter.SDK***
-  * 可以直接去[***Flutter官网***](https://flutter.dev/)或者[***Flutter.GitHub***](https://github.com/flutter/flutter)地址下载以后，和编译器进行关联；
-  * 也可以编译器智能监测下载***Dart.Flutter.SDK***进行自动关联；
-  * 如果***Dart.Flutter.SDK***的位置发生了更改，那么需要在[***VSCode***](https://code.visualstudio.com/)编译器里面进行相应的映射：
-    * 方式1：手动关联SDK，如下图所示👇🏻：<span style="color:red; font-weight:bold;">编译过后，用 *Command + s* 进行保存</span>
-  
-    ![image-20240321153420881](./assets/image-20240321153420881.png)
-  
-    ![image-20240321153739756](./assets/image-20240321153739756.png)
-  
-    * 方式2：自动侦测SDK：在[***VSCode***](https://code.visualstudio.com/)里面，使用快捷键：*Shift + command + p* 唤起命令输入弹出框；输入：*Flutter:Change SDK*
-  
-* 终端执行命令 *code .*打开[***VSCode***](https://code.visualstudio.com/)
-  * 在[***VSCode***](https://code.visualstudio.com/)里面，使用快捷键：*Shift + command + p* 唤起命令输入弹出框；
-  * 在命令输入弹出框输入命令***Flutter: New Project*** 新建Dart.Flutter工程（自定义工程文件路径）。此时如果没有下载或者成功关联***Dart.Flutter.SDK***将会出现提示；
-  * ***Dart.Flutter.SDK***  <span style="color:red; font-weight:bold;">自带Dart语言环境</span>；
-* 关联运行设备：
-  * iOS模拟器：[***Xcode下载模拟器报错***](https://blog.csdn.net/saw471/article/details/136560974)
-    * 运行环境是**XCode**。<span style="color:red; font-weight:bold;">需要注意的是：XCode14以后最小化安装包，从而将模拟器不集中在安装包中，需要单独***[下载](https://developer.apple.com/download/all/)***和安装</span>。
-      *打开终端，输入如下命令。将 `*.dmg`文件拖动到终端获取该文件的磁盘绝对地址*
-    ```shell
-    xcrun simctl runtime add 下载好的文件的磁盘绝对地址
-    ```
-    * 必须要选定模拟器型号以后，***生成一个模拟器实例***以后（会出现一个设备ID），才可以正确关联。在***XCode***里面删除这个模拟器设备（实例销毁），虽然在***VSCode***里面有设备ID指向，但是关联会运行失败；
-    
-    ![image-20240320211238339](./assets/image-20240320211238339.png)
-
-    ![image-20240320212703635](./assets/image-20240320212703635.png)
-
-    ![image-20240320212829130](./assets/image-20240320212829130.png)
-    
-    * <span style="color:red; font-weight:bold;">必须要安装iOS的SDK，否则只能链接设备，无法编译。Android同理</span>；
-    
-    ![image-20240320214344707](./assets/image-20240320214344707.png)
-    
-    * 如果使用终端运行Dart.Flutter代码，则需要额外的，优先唤起iOS模拟器。
-    ```shell
-    open -a Simulator
-    ```
-    * 如果是通过[***VSCode***](https://code.visualstudio.com/) ，那么只需要进行设备关联即可以唤起模拟器设备；
-
-      ![image-20240321041753483](./assets/image-20240321041753483.png)
-    
-  * ***Android***模拟器：运行环境是**Android Studio**。下载完成此IDE以后，需要打开**Android Studio**，IDE会自动安装***Android.SDK***
-  
-    * ###### ***Android SDK Command-line Tools：***目前的版本，需要在*setting*里面手动勾选安装；<span style="color:red; font-weight:bold;">***安装以后会得到 sdkmanager***</span>；
-  
-    ![image-20240321035653738](./assets/image-20240321035653738.png)
-  
-    ![image-20240321040315072](./assets/image-20240321040315072.png)
-  
-    * 终端获取***Android.SDK***的（默认）绝对路径，为：*/Users/jobs/Library/Android/sdk*
-    ```shell
-    ➜  Desktop whoami           
-    jobs
-    ➜  Desktop /Users/jobs/Library/Android/sdk
-    ➜  sdk 
-    ```
-    * 配置***Android***环境 [***见上文***](# 在*.bash_profile*文件里面，添加如下的环境变量；  )；
-    * 关联***Android.SDK***到Dart.Flutter；
-    ```shell
-    ➜  Desktop flutter config --android-sdk /Users/jobs/Library/Android/sdk
-    Setting "android-sdk" value to "/Users/jobs/Library/Android/sdk".
-    
-    You may need to restart any open editors for them to read new settings.
-    ```
-    * ***Android***授权：需要在有[***sdkmanager***](# ***Android SDK Command-line Tools：***目前的版本，需要在*setting*里面手动勾选安装；<span style="color:red; font-weight:bold;">***安装以后会得到 sdkmanager***</span>；)的基础上，方能正常执行；
-    ```shell
-    flutter doctor --android-licenses
-    
-    ➜  Desktop flutter doctor --android-licenses
-    [=======================================] 100% Computing updates...             
-    5 of 6 SDK package licenses not accepted.
-    Review licenses that have not been accepted (y/N)? y
-    
-    1/5: License android-googletv-license:
-    ---------------------------------------
-    ...... 此处省略很多字......
-    ---------------------------------------
-    Accept? (y/N): y
-    All SDK package licenses accepted
-    ```
-  * ***iOS***真机：需要用***XCode***打开**Runner.xcworkspace**，选择一个*Team*
-  * ***Android***真机：同理，略
-  * ***PC***浏览器：同理，略
-  
-* <span style="color:red; font-weight:bold;">***运行Dart.Flutter工程（有3种方式运行）***</span> 第一次运行会有编译器的自动配置；
-  
-  * 仅仅在[***VSCode***](https://code.visualstudio.com/)控制台上运行Flutter代码（等于调用系统终端运行）；
-  * *终端运行Dart.Flutter代码，没有检测到属于移动设备的SDK，而只检测到了MacOS和浏览器的SDK。所以👇🏻*（并且选择关联设备，以哪种平台方式运行代码）；  
-  ```shell
-  ➜  flutter_application_1 flutter run
-  Connected devices:
-  macOS (desktop) • macos  • darwin-arm64   • macOS 14.4 23E214 darwin-arm64
-  Chrome (web)    • chrome • web-javascript • Google Chrome 123.0.6312.58
-  
-  No wireless devices were found.
-  
-  [1]: macOS (macos)
-  [2]: Chrome (chrome)
-  Please choose one (or "q" to quit): 1
-  Launching lib/main.dart on macOS in debug mode...
-  ```
-  <span style="color:red; font-weight:bold;">***成功运行***</span> 
-  
-  ```shell
-  ➜  flutter_application_1 flutter run
-  Launching lib/main.dart on iPhone Xs in debug mode...
-  Running Xcode build...                                                  
-   └─Compiling, linking and signing...                         6.5s
-  Xcode build done.                                           22.1s
-  Syncing files to device iPhone Xs...                               163ms
-  
-  Flutter run key commands.
-  r Hot reload. 🔥🔥🔥
-  R Hot restart.
-  h List all available interactive commands.
-  d Detach (terminate "flutter run" but leave application running).
-  c Clear the screen
-  q Quit (terminate the application on the device).
-  
-  A Dart VM Service on iPhone Xs is available at: http://127.0.0.1:52561/ffKDHeQhRQA=/
-  The Flutter DevTools debugger and profiler on iPhone Xs is available at: http://127.0.0.1:9101?uri=http://127.0.0.1:52561/ffKDHeQhRQA=/
-  ```
-  
-* 其他：
-  * ***flutter pub get --no-example*** 是Flutter 包管理器 **pub** 的命令。用于获取项目所需的依赖包，但不包括示例代码。
-  ```dart
-  [flutter_application_1] flutter pub get --no-example
-  Waiting for another flutter command to release the startup lock...
-  Resolving dependencies...
-    leak_tracker 10.0.0 (10.0.4 available)
-    leak_tracker_flutter_testing 2.0.1 (3.0.3 available)
-    leak_tracker_testing 2.0.1 (3.0.1 available)
-    material_color_utilities 0.8.0 (0.11.1 available)
-    meta 1.11.0 (1.12.0 available)
-    test_api 0.6.1 (0.7.0 available)
-    vm_service 13.0.0 (14.1.0 available)
-  Got dependencies!
-  7 packages have newer versions incompatible with dependency constraints.
-  Try `flutter pub outdated` for more information.
-  exit code 0
-  ```
 * 一些报错的处理经验记录
   * <span style="color:red; font-weight:bold;">***[ERROR:flutter/shell/platform/darwin/graphics/FlutterDarwinContextMetalImpeller.mm(42)] Using the Impeller rendering backend.***</span> 
   ```shell
@@ -5075,9 +4885,9 @@ class _LoginPageState extends State<LoginPage> {
   ```
 
   * <span style="color:red; font-weight:bold;">***Target debug_unpack_ios failed: Exception: Failed to codesign***</span> 
-  
+
   [***解决方案***](https://www.cnblogs.com/cappuccino/p/17777342.html)：关闭iCloud同步
-  
+
   ```shell
     Failed to build iOS app
     Error (Xcode): Target debug_unpack_ios failed: Exception: Failed to codesign
@@ -5118,6 +4928,7 @@ class _LoginPageState extends State<LoginPage> {
       logger.e('Error message');
       logger.v('Verbose message');
       ```
+
 ### ***Dart.Flutter.DevTools***
 
 Dart.Flutter提供了一些调试工具来帮助开发者调试应用程序的代码和性能，其中包括以下工具：
