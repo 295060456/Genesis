@@ -227,7 +227,7 @@ static char *BaseVC_BackBtn_backBtnCategoryItem = "BaseVC_BackBtn_backBtnCategor
 
 ## KVC 和 KVO
 
-### KVC（<span style="color:red; font-weight:bold;">***K***</span>ey-<span style="color:red; font-weight:bold;">***V***</span>alue <span style="color:red; font-weight:bold;">***C***</span>oding）：**键值存储**
+### KVC（<span style="color:red; font-weight:bold;">***K***</span>ey-<span style="color:red; font-weight:bold;">***V***</span>alue <span style="color:red; font-weight:bold;">***C***</span>oding）：**键值**<span style="color:red; font-weight:bold;">存储</span>
 
 * 通过key->对象属性。不需要通过`set/get`方法；
 * 对于支持 KVC 的对象，可以通过 `setValue:forKey:` 和 `valueForKey:` 等方法来设置和获取属性值；
@@ -235,13 +235,13 @@ static char *BaseVC_BackBtn_backBtnCategoryItem = "BaseVC_BackBtn_backBtnCategor
 * 也有一些特殊情况下的对象不支持 KVC。例如：
   * 未定义键的属性：如果[***一个属性没有对应的 `getter` 和 `setter` 方法***](# 可能会存在属性没有对应的 `getter` 和 `setter` 方法的情况)，或者不符合 KVC 的命名规范，那么该属性就不支持 KVC。
 
-### KVO（<span style="color:red; font-weight:bold;">***K***</span>ey-<span style="color:red; font-weight:bold;">***V***</span>alue <span style="color:red; font-weight:bold;">***O***</span>bserving）：**属性观察**
+### KVO（<span style="color:red; font-weight:bold;">***K***</span>ey-<span style="color:red; font-weight:bold;">***V***</span>alue <span style="color:red; font-weight:bold;">***O***</span>bserving）：**属性**<span style="color:red; font-weight:bold;">观察</span>
 
 * KVO 是一种**观察者模式**的实现，它**允许一个对象（非类）监听另一个对象的属性的变化**；
 * 不是所有的类都支持KVO：
-  * ***类必须直接或间接地继承自NSObject（即，类必须实例为对象）***：这是因为KVO是基于Objective-C runtime系统的，它利用了Objective-C的动态特性来观察对象属性的变化；一个常见的反例是 Core Graphics（Quartz）框架中的许多类型，如 CGPoint、CGSize、CGRect 等。这些类型是 C 语言结构体，而不是 Objective-C 对象，因此它们不继承自 NSObject，并且不支持 KVO。
+  * ***类必须直接或间接地继承自NSObject（即，类必须实例为对象）***：这是因为KVO是基于OC.runtime系统的，它利用了OC的动态特性来观察对象属性的变化；一个常见的反例是 Core Graphics（Quartz）框架中的许多类型，如 CGPoint、CGSize、CGRect 等。这些类型是 C 语言结构体，而不是 OC 对象，因此它们不继承自 NSObject，并且不支持 KVO。
   * ***被观察的属性必须是对象的属性，而非标量类型***（例如int、float等）；
-  * ***被观察的属性必须使用属性访问器方法***（通常是getter和setter方法），***而不是直接访问实例变量***；
+  * ***被观察的属性必须使用属性访问器方法***（通常是`set/get`方法），***而不是直接访问实例变量***；
 * 当被监听对象的某个属性发生变化时，注册了观察者的对象会收到通知，从而可以采取相应的操作；
 * KVO的使用步骤：
   * 先注册观察者
