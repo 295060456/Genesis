@@ -63,7 +63,7 @@
 * Swift是没有关联对象：因为 Swift 不直接继承自 Objective-C 的运行时机制；
 * 允许你向已有的类中添加属性，而无需修改类的源代码；
 * 依赖于 Objective-C 运行时机制；
-* 可以动态地将一个对象与一个 key 关联起来，然后可以在运行时根据这个 key 来获取或设置关联的对象；
+* 可以动态地将一个对象与一个 key 关联起来，然后可以在运行时根据这个 key 来获取或设置关联的对象；**根据key来进行值存取，如果key不是全局唯一，就会出现异常；**
 * 基本数据类型，需要包装成NSNumber进行存储
 * 关联对象***不会影响类的继承体系***，也***不会改变类的实例变量***，而是将额外的数据***存储在一个全局的关联表***中；
   * 导入 `<objc/runtime.h>` 头文件；
@@ -72,43 +72,7 @@
   * 使用 `objc_getAssociatedObject` 函数根据 key 获取关联的对象；
   * 如果需要，使用 `objc_removeAssociatedObjects` 函数来移除与对象相关的所有关联对象；
 
-***如何使用关联对象为一个类添加一个动态属性：***
-
-```objective-c
-#import <Foundation/Foundation.h>
-#import <objc/runtime.h>
-
-@interface MyClass : NSObject
-@end
-
-@implementation MyClass
-@end
-
-int main(int argc, const char * argv[]) {
-    @autoreleasepool {
-        // 创建一个 key 作为关联对象的标识符
-        static void *MyKey = &MyKey;
-        
-        // 创建一个 MyClass 的实例
-        MyClass *myObject = [[MyClass alloc] init];
-        
-        // 设置关联对象
-        NSString *associatedObject = @"Associated String";
-        objc_setAssociatedObject(myObject, MyKey, associatedObject, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-        
-        // 获取关联对象
-        NSString *retrievedObject = objc_getAssociatedObject(myObject, MyKey);
-        NSLog(@"Associated Object: %@", retrievedObject); // 输出：Associated Object: Associated String
-    }return 0;
-}
-/**
-  在这个例子中，我们向 MyClass 类的实例添加了一个动态属性，该属性与一个字符串对象关联;
-  我们使用 objc_setAssociatedObject 函数将字符串对象与 MyClass 实例关联起来;
-  并使用 objc_getAssociatedObject 函数来获取关联的对象。
-*/
-```
-
-*对Block* <span style="color:red; font-weight:bold;">存取策略：`OBJC_ASSOCIATION_COPY_NONATOMIC`</span>
+***对Block*** <span style="color:red; font-weight:bold;">存取策略：`OBJC_ASSOCIATION_COPY_NONATOMIC`</span>
 
 ```objective-c
 #import <Foundation/Foundation.h>
@@ -134,7 +98,7 @@ int main(int argc, const char * argv[]) {
 @end
 ```
 
-*关联方法。方法用`NSStringFromSelector`包装成字符串对象进行存取。* <span style="color:red; font-weight:bold;">存取策略：`OBJC_ASSOCIATION_COPY_NONATOMIC`</span>
+***对方法*** *方法用`NSStringFromSelector`包装成字符串对象进行存取。* <span style="color:red; font-weight:bold;">存取策略：`OBJC_ASSOCIATION_COPY_NONATOMIC`</span>
 
 ```objective-c
 #import <Foundation/Foundation.h>
@@ -159,7 +123,7 @@ static char *UIViewController_BaseVC_selector = "UIViewController_BaseVC_selecto
 @end
 ```
 
-*对基本数据类型，需要封装成NSNumber对象进行存取* <span style="color:red; font-weight:bold;">存取策略：`OBJC_ASSOCIATION_RETAIN_NONATOMIC`</span>
+***对基本数据类型*** *需要封装成NSNumber对象进行存取* <span style="color:red; font-weight:bold;">存取策略：`OBJC_ASSOCIATION_RETAIN_NONATOMIC`</span>
 
 ```objective-c
 #import <Foundation/Foundation.h>
@@ -189,7 +153,7 @@ static char *UIViewController_BaseVC_setupNavigationBarHidden = "UIViewControlle
 @end
 ```
 
-*结构体属性，需要`NSValue`来进行包装* <span style="color:red; font-weight:bold;">存取策略：`OBJC_ASSOCIATION_RETAIN_NONATOMIC`</span>
+***对结构体属性*** *需要`NSValue`来进行包装* <span style="color:red; font-weight:bold;">存取策略：`OBJC_ASSOCIATION_RETAIN_NONATOMIC`</span>
 
 ```objective-c
 #import <Foundation/Foundation.h>
@@ -228,7 +192,7 @@ static char *UIViewController_BaseVC_point = "UIViewController_BaseVC_point";
 @end
 ```
 
-*对一般的对象* <span style="color:red; font-weight:bold;">存取策略：`OBJC_ASSOCIATION_RETAIN_NONATOMIC`</span>
+***对一般的对象*** <span style="color:red; font-weight:bold;">存取策略：`OBJC_ASSOCIATION_RETAIN_NONATOMIC`</span>
 
 ```objective-c
 #import <Foundation/Foundation.h>
@@ -260,8 +224,6 @@ static char *BaseVC_BackBtn_backBtnCategoryItem = "BaseVC_BackBtn_backBtnCategor
 
 @end
 ```
-
-
 
 ## KVC 和 KVO
 
