@@ -2,6 +2,7 @@
 
 [toc]
 ## <span style="color:red; font-weight:bold;">***OC/C.Block***</span>
+
 * ***Block* 的捕获变量：** 当一个 *Block* 被创建时，它会捕获在其内部使用的外部变量。  
   
   * **对于局部变量，*Block* 会在创建时将其复制一份，然后在 *Block* 内部使用。**如果 *Block* 在定义时没有修改该变量，那么这个变量的值在 *Block* 内部是不可变的。这被称为值捕获（*Value Capture*），捕获的变量可以是局部变量或全局变量；
@@ -55,7 +56,7 @@
 ## 可能会存在属性没有对应的 `getter` 和 `setter` 方法的情况
 
 * 一个例子是使用 `@dynamic` 关键字来声明属性。在使用 Core Data 框架或者实现了自定义的动态属性存取方法时，你可能会使用 `@dynamic` 来告诉编译器，该属性的 `getter` 和 `setter` 方法由运行时或其他方式动态生成，而不是在编译时静态声明。
-* 另一个例子是在 Objective-C 中使用关联对象（Associated Objects）。关联对象允许你向已有的类中添加属性，而无需修改类的源代码。这种情况下，你可能不会显式地声明属性的 getter 和 setter 方法，而是通过关联对象来存取属性值。
+* 另一个例子是在 Objective-C 中使用[**关联对象（Associated Objects）**](# OC.AssociatedObjects（关联对象）)。关联对象允许你向已有的类中添加属性，而无需修改类的源代码。这种情况下，你可能不会显式地声明属性的 getter 和 setter 方法，而是通过关联对象来存取属性值。
 
 ## ***OC.AssociatedObjects（关联对象）***
 
@@ -63,6 +64,7 @@
 * 允许你向已有的类中添加属性，而无需修改类的源代码；
 * 依赖于 Objective-C 运行时机制；
 * 可以动态地将一个对象与一个 key 关联起来，然后可以在运行时根据这个 key 来获取或设置关联的对象；
+* 基本数据类型，需要包装成NSNumber进行存储
 * 关联对象***不会影响类的继承体系***，也***不会改变类的实例变量***，而是将额外的数据***存储在一个全局的关联表***中；
   * 导入 `<objc/runtime.h>` 头文件；
   * 创建一个 key，作为关联对象的唯一标识符。这个 key 是一个静态变量，通常是一个唯一的地址，你可以使用 `static` 关键字来定义；
@@ -105,6 +107,161 @@ int main(int argc, const char * argv[]) {
   并使用 objc_getAssociatedObject 函数来获取关联的对象。
 */
 ```
+
+*对Block* <span style="color:red; font-weight:bold;">存取策略：`OBJC_ASSOCIATION_COPY_NONATOMIC`</span>
+
+```objective-c
+#import <Foundation/Foundation.h>
+#import <objc/runtime.h>
+
+@interface NSNotificationCenter (JobsBlock)
+@property(nonatomic,copy)void (^jobsNotificationBlock)(NSNotification *notification);
+@end
+  
+@implementation NSNotificationCenter (JobsBlock)
+
+-(void (^)(NSNotification *))jobsNotificationBlock {
+    return objc_getAssociatedObject(self, _cmd);
+}
+
+-(void)setJobsNotificationBlock:(void (^)(NSNotification *))jobsNotificationBlock {
+    objc_setAssociatedObject(self,
+                             _cmd,
+                             jobsNotificationBlock,
+                             OBJC_ASSOCIATION_COPY_NONATOMIC);
+}
+
+@end
+```
+
+*关联方法。方法用`NSStringFromSelector`包装成字符串对象进行存取。* <span style="color:red; font-weight:bold;">存取策略：`OBJC_ASSOCIATION_COPY_NONATOMIC`</span>
+
+```objective-c
+#import <Foundation/Foundation.h>
+#import <objc/runtime.h>
+
+@interface UIViewController (BaseVC)
+@property(nonatomic,assign)SEL selector;
+@end
+
+@implementation UIViewController (BaseVC)
+
+static char *UIViewController_BaseVC_selector = "UIViewController_BaseVC_selector";
+
+- (SEL)selector {
+    return objc_getAssociatedObject(self, UIViewController_BaseVC_selector);
+}
+
+- (void)setSelector:(SEL)selector {
+    objc_setAssociatedObject(self, UIViewController_BaseVC_selector, NSStringFromSelector(selector), OBJC_ASSOCIATION_COPY_NONATOMIC);
+}
+
+@end
+```
+
+*对基本数据类型，需要封装成NSNumber对象进行存取* <span style="color:red; font-weight:bold;">存取策略：`OBJC_ASSOCIATION_RETAIN_NONATOMIC`</span>
+
+```objective-c
+#import <Foundation/Foundation.h>
+#import <objc/runtime.h>
+
+@interface UIViewController (BaseVC)
+@property(nonatomic,assign)BOOL setupNavigationBarHidden;
+@end
+
+@implementation UIViewController (BaseVC)
+
+static char *UIViewController_BaseVC_setupNavigationBarHidden = "UIViewController_BaseVC_setupNavigationBarHidden";
+@dynamic setupNavigationBarHidden;
+#pragma mark —— @property(nonatomic,assign)BOOL setupNavigationBarHidden;
+-(BOOL)setupNavigationBarHidden{
+    BOOL SetupNavigationBarHidden = [objc_getAssociatedObject(self, UIViewController_BaseVC_setupNavigationBarHidden) boolValue];
+    return SetupNavigationBarHidden;
+}
+
+-(void)setSetupNavigationBarHidden:(BOOL)setupNavigationBarHidden{
+    objc_setAssociatedObject(self,
+                             UIViewController_BaseVC_setupNavigationBarHidden,
+                             [NSNumber numberWithBool:setupNavigationBarHidden],
+                             OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+@end
+```
+
+*结构体属性，需要`NSValue`来进行包装* <span style="color:red; font-weight:bold;">存取策略：`OBJC_ASSOCIATION_RETAIN_NONATOMIC`</span>
+
+```objective-c
+#import <Foundation/Foundation.h>
+#import <objc/runtime.h>
+
+@interface UIViewController (BaseVC)
+@property(nonatomic,assign)CGRect rect;
+@property(nonatomic,assign)CGPoint point;
+@end
+
+@implementation UIViewController (BaseVC)
+
+static char *UIViewController_BaseVC_rect = "UIViewController_BaseVC_rect";
+static char *UIViewController_BaseVC_point = "UIViewController_BaseVC_point";
+
+- (CGRect)rect {
+    NSValue *value = objc_getAssociatedObject(self, UIViewController_BaseVC_rect);
+    return [value CGRectValue];
+}
+
+- (void)setRect:(CGRect)rect {
+    NSValue *value = [NSValue valueWithCGRect:rect];
+    objc_setAssociatedObject(self, UIViewController_BaseVC_rect, value, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+- (CGPoint)point {
+    NSValue *value = objc_getAssociatedObject(self, UIViewController_BaseVC_point);
+    return [value CGPointValue];
+}
+
+- (void)setPoint:(CGPoint)point {
+    NSValue *value = [NSValue valueWithCGPoint:point];
+    objc_setAssociatedObject(self, UIViewController_BaseVC_point, value, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+@end
+```
+
+*对一般的对象* <span style="color:red; font-weight:bold;">存取策略：`OBJC_ASSOCIATION_RETAIN_NONATOMIC`</span>
+
+```objective-c
+#import <Foundation/Foundation.h>
+#import <objc/runtime.h>
+
+@interface UIViewController (BaseVC)
+@property(nonatomic,strong)UIBarButtonItem *backBtnCategoryItem;
+@end
+
+@implementation UIViewController (BaseVC)
+
+static char *BaseVC_BackBtn_backBtnCategoryItem = "BaseVC_BackBtn_backBtnCategoryItem";
+@dynamic backBtnCategoryItem;
+#pragma mark —— @property(nonatomic,strong)UIBarButtonItem *backBtnCategoryItem;
+-(UIBarButtonItem *)backBtnCategoryItem{
+    UIBarButtonItem *BackBtnCategoryItem = objc_getAssociatedObject(self, BaseVC_BackBtn_backBtnCategoryItem);
+    if (!BackBtnCategoryItem) {
+        BackBtnCategoryItem = [UIBarButtonItem.alloc initWithCustomView:self.backBtnCategory];
+        [self setBackBtnCategoryItem:BackBtnCategoryItem];
+    }return BackBtnCategoryItem;
+}
+
+-(void)setBackBtnCategoryItem:(UIBarButtonItem *)backBtnCategoryItem{
+    objc_setAssociatedObject(self,
+                             BaseVC_BackBtn_backBtnCategoryItem,
+                             backBtnCategoryItem,
+                             OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+@end
+```
+
+
 
 ## KVC 和 KVO
 
@@ -557,7 +714,53 @@ public class OverloadExample {
     }
 }
 ```
+## <span style="color:red; font-weight:bold;">***OC.定时器***</span>
+
+### GCD
+
+* **优势：**
+  * **简单易用：** GCD 提供了简单易用的 API，使得在应用程序中执行并发任务变得非常容易。你只需使用几行代码就可以实现任务的并行执行。
+  * **性能优化：** GCD 使用底层系统资源来管理任务的执行，可以根据系统的资源状况来动态调整任务的执行顺序和优先级，从而优化应用程序的性能。
+  * **多核支持：** GCD 可以利用多核处理器来并行执行任务，从而提高应用程序的性能和响应速度。
+  * **自动管理：** GCD 可以自动管理线程的生命周期和资源，你不需要手动创建和管理线程，从而减少了代码的复杂性和出错的可能性。
+  * **灵活性：** GCD 提供了多种不同类型的队列和调度方式，可以满足不同类型任务的需求，例如串行队列、并行队列、同步执行、异步执行等。
+* **劣势：**
+  * **学习曲线：** 对于初学者来说，GCD 的概念可能比较抽象，需要一定的学习成本才能掌握其使用方法和最佳实践。
+  * **调试困难：** 由于 GCD 是基于异步执行的，并且任务的执行顺序和时间不确定，因此在调试时可能会遇到一些困难，特别是涉及到多个并发任务时。
+  * **竞争条件：** 如果不正确地使用 GCD，可能会导致竞争条件和死锁等并发问题，因此在编写并发代码时需要特别小心。
+  * **不适合所有场景：** 虽然 GCD 可以满足大多数应用程序的并发需求，但并不适用于所有类型的并发任务，特别是涉及到复杂的同步和通信问题时可能需要使用其他并发技术。
+
+### NSTimer
+
+* 优势：
+  * **简单易用：** NSTimer 的使用非常简单，只需创建一个实例并指定一个目标方法和触发时间间隔，然后将其添加到运行循环中即可。
+  * **灵活性：** NSTimer 可以用于执行一次性任务或周期性任务，你可以根据需要设置重复次数或无限重复。
+  * **线程安全：** NSTimer 是线程安全的，可以在主线程或其他线程中使用，而不必担心线程同步的问题。
+  * **精确度：** NSTimer 提供了相对较高的精确度，可以满足大多数应用场景的需求。
+
+* **劣势：**
+  * **不准确：** NSTimer 并不是实时触发的，它依赖于运行循环和系统资源的可用性，因此在某些情况下可能会出现延迟或不准确的情况。
+  * **运行循环依赖：** NSTimer 是依赖于运行循环的，如果运行循环被阻塞或者停止了，NSTimer 的触发也会受到影响。
+  * **内存管理：** 如果 NSTimer 持有它的目标对象，而目标对象又持有 NSTimer，可能会导致循环引用和内存泄漏的问题，因此在使用时需要小心管理内存。
+  * **不适合高频率任务：** 如果需要执行高频率的任务，例如每秒钟执行多次，使用 NSTimer 可能会影响性能，因为 NSTimer 的触发时间间隔是相对较长的。
+
+### CADisplayLink
+
+是 iOS 中用于实现动画的定时器类。可以让应用程序在下一次屏幕刷新之前执行特定的操作，通常用于实现流畅的动画效果
+
+* **优势：**
+  * **同屏幕刷新同步：** CADisplayLink 会在每次屏幕刷新之前调用指定的方法，确保动画更新与屏幕刷新同步，从而实现流畅的动画效果。
+  * **精确的时间控制：** CADisplayLink 提供了精确的时间控制，可以设置动画的帧率和持续时间，以实现各种类型的动画效果。
+  * **简单易用：** CADisplayLink 的使用非常简单，只需创建一个实例并指定一个目标方法，然后将其添加到主运行循环中即可。
+  * **自动管理：** CADisplayLink 会自动根据屏幕的刷新频率调整动画的帧率，确保动画效果在不同设备上表现一致。
+
+* **劣势：**
+  * **主线程阻塞：** 使用 CADisplayLink 进行动画更新时，相关的方法会在主线程中执行，如果动画逻辑复杂或者处理时间过长，可能会导致主线程阻塞，影响应用的响应性能。
+  * **不适合所有场景：** CADisplayLink 适用于实现基于帧率的动画效果，但并不适用于所有类型的动画，例如复杂的过渡效果或基于物理引擎的动画。
+  * **需谨慎管理：** 使用 CADisplayLink 进行动画更新时，需要谨慎管理内存和资源，避免出现内存泄漏或性能问题。
+
 ## <span style="color:red; font-weight:bold;">***OC.多线程***</span>
+
 ### pthread
 
 * *pthread（**P**OSIX **Thread**s）*是一套<span style="color:red; font-weight:bold;">***C语言编写***</span>的**跨平台多线程API**，**使用难度大**，需要**手动管理线程生命周期**。（需要更加谨慎地处理线程的同步和互斥操作，以避免出现死锁、数据竞争等问题）
