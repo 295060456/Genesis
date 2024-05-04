@@ -200,8 +200,7 @@
     * 性能优势：**仅仅是单个指针的上下移动**；
     * 线程安全：直接存储于内存 ＋ 不需要引用（没有引用计数）和垃圾回收等操作 = 不会发生因为引用计数的增减而引起的竞态条件；
 * **队列（Queue）**
-
-  * 一种先进先出（FIFO）的线性数据结构；
+  * 一种先进先出（**F**irst-**I**n-**F**irst-**O**ut，**FIFO**）的线性数据结构；
   * 支持在一端进行插入操作，在另一端进行删除操作；
   * 队列常用于实现任务调度、消息传递等场景；
 * **数组（Array）**
@@ -237,6 +236,72 @@
   * 一种非线性数据结构；
   * 由节点（顶点）和边组成，用于表示各种实体之间的关系；
   * 图常用于网络分析、路由算法等场景。
+
+## 锁
+
+在操作系统中，常见的锁包括：
+
+* **互斥锁（Mutex Lock）：** 互斥锁是最基本的一种锁，用于保护临界区，确保在同一时刻只有一个线程可以访问共享资源。当一个线程持有互斥锁时，其他线程必须等待该线程释放锁才能访问共享资源。
+
+* **自旋锁（Spin Lock）：** 自旋锁是一种忙等待的锁，当线程尝试获取锁时，如果锁已被其他线程持有，则该线程会循环等待直到锁被释放。自旋锁适用于对临界区的访问时间很短的情况。
+
+* **读写锁（Read-Write Lock）：** 读写锁允许多个线程同时读取共享资源，但是在写操作时需要互斥访问。读写锁通过分离读操作和写操作来提高并发性能。
+
+* **条件变量（Condition Variable）：** 条件变量通常与互斥锁一起使用，用于实现线程间的同步。它允许线程在特定条件下等待并在条件满足时被唤醒。条件变量提供了 `wait`、`signal` 和 `broadcast` 等操作。
+
+* **信号量（Semaphore）：** 信号量是一种计数器，用于控制对共享资源的访问。它可以用于限制同时访问共享资源的线程数量，或者用于线程间的同步和通信。
+
+* **屏障（Barrier）：** 屏障用于在多线程环境下同步多个线程的执行顺序。它可以保证在达到屏障之前的所有线程都执行完毕后，再执行屏障之后的操作。
+
+这些锁和同步机制在操作系统中起着至关重要的作用，可以有效地控制对共享资源的访问，保证多个线程之间的协调和同步。不同的锁适用于不同的场景和需求，开发人员需要根据具体的应用场景选择合适的锁来实现线程安全和并发控制。
+
+```swift
+import Foundation
+
+class CustomLock {
+    private var lock = NSLock()
+    
+    func lock() {
+        lock.lock()
+    }
+    
+    func unlock() {
+        lock.unlock()
+    }
+}
+
+func testCustomLock() {
+    let lock = CustomLock()
+    
+    DispatchQueue.global().async {
+        lock.lock()
+        print("Thread 1: Lock acquired")
+        sleep(2) // 模拟一些工作
+        lock.unlock()
+        print("Thread 1: Lock released")
+    }
+    
+    DispatchQueue.global().async {
+        lock.lock()
+        print("Thread 2: Lock acquired")
+        sleep(2) // 模拟一些工作
+        lock.unlock()
+        print("Thread 2: Lock released")
+    }
+    
+    // 防止主线程结束
+    dispatchMain()
+}
+
+testCustomLock()
+
+/**
+在这个示例中，我们定义了一个名为 CustomLock 的类，它使用 NSLock 来实现互斥锁。
+lock 方法通过调用 NSLock 的 lock 方法来获取锁，unlock 方法通过调用 NSLock 的 unlock 方法来释放锁。
+在 testCustomLock 函数中，我们创建了一个 CustomLock 对象，并在两个后台线程中分别调用 lock 和 unlock 方法来模拟锁的获取和释放。
+最后，我们调用 dispatchMain() 来防止主线程提前结束。
+*/
+```
 
 ## 在Swift中，一个结构体（*struct*），占据多大的内存？
 

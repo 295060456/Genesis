@@ -47,6 +47,76 @@
   * 具体来说，编译器会生成一个指向 `self` 的弱引用；**这个弱引用不会增加 `self` 的引用计数，也不会阻止 `self` 被释放**。如果 `self` 被释放后，这个弱引用会被自动置为 nil，以避免访问已释放的对象而导致的崩溃；
   * 实际上，当 *Block* 内部访问 `self` 时，会首先检查这个弱引用是否有效（即是否为 nil）。如果有效，则可以继续访问 `self`；如果无效，则说明 `self` 已经被释放，这时候访问 `self` 将不会引发野指针访问错误，而是返回 nil 或者执行一些安全的默认行为，这取决于具体的上下文和实现。
 
+## 锁
+
+```objective-c
+#import <Foundation/Foundation.h>
+
+@interface CustomLock : NSObject
+
+- (void)lock;
+- (void)unlock;
+
+@end
+
+@implementation CustomLock {
+    dispatch_semaphore_t _semaphore;
+}
+
+- (instancetype)init {
+    self = [super init];
+    if (self) {
+        _semaphore = dispatch_semaphore_create(1);
+    }
+    return self;
+}
+
+- (void)lock {
+    dispatch_semaphore_wait(_semaphore, DISPATCH_TIME_FOREVER);
+}
+
+- (void)unlock {
+    dispatch_semaphore_signal(_semaphore);
+}
+
+@end
+
+int main(int argc, const char * argv[]) {
+    @autoreleasepool {
+        CustomLock *lock = [[CustomLock alloc] init];
+        
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            [lock lock];
+            NSLog(@"Thread 1: Lock acquired");
+            sleep(2); // Simulate some work
+            [lock unlock];
+            NSLog(@"Thread 1: Lock released");
+        });
+        
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            [lock lock];
+            NSLog(@"Thread 2: Lock acquired");
+            sleep(2); // Simulate some work
+            [lock unlock];
+            NSLog(@"Thread 2: Lock released");
+        });
+        
+        [[NSRunLoop currentRunLoop] run]; // Keep the main thread alive
+    }
+    return 0;
+}
+/**
+
+这个示例定义了一个名为 CustomLock 的类，它实现了 lock 和 unlock 方法。
+
+在 lock 方法中，我们使用 dispatch_semaphore_wait 函数来等待信号量
+当信号量的值为大于等于 1 时，说明锁是可用的，我们就将信号量的值减 1，并且获取锁。
+在 unlock 方法中，我们使用 dispatch_semaphore_signal 函数来释放锁，将信号量的值加 1。
+
+在 main 函数中，我们创建了一个 CustomLock 对象，并在两个后台线程中分别调用 lock 和 unlock 方法来模拟锁的获取和释放。为了保持主线程的运行，我们使用了 [[NSRunLoop currentRunLoop] run] 来让主线程保持活跃状态。
+*/
+```
+
 ## OC里面有没有类似于Java里面的`linkedhashset`的东西
 
 * 在Objective-C中，没有直接类似于Java中*LinkedHashSet*的数据结构；
@@ -255,6 +325,7 @@ static char *BaseVC_BackBtn_backBtnCategoryItem = "BaseVC_BackBtn_backBtnCategor
 ```
 ### KVO相应的观察方法
 **`observeValueForKeyPath:ofObject:change:context:`**
+
 - 这是 [***KVO***](# KVO（<span style="color:red; font-weight:bold;">***K***</span>ey-<span style="color:red; font-weight:bold;">***V***</span>alue <span style="color:red; font-weight:bold;">***O***</span>bserving）：**属性观察) 观察者对象必须实现的方法之一；
 - 当被观察对象的属性值发生变化时，系统会调用这个方法，并传递一些参数，包括被观察的属性的键路径、被观察的对象、属性的改变信息以及上下文信息；
 - 观察者对象在实现这个方法时，可以根据传递的信息执行相应的操作，比如更新 UI、处理数据等；
@@ -901,7 +972,74 @@ Objective-C 中的消息转发机制是一种在***运行时动态处理未知�
 3. **完整消息转发（Complete Message Forwarding）**：
    如果备用接收者也无法处理消息，最后的选择是使用完整的消息转发机制。Objective-C 运行时会调用 `-forwardInvocation:` 方法，并将消息包装成一个 *NSInvocation* 对象传递给该方法。在 `-forwardInvocation:` 方法中，对象可以选择将消息发送给其他对象，或者抛出异常，或者其他自定义处理。如果 `-forwardInvocation:` 方法没有被实现，或者在其中没有将消息发送给其他对象，那么将会抛出一个 *NSInvalidArgumentException* 异常。
    通过这三个阶段，Objective-C 运行时可以实现动态消息处理的能力，使得对象能够在运行时动态地处理未知消息，从而增强了语言的灵活性和动态性；
+
+## dylib
+
+[**dylib动态库加载过程分析**](# https://zhuanlan.zhihu.com/p/24875905)
+
+* Windows系统的动态库是DLL文件，Linux系统是so文件，macOS系统的动态库则使用dylib文件作为动态库
+* dyld是苹果操作系统一个重要组成部分，它是开源的。任何人可以通过苹果官网下载它的源码来阅读理解它的运作方式（下载地址：[Source Browser](https://link.zhihu.com/?target=http%3A//opensource.apple.com/tarballs/dyld)），了解系统加载动态库的细节。
+* dylib本质上是一个Mach-O格式的文件，它与普通的Mach-O执行文件几乎使用一样的结构，只是在文件类型上一个是MH_DYLIB，一个是MH_EXECUTE
+* 在系统的`/usr/lib`目录下，存放了大量供系统与应用程序调用的动态库文件
+* 动态库不能直接运行，而是需要通过系统的动态链接加载器进行加载到内存后执行
+* dyld加载时，为了优化程序启动，启用了共享缓存（shared cache）技术
+* 共享缓存是以文件形式存放在`/var/db/dyld/`目录下的，生成共享缓存的**update_dyld_shared_cache**程序位于是`/usr/bin/`目录下
+* **在没有依赖关系的情况下，动态库的加载顺序由`Link Binary With Libraries`中的顺序决定，当然我们可以通过`Link Binary With Libraries`来控制动态库的加载顺序。**
+
+## `+load` 和 `+initialize` 的区别
+
+[**iOS之 +(void)load与+(void)initialize理解**](# https://blog.csdn.net/C_philadd/article/details/117994960)
+
+[**iOS启动优化--探索load中方法替换迁移到initialize的可行性**](# https://www.jianshu.com/p/62e6709ca171)
+
+| 区别     | `+load`方法                                                  | `+initialize`方法                                            |
+| :------- | :----------------------------------------------------------- | :----------------------------------------------------------- |
+| 调用时刻 | 在Runtime加载类、分类时调用<br/>不管有没有用到这些类，在程序运行起来的时候都会加载进内存，并调用`+load`方法。<br/>每个类、分类的`+load`方法，在程序运行过程中只调用一次（除非开发者手动调用）。 | 在类第一次接收到消息时调用。<br/>如果子类没有实现`+initialize`方法，会调用父类的`+initialize`方法。<br/>所以父类的`+initialize`方法可能会被调用多次，但不代表父类初始化多次，每个类只会初始化一次。 |
+| 调用方式 | ① 系统自动调用`+load`方法的方式为直接通过函数地址调用；<br/>② 开发者手动调用`+load`方法的方式为消息机制`objc_msgSend`函数调用。 | 消息机制`objc_msgSend`函数调用。                             |
+| 调用顺序 | ① 先调用类的`+load`方法，按照编译先后顺序调用（先编译，先调用），调用子类的`+load`方法之前会先调用父类的`+load`方法；<br/>② 再调用分类的`+load`方法，按照编译先后顺序调用（先编译，先调用）（注意：分类的其它方法是：后编译，优先调用）。 | ① 先调用父类的`+initialize`，<br/>② 再调用子类的`+initialize`（先初识化父类，再初始化子类）。 |
+
+* `+load`方法 调用时刻：`+load`方法方法会在Runtime加载类、分类时调用（不管有没有用到这些类，在程序运行起来的时候都会加载进内存，并调用+load方法）； 每个类、分类的`+load`方法，在程序运行过程中只调用一次（除非开发者手动调用）。
+* `+load`方法 调用方式：系统自动调用+load方式为直接通过函数地址调用，开发者手动调用`+load`方法方式为消息机制objc_msgSend函数调用。
+* `+load`方法 调用顺序： 先调用类的`+load`方法，按照编译先后顺序调用（先编译，先调用），调用子类的`+load`方法之前会先调用父类的`+load`方法； 再调用分类的`+load`方法，按照编译先后顺序调用（先编译，先调用）（注意：分类的其它方法是：后编译，优先调用）
+* `+load`方法在`Runtime`加载类、分类的时候调用；
+* `+load`方法可以继承，但是一般情况下不会手动去调用`+load`方法，都是让系统自动调用。
+* **`+load`方法 函数调用栈**
+  * objc-os.mm ① `_objc_init`：Runtime的入口函数，进行一些初始化操作
+  * objc-runtime-new.mm 
+    * ② `load_images` 
+    * ③ `prepare_load_methods` `schedule_class_load` `add_class_to_loadable_list` `add_category_to_loadable_list` 
+    * ④ `call_load_methods`  `call_class_loads` `call_category_loads` ` (*load_method)(cls, SEL_load) `核心函数
+* `+initialize`方法 调用时刻：`+initialize`方法方法会在类第一次接收到消息时调用。
+  *  如果子类没有实现`+initialize`方法方法，会调用父类的`+initialize`方法，所以父类的`+initialize`方法方法可能会被调用多次，但不代表父类初始化多次，每个类只会初始化一次。
+* `+initialize`方法 调用方式：消息机制`objc_msgSend`函数调用。
+* `+initialize`方法 调用顺序： 先调用父类的`+initialize`方法，再调用子类的`+initialize`方法 （先初识化父类，再初始化子类）
+* **`+initialize`方法 函数调用栈**
+  * objc-msg-arm64.s ① `_objc_msgSend`
+  * objc-runtime-new.mm
+    * ② `class_getInstanceMethod`：调用方法之前需要先获取方法
+    * ③ `lookUpImpOrNil` 
+    * ④ `lookUpImpOrForward`
+    * ⑤ `_class_initialize`：初始化类的函数
+    * ⑥ `callInitialize`
+    * ⑦ `objc_msgSend(cls, SEL_initialize)`：给 cls 对象发送 initialize 消息
+
+## [**objc_msgSend 方法调用流程**](# https://www.jianshu.com/p/a5d818d90a6e)
+
+* 在`OC`中调用一个方法时，编译器会根据情况调用以下函数中的一个进行消息传递：`objc_msgSend`、`objc_msgSend_stret`、`objc_msgSendSuper`、`objc_msgSendSuper_stret`
+  * 当方法调用者为`super`时会调用`objc_msgSendSuper`；
+  * 当数据结构作为返回值时会调用`objc_msgSend_stret`或`objc_msgSendSuper_stret`；
+  * 其他方法调用的情况都是转换为`objc_msgSend()`函数的调用；
+* 给`receiver`（方法调用者/消息接收者）发送一条消息（`SEL`方法名）
+  * 参数 1 : `receiver`
+  * 参数 2 : `SEL`
+  * 参数 3、4、5... : `SEL`方法的参数
+* `objc_msgSend()`的执行流程可以分为 3 大阶段：
+  * 消息发送
+  * 动态方法解析
+  * 消息转发
+
 ## ***OC.database***
+
 ### ***OC.SQLite***
 
 * 零配置：可在无需配置的情况下使用的简单的数据库引擎
@@ -1074,6 +1212,8 @@ int main(int argc, const char * argv[]) {
 
 ## 其他
 
+* [**iOS封装dylib并调用**](# https://blog.csdn.net/qq_44974089/article/details/130806590)
+  
 * <span style="color:purple; font-weight:bold;">**OC热更新**</span>
   
   * **动态下载资源文件**：你可以在应用中集成网络请求功能，使应用能够从服务器上下载资源文件，比如图片、配置文件等。这样，你可以在服务器端更新这些资源文件，然后让应用在需要时下载最新版本的资源文件。
@@ -1084,7 +1224,7 @@ int main(int argc, const char * argv[]) {
   
 * <span style="color:purple; font-weight:bold;">**为什么有些文件没有后缀名，却依然可以被识别成图片并成功读取**</span>
   
-  * 这通常是因为文件系统和操作系统依赖于文件的“魔术数字”（Magic Number）来确定文件类型，而不仅仅是依赖于文件扩展名；
+  * 这通常是因为文件系统和操作系统依赖于文件的“魔术数字”（Magic Number）来确定文件类型，而**不仅仅是依赖于文件扩展名**；
   * 魔术数字是文件头的一部分，它是一个固定的字节序列，用于标识文件的类型；
   * 对于图像文件来说，它们的文件头通常包含特定的标识符或字节序列，这些信息告诉操作系统或应用程序这是一个图像文件，以及它的格式是什么（如JPEG、PNG、GIF等）；
   * 因此，即使一个文件没有文件扩展名，只要它的文件头包含了与某种图像格式对应的魔术数字，操作系统或应用程序就能够识别它为图像文件，并相应地进行处理。这使得即使文件名被更改或者缺失，文件仍然可以正确地被识别和处理；
@@ -1295,8 +1435,8 @@ int main(int argc, const char * argv[]) {
     - **远程通知**：***由远程服务器发出，通过苹果的 APNs 服务将通知发送到用户设备上***。远程通知允许开发者在应用程序不在前台时向用户发送消息；
   * **APNs 服务:** ***A***pple ***P***ush ***N***otification ***s***ervice
     
-    - 开发者需要在*[苹果开发者中心](https://developer.apple.com/cn/)*注册应用程序的 ***bundle identifier***，并获取一个 ***APNs 证书***来与 APNs 服务器通信；
-    - 通过 APNs 服务，开发者可以向用户设备发送远程通知，并指定通知的内容、声音、标志等参数；
+    - 开发者需要在*[苹果开发者中心](https://developer.apple.com/cn/)*注册应用程序的 ***bundle identifier***，并获取一个 ***APNs 证书***来与***APNs***服务器通信；
+    - 通过 **APNs** 服务，开发者可以向用户设备发送远程通知，并指定通知的内容、声音、标志等参数；
     ```json
     {
       "aps": {
@@ -1312,6 +1452,7 @@ int main(int argc, const char * argv[]) {
     }
     ```
   * **推送通知的实现**：
+    
     - 在应用程序中配置推送通知的权限，并请求用户允许发送通知；
     - 使用 Apple 提供的 ***UNUserNotificationCenter*** API 来请求用户的推送通知权限，并处理用户对通知的响应；
     - 配置应用程序的通知设置，包括通知内容、声音、标志等；
