@@ -774,7 +774,7 @@ class _CounterWidgetState extends State<CounterWidget> {
 * 重新构建时，Flutter 会调用该 *Widget* 的 `build` 方法来生成新的 UI 树，从而实现 UI 的更新；
 * `setState` 方法只会重新构建其调用的 *Widget* 及其子树，并不会影响到其他部分的 UI；
 * 如果需要**更新全局状态**或者**在不同*Widget*之间共享状态**，可能需要使用一些状态管理工具。比如：[***Provider***](# Dart.Flutter.Provider)、[***GetX***]( # Dart.Flutter.GetX)、[***Bloc***](# BloC：<span style="color:red; font-weight:bold;">*B*</span>usiness <span style="color:red; font-weight:bold;">*Lo*</span>gic <span style="color:red; font-weight:bold;">*C*</span>omponent) 、***Riverpod***等；
-##  <span style="color:red; font-weight:bold;">***Dart.Flutter.状态管理*** </span>
+##  <span style="color:red; font-weight:bold;">***❤️Dart.Flutter.状态管理*** </span>
 
 * 在所有 **响应式编程** 中，状态管理一直老生常谈的话题，而在 Flutter 中，目前主流的有[***scope_mode***](# scoped_model) 、[***BloC 设计模式***](# BloC：<span style="color:red; font-weight:bold;">*B*</span>usiness <span style="color:red; font-weight:bold;">*Lo*</span>gic <span style="color:red; font-weight:bold;">*C*</span>omponent) 、[***flutter_redux***](# flutter_redux) 、[***fish_redux***](# fish_redux) 等四种设计；
 * 它们的 *复杂度* 和 *上手难度* 是逐步递增的，但同时 **可拓展性** 、**解耦度** 和 **复用能力** 也逐步提升。
@@ -1422,8 +1422,8 @@ class ChildWidget extends StatelessWidget {
       * **组件状态管理**：`GlobalKey` 还可以用于管理 *Widget* 的状态。例如，你可以使用 `GlobalKey` 来保存和恢复 *Widget* 的状态，或者在需要时重新构建 *Widget*；
       * **重建 Widget**：使用 `GlobalKey` 可以在需要时重新构建整个 *Widget*，而不必手动保存和重新创建 *Widget* 的状态。这在一些场景下可能会更加方便；
 ## ***Dart.Flutter.UI***
-### ***Dart.Flutter.MaterialApp*** 和 ***Dart.Flutter.CupertinoApp*** 的生命周期方法
-***MaterialApp*** 和 ***CupertinoApp*** 都有各自的生命周期方法，它们继承自 ***WidgetsApp***，因此具有相似的生命周期（7个）
+### ***❤️Dart.Flutter.MaterialApp*** 和 ***Dart.Flutter.CupertinoApp*** 的生命周期方法
+***MaterialApp*** 和 ***CupertinoApp*** 都有各自的生命周期方法，它们继承自 ***WidgetsApp***，因此具有相似的生命周期（**7个**）
 
 * `createState()`：用于创建小部件的状态对象。这个方法在小部件第一次被创建时调用，通常用于初始化状态；
 * `initState()`：在小部件被插入到小部件树中时调用。通常在这个方法中执行一些初始化操作，比如订阅流、初始化控制器等；
@@ -2604,7 +2604,7 @@ class MyApp extends StatelessWidget {
   }
 }
 ```
-## ***Dart.Flutter***.<span style="color:red; font-weight:bold;">*Provider*</span>
+## ***❤️Dart.Flutter***.<span style="color:red; font-weight:bold;">*Provider*</span>
 * 主要用于解决 Dart.Flutter 应用程序中的***数据共享和管理***问题；
 * 第三方，需要引入包；
 ```yaml
@@ -2834,7 +2834,7 @@ class MyHomePage extends StatelessWidget {
 * Dart：
   * 是从 `_dispatchPointerDataPacket` 开始的，之后会通过 `Zone` 判断环境回调，会执行 ***GestureBinding*** 这个胶水类中的 `_handlePointerEvent` 方法；
 * Android：
-  * 所有的事件都是起原生源于***io.flutter.view.FlutterView ： SurfaceView***
+  * 所有的事件都是起源于原生***io.flutter.view.FlutterView ： SurfaceView***
   * 整个触摸手势事件实质上经历了 **JAVA => C++ => Dart** 的一个流程；
   * 手势信息打包成**ByteBuffer**进行传递，最后在 Dart 层的 `_dispatchPointerDataPacket` 方法中，通过 `_unpackPointerDataPacket` 方法解析成可用的 ***PointerDataPacket*** 对象使用。
 * iOS:
@@ -3211,7 +3211,7 @@ void main() {
   ));
 }
 ```
-### ***解决手势冲突（控制手势的响应范围以及触发条件）***
+### ***❤️解决手势冲突（控制手势的响应范围以及触发条件）***
 * ***GestureDetector*** **的各种回调函数** 比如：`onTap`、`onDoubleTap`、`onLongPress`等
 ```dart
 GestureDetector(
@@ -3402,7 +3402,8 @@ class MyApp extends StatelessWidget {
   final user = User().obs;
   ```
 * 自定义类的`Obx`使用：
-  <span style="color:red; font-weight:bold;">***方式一：直接声明变量（类内部赋默认值）***</span>（name.value）
+<span style="color:red; font-weight:bold;">***方式一：直接声明变量（类内部赋默认值）***</span>（name.value）
+
 ```dart
 class People{
   // 直接声明变量
@@ -3502,7 +3503,9 @@ class Demo1 extends StatelessWidget {
   * `GetBuilder`：简单状态管理，当数据源变化时，需要**手动**执行刷新组件的方法，此状态管理器内部实际上是对*StatefulWidget*的封装，占用资源极少！
     <span style="color:red; font-weight:bold;">***但是每个响应式变量`（.obs）`，都需要生成对应的GetStream，如果对象足够多，将生成大量的GetStream，必将对内存造成较大的压力。***</span>
     <span style="color:red; font-weight:bold;">***该情况下，就要考虑使用简单状态管理了。***</span>
+
 ## ***Dart.Flutter.网络请求***
+
 * [***http***](https://github.com/dart-lang/http)
   * [***http***](https://github.com/dart-lang/http)是 ***Dart.Flutter 官方提供的一个基本的网络请求库***，它提供了简单易用的 API，可以方便地进行 *HTTP* 请求和响应的处理；
   * 虽然功能相对简单，但*适用于大多数简单的网络请求场景*；
@@ -3856,9 +3859,9 @@ void main() {
 
 <span style="color:red; font-weight:bold;">***值得注意的是：在Dart中，异步操作不是多线程（有别于Java）***</span>
 ### ***Dart.Isolate***
-* 在Dart 2.6 版本中引入。Isolate 是 Dart 中的<u>并发执行单元</u>，<span style="color:red; font-weight:bold;">***类似于线程***</span>（即，***Dart的线程是被封装在Isolate里面的***）。但具有独立的内存堆；
-* Isolate 之间通过消息传递进行通信，这种模型<u>有助于避免共享内存的并发问题</u>。( JS里面也是模拟多线程，<span style="color:red; font-weight:bold;">**因为总共才一个线程**</span>)
-### ***Dart.Future***
+* 在Dart 2.6 版本中引入。Isolate 是 Dart 中的<u>并发执行单元</u>，<span style="color:red; font-weight:bold;">***类似于线程***</span>（即，***Dart的线程是被封装在Isolate里面的***）。但具有独立的堆内存；
+* Isolate 之间通过**消息传递**进行通信，这种模型<u>有助于避免共享内存的并发问题</u>。( JS里面也是模拟多线程，<span style="color:red; font-weight:bold;">**因为总共才一个线程**</span>)
+### ***❤️Dart.Future***
 
 ***Future*** 是一个***用于表示异步操作结果的对象***。*通常用于处理需要等待一段时间才能完成的操作。它表示一个在某个未来时刻会产生值或错误的计算过程*；
 
@@ -4189,7 +4192,7 @@ flutter: 100
 flutter: 5
 flutter: complete
 ```
-#### ***Dart.Flutter.FutureBuilder***
+#### ***❤️Dart.Flutter.FutureBuilder***
 
 *  *Future* 提供了一个名为 *FutureBuilder* 的*Widget*，<span style="color:red; font-weight:bold;">***用于在Future完成后构建UI***</span>。使用 *FutureBuilder*，你可以轻松地根据 *Future* 的状态（未完成、完成并成功返回结果、完成但返回错误）来构建不同的UI；
   
@@ -4276,7 +4279,7 @@ flutter: complete
 * ***AsyncSnapshot*** 是 Flutter 中用于表示异步操作的快照的类。它通常与 [***FutureBuilder***](# Dart.Flutter.FutureBuilder) 或 [***StreamBuilder***](# Dart.Flutter.Widget.StreamBuilder) 一起使用，用于获取异步操作的结果或状态，并在 UI 中进行相应的处理。
 * ***AsyncSnapshot*** 包含了有关异步操作当前状态的信息，例如数据、错误、连接状态等；
 
-### ***Dart.Stream***
+### ***❤️Dart.Stream***
 
 ### 资料来源
 
@@ -4862,7 +4865,13 @@ class _LoginPageState extends State<LoginPage> {
 
 ## 其他
 
+* Dart 没有宏定义的概念。
+  
+  * Dart 是一种强类型的面向对象语言，它没有预处理器，也不支持在编译前执行类似宏定义的操作；
+  * 相反，Dart 通过其强大的语言特性（如函数、类、常量等）来支持代码重用和抽象化；
+  
 * 一些报错的处理经验记录
+  
   * <span style="color:red; font-weight:bold;">***[ERROR:flutter/shell/platform/darwin/graphics/FlutterDarwinContextMetalImpeller.mm(42)] Using the Impeller rendering backend.***</span> 
   ```shell
   Launching lib/main.dart on iPhone Xs in debug mode...
@@ -4883,11 +4892,11 @@ class _LoginPageState extends State<LoginPage> {
   </dict>
   </plist>
   ```
-
+  
   * <span style="color:red; font-weight:bold;">***Target debug_unpack_ios failed: Exception: Failed to codesign***</span> 
-
+  
   [***解决方案***](https://www.cnblogs.com/cappuccino/p/17777342.html)：关闭iCloud同步
-
+  
   ```shell
     Failed to build iOS app
     Error (Xcode): Target debug_unpack_ios failed: Exception: Failed to codesign
@@ -4928,6 +4937,27 @@ class _LoginPageState extends State<LoginPage> {
       logger.e('Error message');
       logger.v('Verbose message');
       ```
+    
+  * <span style="color:red; font-weight:bold;">In iOS 14+ ,debug mode Flutter apps can only be launched from Flutter tooling,IDEs with Flutter Plugins or from Xcode.Alternatively,build in profile or release modes to enable launching from the Home Screen.</span> 
+  
+    * 这个错误的出现，是用真机（开发者账号）运行的时候出现的
+    
+    * 解决方案：
+    
+      ```bash
+      #! /bin/sh
+      
+      # 获取当前脚本文件的目录
+      current_directory=$(dirname "$(readlink -f "$0")")
+      echo $current_directory
+      cd $current_directory
+      
+      # 真机运行
+      flutter run --release
+      ```
+  
+  ![image-20240508200637056](./assets/image-20240508200637056.png)
+  
 
 ### ***Dart.Flutter.DevTools***
 
@@ -4949,7 +4979,8 @@ Dart.Flutter提供了一些调试工具来帮助开发者调试应用程序的�
 * *Retrofit* 是一个针对 *Android* 平台的 [***RESTful API***](# RESTful API)客户端库，由 Square 公司开发和维护；
 * 它提供了一种简单、强大的方式来执行网络请求和处理 API 响应；
 * *Retrofit* 基于 *OkHttp* 库构建，可以与其无缝集成，提供了许多便捷的功能和特性；
-### ***Dart.Flutter.对象循环引用问题***
+### ***❤️Dart.Flutter.对象循环引用问题***
+
 * 表现形式：
   * ***Widget*之间的循环引用**：相互持有，无法释放；
   * **异步操作中的循环引用**：在异步操作中，例如使用[***Stream***](# Dart.Stream)或[***Future***](# Dart.Future)进行数据流处理时，如果没有正确处理对资源的引用，可能会导致循环引用问题；
