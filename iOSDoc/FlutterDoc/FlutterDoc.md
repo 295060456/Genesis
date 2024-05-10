@@ -746,12 +746,15 @@ class _CounterWidgetState extends State<CounterWidget> {
   因为状态被保存在 StatefulWidget 中，而不是每次重新创建
 */
 ```
-* ***Dart.Flutter.State***的生命周期（7个）：<span style="color:red; font-weight:bold;">**是指 *StatefulWidget* 对象的状态变化和生命周期方法调用的过程**</span>；
+* ### ***Dart.Flutter.State***的生命周期（8个）
+
+<span style="color:red; font-weight:bold;">**是指 *StatefulWidget* 对象的状态变化和生命周期方法调用的过程**</span>
+
   * `createState()`
     - 调用时机：在 *StatefulWidget* 首次被创建时调用。
-    - 作用：用于创建 *StatefulWidget* 的关联 *State* 对象。
+    - 作用：用于创建 *StatefulWidget* 的关联 *State* 对象。这个方法在小部件第一次被创建时调用，通常用于初始化状态；
   * `initState()`
-    - 调用时机：在与 *State*对象关联的 *StatefulWidget* 被插入到树中时调用，即在 *Widget* 的生命周期中只会被调用一次。
+    - 调用时机：在与 *State*对象关联的 *StatefulWidget* 被**插入到树中**时调用，即在 *Widget* 的生命周期中只会被调用一次。
     - 作用：通常用于执行一次性的初始化操作，比如订阅流、初始化变量等。
   * `didChangeDependencies()`
     - 调用时机：在 *State*对象依赖的对象发生变化时被调用，例如在 `initState()` 之后，*Widget* 的依赖关系发生变化时调用。
@@ -761,14 +764,17 @@ class _CounterWidgetState extends State<CounterWidget> {
     - 作用：用于构建当前 *State* 对象所对应的 *Widget* 树。
   * `didUpdateWidget()`
     - 调用时机：在 *Widget* 树中的一个已存在的子树，发生变化时，会调用旧的 *Widget* 的 `didUpdateWidget` 方法。
-    - 作用：通常用于在 *Widget* 重新构建时执行一些操作，例如对比新旧 *Widget* 的属性值，并做相应的处理。
+    - 作用：通常用于在 *Widget* 重新构建时执行一些操作。当小部件的配置发生变化时调用。***通常用于处理小部件的状态变化***。例如对比新旧 *Widget* 的属性值，并做相应的处理；
   * `setState()`
     - 调用时机：当调用此方法时，Dart.Flutter 会重新调用 `build()` 方法，从而更新 *Widget* 树。
     - 作用：用于通知 Dart.Flutter 框架，*State* 对象的状态发生了变化，需要重新构建 *Widget* 树。
+  * `deactivate()`
+    * 当小部件被移除时调用。通常用于释放资源或取消订阅；
   * `dispose()`
     - 调用时机：在 *State* 对象从 *Widget* 树中被永久移除时调用。
-    - 作用：通常用于执行一些清理操作，比如取消订阅、释放资源等。
+    - 作用：通常用于执行一些清理操作，比如取消订阅、释放资源等。通常来说，`super.dispose()` 应该放在最后调用，因为这是 Dart.Flutter 框架设计的推荐做法，以确保在小部件的生命周期结束时执行所有必要的清理操作。（区别于OC）
 * [***InheritedWidget***](# Dart.Flutter.Widget.InheritedWidget)
+
 ## ***Dart.Flutter.`setState`***
 * 是 Flutter 的单向数据流模型。当调用一个 *Widget* 的 `setState` 方法时，Flutter 将会标记该 *Widget* 为***dirty***，表示该 *Widget* 及其子树需要被重新构建；
 * 重新构建时，Flutter 会调用该 *Widget* 的 `build` 方法来生成新的 UI 树，从而实现 UI 的更新；
@@ -1422,17 +1428,9 @@ class ChildWidget extends StatelessWidget {
       * **组件状态管理**：`GlobalKey` 还可以用于管理 *Widget* 的状态。例如，你可以使用 `GlobalKey` 来保存和恢复 *Widget* 的状态，或者在需要时重新构建 *Widget*；
       * **重建 Widget**：使用 `GlobalKey` 可以在需要时重新构建整个 *Widget*，而不必手动保存和重新创建 *Widget* 的状态。这在一些场景下可能会更加方便；
 ## ***Dart.Flutter.UI***
-### ***❤️Dart.Flutter.MaterialApp*** 和 ***Dart.Flutter.CupertinoApp*** 的生命周期方法
-***MaterialApp*** 和 ***CupertinoApp*** 都有各自的生命周期方法，它们继承自 ***WidgetsApp***，因此具有相似的生命周期（**7个**）
+### ***Dart.Flutter.MaterialApp*** 和 ***Dart.Flutter.CupertinoApp*** 的生命周期方法
 
-* `createState()`：用于创建小部件的状态对象。这个方法在小部件第一次被创建时调用，通常用于初始化状态；
-* `initState()`：在小部件被插入到小部件树中时调用。通常在这个方法中执行一些初始化操作，比如订阅流、初始化控制器等；
-* `didChangeDependencies()`：当小部件依赖的对象发生变化时调用。***通常用于处理依赖关系发生变化时的逻辑***；
-* `build()`：构建小部件的UI结构，这个方法会在小部件需要被构建时调用；
-* `didUpdateWidget()`：当小部件的配置发生变化时调用。***通常用于处理小部件的状态变化***；
-* `deactivate()`：当小部件被移除时调用。通常用于释放资源或取消订阅；
-* `dispose()`：在小部件被销毁时调用。通常用于释放资源、取消订阅以及清理工作；
-  * 通常来说，`super.dispose()` 应该放在最后调用，因为这是 Dart.Flutter 框架设计的推荐做法，以确保在小部件的生命周期结束时执行所有必要的清理操作。（区别于OC）
+* ***MaterialApp*** 和 ***CupertinoApp*** 都有各自的生命周期方法，它们继承自 ***WidgetsApp***，因此具有相似的[**生命周期**](# ***Dart.Flutter.State***的生命周期（8个）)
 
 ### `MyHomePage`和`_MyHomePageState`的分离
 
@@ -4764,7 +4762,7 @@ class DetailsScreen extends StatelessWidget {
 *  [***flutter_ffmpeg***](https://github.com/tanersener/flutter-ffmpeg)：
   * ***开源项目*** <span style="color:red; font-weight:bold;">**（停止维护）**</span>；
   * 这是一个基于 *FFmpeg* 的 Dart.Flutter 插件，它提供了一种在 Dart.Flutter 应用程序中执行音视频处理和转码的方式。
-  * 使用 [***flutter_ffmpeg***](https://github.com/tanersener/flutter-ffmpeg)，您可以执行各种音视频处理任务，如裁剪、合并、转码等  * 它是一个功能强大的音视频处理解决方案，但***需要对 FFmpeg 的使用和命令行参数有一定的了解***。
+  * 使用 [***flutter_ffmpeg***](https://github.com/tanersener/flutter-ffmpeg)，您可以执行各种音视频处理任务，如裁剪、合并、转码等。它是一个功能强大的音视频处理解决方案，但***需要对 FFmpeg 的使用和命令行参数有一定的了解***。
 * [***Agora SDK***](https://github.com/AgoraIO-Extensions/Agora-Flutter-SDK)：
   * [***Agora SDK***](https://github.com/AgoraIO-Extensions/Agora-Flutter-SDK) <span style="color:red; font-weight:bold;">***是不开源的***</span>。[***Agora SDK***](https://github.com/AgoraIO-Extensions/Agora-Flutter-SDK)是由 *Agora* 公司开发和维护的，用于***实时音视频通信的 SDK***；
   * [***Agora SDK***](https://github.com/AgoraIO-Extensions/Agora-Flutter-SDK)是一个专门用于实时音视频通信的 SDK，它提供了丰富的功能和强大的性能，包括音视频通话、直播、互动白板等功能；
