@@ -42,7 +42,7 @@ To github.com:295060456/JobsOCKit.git
   * `path_to_submodule` 是相对外层Git文件的路径。这里是`./JobsBlock`
   
   * 此时会在最外层目录，生成一个名为`.gitmodules`的隐藏文件
-  
-   ![image-20240507184331553](./assets/image-20240507184331553.png)
-  
+
+![image-20240507184331553](./assets/image-20240507184331553.png)
+
 * 最后，对最外层的Git管理的文件（夹），进行同步处理。成功完成！！！
