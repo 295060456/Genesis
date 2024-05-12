@@ -109,7 +109,7 @@
     static const int myConstVar = 42;
   
     static void printConstVar() {
-      print('My const variable: $myConstVar');
+      debugPrint('My const variable: $myConstVar');
     }
   }
   
@@ -117,7 +117,7 @@
     // 直接访问静态方法
     MyClass.printConstVar();
     // 或者通过类名访问静态变量
-    print('Accessing const variable via class: ${MyClass.myConstVar}');
+    debugPrint('Accessing const variable via class: ${MyClass.myConstVar}');
   }
   ```
   * <span style="color:red; font-weight:bold;">***const***</span>修饰的List集合任意索引不可修改，<span style="color:red; font-weight:bold;">***final***</span>修饰的可以修改；
@@ -137,7 +137,7 @@
     // 删除元素
     finalList.removeAt(1);
   
-    print('Final List: $finalList');
+    debugPrint('Final List: $finalList');
   }
   ```
   *  <span style="color:red; font-weight:bold;">***`const`***</span>用来修饰变量 只能被赋值一次，在**编译**时赋值；**仅用于标识编译时常量**
@@ -152,7 +152,7 @@
      const MyClass(this.x, this.y); // 使用 const 修饰构造函数，并要求所有成员都是 final 的
    
      void printValues() {
-       print('x: $x, y: $y');
+       debugPrint('x: $x, y: $y');
      }
    }
    
@@ -167,7 +167,97 @@
      myConstObject.printValues();
    }
    ```
+## ***Dart.方法的定义（写法）***
+
+* ```dart
+  import 'package:flutter/foundation.dart';
+  
+  class MyClass {
+    // 定义一个实例方法
+    void instanceMethod() {
+      debugPrint('MyClass的实例方法');
+    }
+    // 定义一个类方法
+    static void classMethod() {
+      debugPrint('MyClass的类方法');
+    }
+  }
+  
+  void main() {
+    // 调用实例方法
+    MyClass myObject = MyClass();
+    myObject.instanceMethod(); // 输出：MyClass的实例方法
+    // 调用类方法，无需创建类的实例
+    MyClass.classMethod(); // 输出：MyClass的类方法
+  }
+  ```
+
+* ```dart
+  import 'package:flutter/foundation.dart';
+  
+  class MyClass {
+    String? senderId;
+    String? type;
+    String? senderName;
+    String? content;
+    dynamic receiveIds;
+    dynamic gift;
+    // 构造方法
+    Message({this.senderId, this.type, this.senderName, this.content, this.receiveIds, this.gift});
+    // 定义一个实例方法
+    void instanceMethod() {
+      debugPrint('This is an instance method');
+    }
+    // 定义一个类方法
+    MyClass.fromJson(Map<String, dynamic>? json) {
+      if (json != null) {
+        if(json["senderID"] is String) {
+        senderId = json["senderID"];
+      	}
+        if(json["type"] is String) {
+          type = json["type"];
+        }
+        if(json["senderName"] is String) {
+          senderName = json["senderName"];
+        }
+        if(json["content"] is String) {
+          content = json["content"];
+        }
+        receiveIds = json["receiveIds"];
+     	  gift = json["gift"];
+      }else{
+        debugPrint('MyClass的类方法');
+      }
+  }
+  
+  void main() {
+    // 调用实例方法
+    MyClass myObject = MyClass();
+    myObject.instanceMethod(); // 输出：MyClass的实例方法
+    // 调用类方法，无需创建类的实例
+    MyClass.fromJson(); // 输出：MyClass的类方法
+  }
+  ```
+
+## ***Dart.下划线***
+
+* 可以提供更清晰的代码意图和保护
+  * `_` 前缀表示这个构造函数是私有的，只能在当前的库（文件）中访问。其他文件无法访问以`_`开头的函数或者变量。
+  * 这个构造函数被放置在 `AppColors` 类的内部，因此只有 `AppColors` 类内部可以调用这个构造函数。
+
+  ```dart
+  class AppColors {
+    AppColors._();
+    static const transparent = Color(0x00000000);
+    static const primary = Color(0xFF22BB62);
+    static const backgroundColor = Colors.black;
+    var buttonColor = Colors.red[400];
+    static const borderColor = Colors.grey;
+  }
+  ```
+
 ## ***Dart.级联操作符***
+
 ```dart
 var person = Person()
   ..setName('Bob')
@@ -256,17 +346,19 @@ gcc -shared -o libexample.so example.c
   * **可以调用父类方法**：<span style="color:red; font-weight:bold;">*`Mixin`*</span> 类可以调用目标类的父类的方法，这使得 <span style="color:red; font-weight:bold;">*`Mixin`*</span> 更加灵活；
   * **可以组合多个** <span style="color:red; font-weight:bold;">*`Mixin`*</span>：一个类可以同时使用多个 <span style="color:red; font-weight:bold;">*`Mixin`*</span>，通过逗号分隔。<span style="color:red; font-weight:bold;">*`Mixin`*</span> 的组合顺序很重要，因为如果多个 <span style="color:red; font-weight:bold;">*`Mixin`*</span> 中有相同的方法或属性，那么最后一个 <span style="color:red; font-weight:bold;">*`Mixin`*</span> 中的方法或属性会覆盖前面的；
 ```dart
+import 'package:flutter/foundation.dart';
+
 // 定义一个 Mixin
 mixin Swimming {
   void swim() {
-    print('Swimming...');
+    debugPrint('Swimming...');
   }
 }
 
 // 定义一个类，同时使用 Mixin
 class Duck with Swimming {
   void quack() {
-    print('Quack!');
+    debugPrint('Quack!');
   }
 }
 
@@ -434,6 +526,8 @@ class MyApp extends StatelessWidget {
 ```
 * Swift懒加载关键字<span style="color:red; font-weight:bold;">*`lazy`*</span>
 ```swift
+import 'package:flutter/foundation.dart';
+
 class MyClass {
     // 使用懒加载延迟初始化 x 变量
     // 使用闭包（匿名函数）来定义懒加载的属性。
@@ -445,7 +539,7 @@ class MyClass {
 
 let obj = MyClass()
 // 在首次访问 x 变量时进行初始化
-print(obj.x) // 输出: 10
+debugPrint(obj.x) // 输出: 10
 ```
 ## ***Dart.Flutter.Widget 树***
 
@@ -484,7 +578,7 @@ print(obj.x) // 输出: 10
     // 依赖注入的服务类
     class MyService {
       void doSomething() {
-        print('MyService is doing something');
+        debugPrint('MyService is doing something');
       }
     }
     // 使用依赖注入的控制器
@@ -540,6 +634,7 @@ print(obj.x) // 输出: 10
     *使用以下示例：*
     
     ```dart
+    import 'package:flutter/foundation.dart';
     import 'package:flutter/material.dart';
     import 'package:get_it/get_it.dart';
     
@@ -551,7 +646,7 @@ print(obj.x) // 输出: 10
     class ConsoleLogger implements Logger {
       @override
       void log(String message) {
-        print('ConsoleLogger: $message');
+        debugPrint('ConsoleLogger: $message');
       }
     }
     // 注册服务实例
@@ -860,6 +955,7 @@ class CountModel extends Model {
 * 它属于一种设计模式，在 Dart.Flutter 中它主要是通过 [***Stream***](# Dart.Stream) 与 [***SteamBuilder***](# Dart.Flutter.SteamBuilder) 来实现设计的，所以 ***BloC*** 实现起来也相对简单；
 * 当然，如果和 `rxdart` 结合可以简化 [***StreamController***](# Dart.Flutter.StreamController)  的一些操作，同时如果你需要利用 `BloC` 模式实现状态共享，那么自己也可以封装多一层 [***InheritedWidgets***](# Dart.Flutter.Widget.InheritedWidget) 的嵌套；
 * **BloC**没实现路由管理；
+* **BloC** 是 Flutter 中组织代码的起点，它将业务逻辑与可视化分开；
 * 业务处理流程总结：
   * 定义一个 ***PageBloc*** 对象，利用 [***StreamController***](# Dart.Flutter.StreamController) 创建 ***Sink*** 与 [***Stream***](# Dart.Stream)；
   * ***PageBloc*** 对外暴露 ***Stream*** 用来与 [***SteamBuilder***](# Dart.Flutter.SteamBuilder)   结合；暴露 `add` 方法提供外部调用，内部通过 ***Sink*** 更新 ***Stream***；
@@ -981,12 +1077,14 @@ dependencies:
     *用于在每次分派（dispatch）action 时打印日志👇🏻*
   
   ```dart
+  import 'package:flutter/foundation.dart';
+  
   void loggingMiddleware(Store<AppState> store, action, NextDispatcher next) {
-    print('Action: $action');
-    print('Current State: ${store.state}');
+    debugPrint('Action: $action');
+    debugPrint('Current State: ${store.state}');
     // 调用下一个 Middleware 或者 reducer
     next(action);
-    print('Next State: ${store.state}');
+    debugPrint('Next State: ${store.state}');
   }
   ```
   
@@ -1771,6 +1869,7 @@ class MyApp extends StatelessWidget {
 ```
 ```dart
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 
 void main() {
   runApp(MyApp());
@@ -1797,7 +1896,7 @@ class MyApp extends StatelessWidget {
               ElevatedButton(
                 onPressed: () {
                   // 按钮点击时执行的操作
-                  print('Button pressed');
+                  debugPrint('Button pressed');
                 },
                 child: Text('Button'),
               ),
@@ -2283,7 +2382,8 @@ class FlareAnimationDemo extends StatelessWidget {
   确保将Flare文件的路径正确地指定为您项目中的实际路径，并将动画名称设置为您要播放的实际动画名称。
 */
 ```
-## ***Dart.Flutter.database***
+## ***🪣Dart.Flutter.Database***
+
 <span style="color:red; font-weight:bold;">**Dart.Flutter 官方目前没有提供一个 Dart.Flutter 原生自带的数据库解决方案。**</span>Dart.Flutter 团队的重点是提供一个灵活、高性能的 UI 框架，以便开发人员可以构建跨平台的用户界面。对于数据存储和管理，Dart.Flutter 官方更多地依赖于第三方库和平台特定的解决方案
 ```
 SQLite 是一种跨平台的关系型数据库管理系统 (RDBMS)，它是由 D. Richard Hipp 在 2000 年开发的，最初是为了满足其他项目的需求。
@@ -2296,10 +2396,24 @@ Core Data 提供了比 SQLite 更高级和更复杂的功能，但与 SQLite 相
 
 可以使用 Android 提供的 SQLiteOpenHelper 类或者第三方库（如 Room Persistence Library）来简化 SQLite 数据库的管理和操作。
 ```
+* [***Dart.Flutter.GetStorage***](# https://pub.dev/packages/get_storage)
+  * [**GetStorage**](# https://pub.dev/packages/get_storage)，是 Dart.Flutter 生态中的一个**轻量级**的本地（数据持久化方案）存储解决方案；
+  * 它是一个简单易用的 key-value 存储库，用于在 Flutter 应用程序中持久化存储简单的数据；
+  * 使用单例模式：整个应用程序生命周期内，只有一个 [**GetStorage()**](# https://pub.dev/packages/get_storage) 实例存在，而且这个实例可以在应用程序的任何地方被访问和使用；
+  * 主要特性：
+    * **简单易用**：[**GetStorage**](# https://pub.dev/packages/get_storage) 提供了简单的 API，使得存储和读取数据变得非常容易；
+    * **轻量级**： [**GetStorage**](# https://pub.dev/packages/get_storage) 是一个轻量级的解决方案，不需要依赖复杂的数据库引擎或第三方库；
+    * **跨平台**： [**GetStorage**](# https://pub.dev/packages/get_storage) 适用于 *Android*、*iOS*、*Web*、*Linux*、*Mac* 以及 *Fuchsia* 和 *Windows* 的持久键/值存储，使得在不同平台之间共享数据变得更加方便；
+    * **高性能**： [**GetStorage**](# https://pub.dev/packages/get_storage) 设计用于高性能，适用于存储小规模数据。如：**偏好设置、临时状态等、应用程序的主题设置、认证令牌、http请求的缓存、简单的地图存储**等；
+    * **无需序列化**： [**GetStorage**](# https://pub.dev/packages/get_storage) 可以存储各种基本数据类型（如整数、字符串、布尔值等），而**不需要进行序列化**操作；
+  * 不需要使用[**GetStorage**](# https://pub.dev/packages/get_storage)的情况：
+    * 需要数据库索引的时候；
+    * 当需要在开始另一个操作之前始终检查文件是否已写入存储磁盘时。（内存中的存储是立即完成的，并且可以使用 `box.read()` 立即读取，并且**备份到磁盘是在后台完成的**。<u>确保备份完成，可以使用`await`，但如果需要一直调用`await`，那么使用内存存储就没有意义了</u>）。
 * [***SQFlite***](https://github.com/tekartik/sqflite)
   * 这是一个用于 Dart.Flutter 的 ***SQLite*** **数据库封装**；
   * ***SQLite*** 是一种轻量级的关系型数据库，非常适合移动应用程序；
   * [***SQFlite***](https://github.com/tekartik/sqflite) 提供了一个简单的 API 来执行 SQL 查询和操作，使您可以在 Dart.Flutter 应用程序中使用 ***SQLite*** 数据库；
+
 ```yaml
 dependencies:
   flutter:
@@ -2353,7 +2467,7 @@ class MyApp extends StatelessWidget {
               List<Map<String, dynamic>> users = await database.query('users');
 
               // 打印查询结果
-              print(users);
+              debugPrint(users);
             },
             child: Text('Insert Data'),
           ),
@@ -2377,6 +2491,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:flutter/foundation.dart';
 
 void main() async {
   // 初始化 Hive，并设置应用程序的本地存储路径
@@ -2410,7 +2525,7 @@ class MyApp extends StatelessWidget {
               int age = box.get('age', defaultValue: 0);
 
               // 打印读取的数据
-              print('Name: $name, Age: $age');
+              debugPrint('Name: $name, Age: $age');
 
               // 关闭 Hive Box
               await box.close();
@@ -2433,6 +2548,7 @@ dependencies:
 ```dart
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+
 
 void main() {
   runApp(MyApp());
@@ -2463,7 +2579,7 @@ class MyApp extends StatelessWidget {
 
               // 遍历查询结果并打印数据
               querySnapshot.docs.forEach((doc) {
-                print('Name: ${doc['name']}, Age: ${doc['age']}');
+                debugPrint('Name: ${doc['name']}, Age: ${doc['age']}');
               });
             },
             child: Text('Insert Data'),
@@ -2519,7 +2635,7 @@ class MyApp extends StatelessWidget {
               // 遍历查询结果并打印数据
               Map<dynamic, dynamic> users = dataSnapshot.value;
               users.forEach((key, value) {
-                print('Key: $key, Name: ${value['name']}, Age: ${value['age']}');
+                debugPrint('Key: $key, Name: ${value['name']}, Age: ${value['age']}');
               });
             },
             child: Text('Insert Data'),
@@ -2591,7 +2707,7 @@ class MyApp extends StatelessWidget {
 
               // 打印查询结果
               users.forEach((user) {
-                print('Name: ${user.name}, Age: ${user.age}');
+                debugPrint('Name: ${user.name}, Age: ${user.age}');
               });
             },
             child: Text('Insert Data'),
@@ -2853,7 +2969,7 @@ void main() {
         /// ❤️关键代码❤️
         child: GestureDetector(
           onTap: () {
-            print('点击了按钮');
+            debugPrint('点击了按钮');
           },
           child: Container(
             padding: EdgeInsets.all(12.0),
@@ -2891,7 +3007,7 @@ void main() {
         /// ❤️关键代码❤️
         child: InkWell(
           onTap: () {
-            print('点击了InkWell');
+            debugPrint('点击了InkWell');
           },
           child: Container(
             padding: EdgeInsets.all(12.0),
@@ -2931,7 +3047,7 @@ void main() {
         /// ❤️关键代码❤️
         child: InkResponse(
           onTap: () {
-            print('点击了InkResponse');
+            debugPrint('点击了InkResponse');
           },
           child: Container(
             padding: EdgeInsets.all(12.0),
@@ -2969,7 +3085,7 @@ void main() {
         /// ❤️关键代码❤️
         child: GestureDetector(
           onLongPress: () {
-            print('长按了按钮');
+            debugPrint('长按了按钮');
           },
           child: Container(
             padding: EdgeInsets.all(12.0),
@@ -3044,7 +3160,7 @@ class DraggableDemo extends StatelessWidget {
             color: Colors.blue.withOpacity(0.5),
           ),
           onDraggableCanceled: (Velocity velocity, Offset offset) {
-            print('拖动取消');
+            debugPrint('拖动取消');
           },
         ),
       ),
@@ -3127,10 +3243,10 @@ void main() {
           onHorizontalDragUpdate: (details) {
             if (details.delta.dx > 0) {
               // 向右滑动
-              print('向右滑动');
+              debugPrint('向右滑动');
             } else if (details.delta.dx < 0) {
               // 向左滑动
-              print('向左滑动');
+              debugPrint('向左滑动');
             }
           },
           child: Container(
@@ -3171,10 +3287,10 @@ void main() {
           onDismissed: (direction) {
             if (direction == DismissDirection.startToEnd) {
               // 向右滑动
-              print('向右滑动');
+              debugPrint('向右滑动');
             } else if (direction == DismissDirection.endToStart) {
               // 向左滑动
-              print('向左滑动');
+              debugPrint('向左滑动');
             }
           },
           // 左滑时的背景内容
@@ -3245,7 +3361,7 @@ class MyApp extends StatelessWidget {
             child: GestureDetector(
               behavior: HitTestBehavior.opaque,
               onTap: () {
-                print('Container tapped');
+                debugPrint('Container tapped');
               },
               child: Center(
                 child: Text(
@@ -3283,13 +3399,13 @@ class MyApp extends StatelessWidget {
           /// ❤️关键代码❤️
           child: Listener(
             onPointerDown: (PointerDownEvent event) {
-              print('Pointer down');
+              debugPrint('Pointer down');
             },
             onPointerMove: (PointerMoveEvent event) {
-              print('Pointer move');
+              debugPrint('Pointer move');
             },
             onPointerUp: (PointerUpEvent event) {
-              print('Pointer up');
+              debugPrint('Pointer up');
             },
             child: Container(
               width: 200,
@@ -3326,12 +3442,22 @@ IgnorePointer(
 )
 ```
 ## ***Dart.Flutter.GetX***
+
 ### 资料来源
+
 [***Flutter状态管理GetX使用详解***](https://juejin.cn/post/7020598013986865182)
+
 ### 作用
 
 * 跨页面交互、路由管理、全局[***BuildContext***](# Dart.Context（上下文）)、国际化，主题实现
+* [**GetX**](# https://pub.dev/packages/get) 也能够使用相同的代码在 *Android*、*iOS*、*Web*、*Mac*、*Linux*、*Windows* 和服务器上运行
+* 使用[**Get Server**](# https://github.com/jonataslaw/get_server)**可以在后端完全重用在前端编写的代码**
+* [**GetX**](# https://pub.dev/packages/get) 每个功能都位于单独的容器中，并且只有在使用后才启动
+  * 如果仅使用状态管理，则仅编译状态管理
+  * 如果仅使用路由，则不会编译任何来自状态管理的内容
+
 ### 安装
+
 * 将 [***GitHub.GetX***](https://github.com/jonataslaw/getx)添加到您的 *pubspec.yaml* 文件中：
 ```yaml
 dependencies:
@@ -3362,7 +3488,7 @@ class MyApp extends StatelessWidget {
 ```
 ### ***`Obx`***
 
-* `Obx`：数据的**单向绑定**（数据的改变👉🏻UI更新）。是用于观察**可观察对象**（通常是`Rx`变量或[***GetxController***](# GetxController)中的`Rx`变量）的小部件。
+* `Obx`：<span style="color:red; font-weight:bold;">数据的**单向绑定**</span>（数据的改变👉🏻UI更新）。是用于观察**可观察对象**（通常是`Rx`变量或[***GetxController***](# GetxController)中的`Rx`变量）的小部件。
 * ***三种***声明响应式：<span style="color:blue; font-weight:bold;">***只有当响应式变量的值发生变化时，才会会执行刷新操作，如当变量从“a”再变为“a”，是不会执行刷新操作***</span>
   
   * <span style="color:red; font-weight:bold;">使用 `Rx{Type}`</span>
@@ -3400,6 +3526,7 @@ class MyApp extends StatelessWidget {
   final user = User().obs;
   ```
 * 自定义类的`Obx`使用：
+
 <span style="color:red; font-weight:bold;">***方式一：直接声明变量（类内部赋默认值）***</span>（name.value）
 
 ```dart
@@ -3545,10 +3672,10 @@ class MyApp extends StatelessWidget {
       // 解析响应数据
       Map<String, dynamic> data = jsonDecode(response.body);
       // 打印响应数据
-      print('Response: $data');
+      debugPrint('Response: $data');
     } else {
       // 打印错误消息
-      print('Failed to fetch data: ${response.statusCode}');
+      debugPrint('Failed to fetch data: ${response.statusCode}');
     }
   }
 }
@@ -3594,14 +3721,14 @@ class MyApp extends StatelessWidget {
       // 检查响应状态码
       if (response.statusCode == 200) {
         // 打印响应数据
-        print('Response: ${response.data}');
+        debugPrint('Response: ${response.data}');
       } else {
         // 打印错误消息
-        print('Failed to fetch data: ${response.statusCode}');
+        debugPrint('Failed to fetch data: ${response.statusCode}');
       }
     } on DioError catch (e) {
       ///http错误是通过 DioError 的catch返回的一个对象
-      print('DioError: ${e}');
+      debugPrint('DioError: ${e}');
     }
   }
 }
@@ -3659,14 +3786,14 @@ class MyApp extends StatelessWidget {
       // 检查响应状态码
       if (response.isSuccessful) {
         // 打印响应数据
-        print('Response: ${response.body}');
+        debugPrint('Response: ${response.body}');
       } else {
         // 打印错误消息
-        print('Failed to fetch data: ${response.error}');
+        debugPrint('Failed to fetch data: ${response.error}');
       }
     } catch (e) {
       // 打印错误消息
-      print('Error: $e');
+      debugPrint('Error: $e');
     }
   }
 }
@@ -3736,14 +3863,14 @@ class MyApp extends StatelessWidget {
         // 解析响应数据
         var data = jsonDecode(response.body);
         // 打印响应数据
-        print('Response: $data');
+        debugPrint('Response: $data');
       } else {
         // 打印错误消息
-        print('Failed to fetch data: ${response.statusCode}');
+        debugPrint('Failed to fetch data: ${response.statusCode}');
       }
     } catch (e) {
       // 打印错误消息
-      print('Error: $e');
+      debugPrint('Error: $e');
     } finally {
       // 关闭 HttpClient 实例
       client.close();
@@ -3783,7 +3910,7 @@ void main() {
   String jsonStr = '{"id": 1, "title": "Hello", "body": "World"}';
   Map<String, dynamic> jsonData = jsonDecode(jsonStr);
   Post post = Post.fromJson(jsonData);
-  print(post.title); // Output: Hello
+  debugPrint(post.title); // Output: Hello
 }
 ```
 * **使用第三方库:** [***json_serializable***](https://github.com/google/json_serializable.dart)、[***built_value***](https://github.com/google/built_value.dart)、[***freezed***](https://github.com/rrousselGit/freezed) 来**自动生成数据模型类，并且提供方便的 JSON 序列化和反序列化功能**。这些工具通常需要通过注解来标记数据模型类，并且会自动生成对应的序列化/反序列化代码；
@@ -3898,7 +4025,7 @@ Future<String> getFuture(){
 }
 
 void _incrementCounter() {
-  getFuture().then((value) => print(value));//Future对象用then打开。这里的value就是String，也就是"Alice"
+  getFuture().then((value) => debugPrint(value));//Future对象用then打开。这里的value就是String，也就是"Alice"
 }
 ```
 #### 异步操作的结果：
@@ -3913,16 +4040,16 @@ void _incrementCounter() {
   import 'package:flutter/material.dart';
   
   void main() {
-    print("main1");
-    Future.sync(() => print("main2"));
+    debugPrint("main1");
+    Future.sync(() => debugPrint("main2"));
     Future.value(getName());// 已经确定一个字符串"bob",将他封装成Future
-    print("main2");
+    debugPrint("main2");
   
     runApp(const MyApp());
   }
   
   String getName() {
-    print("get name");
+    debugPrint("get name");
     return "bob";
   }
   // 运行结果
@@ -3940,20 +4067,20 @@ void _incrementCounter() {
   import 'package:flutter/material.dart';
   
   void main() {
-    scheduleMicrotask(() => print("Microtask 1"));// 会自动导入asyn包，即：import 'dart:async';
-    Future.microtask(() => print("Microtask 2"));
-    Future.value(123).then((value) => print("Microtask 3"));
+    scheduleMicrotask(() => debugPrint("Microtask 1"));// 会自动导入asyn包，即：import 'dart:async';
+    Future.microtask(() => debugPrint("Microtask 2"));
+    Future.value(123).then((value) => debugPrint("Microtask 3"));
   
-    print("main1");
-    Future.sync(() => print("sync 1"));
+    debugPrint("main1");
+    Future.sync(() => debugPrint("sync 1"));
     Future.value(getName());
-    print("main2");
+    debugPrint("main2");
   
     runApp(const MyApp());
   }
   
   String getName() {
-    print("get name");
+    debugPrint("get name");
     return "bob";
   }
   // 运行结果
@@ -3974,27 +4101,27 @@ void _incrementCounter() {
   import 'package:flutter/material.dart';
   
   void main() {
-    Future.delayed(Duration(seconds: 1),()=>print("event 3"));
-    Future(()=>print("event 1"));
+    Future.delayed(Duration(seconds: 1),()=>debugPrint("event 3"));
+    Future(()=>debugPrint("event 1"));
     // 这里的时间，不是精确的时间，而是最短的等待时间
     // 这里的Duration.zero不是立即执行，而是0秒以后，系统有机会尽快执行
-    // Future(()=>print("event 1")); 和 Future.delayed(Duration.zero,()=>print("event 2")); 都是等待0秒，谁在前，先执行谁
-    Future.delayed(Duration.zero,()=>print("event 2"));
+    // Future(()=>debugPrint("event 1")); 和 Future.delayed(Duration.zero,()=>debugPrint("event 2")); 都是等待0秒，谁在前，先执行谁
+    Future.delayed(Duration.zero,()=>debugPrint("event 2"));
   
-    scheduleMicrotask(() => print("Microtask 1"));
-    Future.microtask(() => print("Microtask 2"));
-    Future.value(123).then((value) => print("Microtask 3"));
+    scheduleMicrotask(() => debugPrint("Microtask 1"));
+    Future.microtask(() => debugPrint("Microtask 2"));
+    Future.value(123).then((value) => debugPrint("Microtask 3"));
   
-    print("main1");
-    Future.sync(() => print("sync 1"));
+    debugPrint("main1");
+    Future.sync(() => debugPrint("sync 1"));
     Future.value(getName());
-    print("main2");
+    debugPrint("main2");
   
     runApp(const MyApp());
   }
   
   String getName() {
-    print("get name");
+    debugPrint("get name");
     return "bob";
   }
   // 运行结果
@@ -4021,12 +4148,12 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 void main() {
-  Future.delayed(Duration(seconds: 1),() => print("delayed"))
+  Future.delayed(Duration(seconds: 1),() => debugPrint("delayed"))
     .then((value) {
-    scheduleMicrotask(() => print("micro"));
-    print("then");
+    scheduleMicrotask(() => debugPrint("micro"));
+    debugPrint("then");
     })
-    .then((value) => print("then 2"));// Furture的then还是返回一个Future
+    .then((value) => debugPrint("then 2"));// Furture的then还是返回一个Future
 
   runApp(const MyApp());   
 }
@@ -4045,15 +4172,15 @@ flutter: micro
 import 'dart:async';
 
 void main() {
-  print('Fetching Number...');
+  debugPrint('Fetching Number...');
 
   fetchNumber().then((value) {
-    print('Fetched Number: $value');
+    debugPrint('Fetched Number: $value');
   }).catchError((error) {
-    print('Error Fetching Number: $error');
+    debugPrint('Error Fetching Number: $error');
   });
 
-  print('Continuing Execution...');
+  debugPrint('Continuing Execution...');
 }
 ```
 ```dart
@@ -4110,9 +4237,9 @@ Future<int> getFuture()async{
 
 xxx()async{
   int id = await getFuture();
-  print(id);
+  debugPrint(id);
   id *=2;
-  print(id);
+  debugPrint(id);
 }
 // 运行结果
 Launching lib/main.dart on iPhone Xs in debug mode...
@@ -4132,7 +4259,7 @@ flutter: 200
     try {
       int id = await getFuture();
     } catch (e) {
-      print(e);
+      debugPrint(e);
     }
   }
   // 运行结果
@@ -4150,10 +4277,10 @@ Future<String> getFuture(){
 void _incrementCounter() {
   // 有错误出现，就不能打印value了，需要用catchError进行捕获错误error
   getFuture()
-    .then((value)=>print(value))
-    .catchError((err) => print(err))
-    .whenComplete(() => print("complete"));// whenComplete == finally
-  print("hi");
+    .then((value)=>debugPrint(value))
+    .catchError((err) => debugPrint(err))
+    .whenComplete(() => debugPrint("complete"));// whenComplete == finally
+  debugPrint("hi");
 }
 // 运行结果
 Launching lib/main.dart on iPhone Xs in debug mode...
@@ -4170,13 +4297,13 @@ Future<int> getFuture(){
 
 void _incrementCounter() {
   getFuture().then((value) {
-    print(value);// 这里的value就是上面传进来的100
+    debugPrint(value);// 这里的value就是上面传进来的100
     return 5;
   })
-  .then((value)=>print(value))// 打印上一个then的返回值：Future类型的int，值为5
-  .catchError((err) => print(err))
-  .whenComplete(() => print("complete"));
-  print("hi");
+  .then((value)=>debugPrint(value))// 打印上一个then的返回值：Future类型的int，值为5
+  .catchError((err) => debugPrint(err))
+  .whenComplete(() => debugPrint("complete"));
+  debugPrint("hi");
   setState(() {
     _counter++;
   });
@@ -4305,10 +4432,10 @@ void _incrementCounter() {
 
 @override
 void initState() {
-  future.then((value) => print("future complete:$value"));
+  future.then((value) => debugPrint("future complete:$value"));
   // 除了以这样一种方式，还可以用SteamBuilder的方式来进行监听
   stream.listen((event) {
-    print("steam :$event");
+    debugPrint("steam :$event");
   });
   super.initState();
 }
@@ -4536,7 +4663,7 @@ class MyApp extends StatelessWidget {
             count: 0,
             increment: () {
               // 这里是更新计数器的逻辑
-              print('Incrementing count...');
+              debugPrint('Incrementing count...');
               // 由于计数器的值发生了变化，InheritedWidget 会通知子 Widget 进行更新
             },
             child: CounterWidget(),
@@ -4875,99 +5002,9 @@ class _LoginPageState extends State<LoginPage> {
 
 ## 其他
 
-* Dart 没有宏定义的概念。
-  
+* Dart 没有宏定义的概念
   * Dart 是一种强类型的面向对象语言，它没有预处理器，也不支持在编译前执行类似宏定义的操作；
   * 相反，Dart 通过其强大的语言特性（如函数、类、常量等）来支持代码重用和抽象化；
-  
-* 一些报错的处理经验记录
-  
-  * <span style="color:red; font-weight:bold;">***[ERROR:flutter/shell/platform/darwin/graphics/FlutterDarwinContextMetalImpeller.mm(42)] Using the Impeller rendering backend.***</span> 
-  ```shell
-  Launching lib/main.dart on iPhone Xs in debug mode...
-  Xcode build done.                                            9.0s
-  [ERROR:flutter/shell/platform/darwin/graphics/FlutterDarwinContextMetalImpeller.mm(42)] Using the Impeller rendering backend.
-  ```
-  ***产生这个Error的原因是：在Dart.Flutter 3.10.0后iOS默认使用开始使用 Impeller 。在 3.7 版本中 Impeller 就被引入用于未来替换 Skia ，Flutter 团队面对 Skia 上越来越多的问题无法有效快速推进，所以走上了自研 Impeller 的道路。***
-   [***解决方案***](https://blog.csdn.net/wangzhongITger/article/details/130661361)：关闭这个提示，只需把 plist 里的 `FLTEnableImpeller` 设置为 false，如下👇🏻
-  ```xml
-  <?xml version="1.0" encoding="UTF-8"?>
-  <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-  <plist version="1.0">
-  <dict>
-  	...//省略代码
-  	<key>FLTEnableImpeller</key>
-      <false/>
-  	...//省略代码
-  </dict>
-  </plist>
-  ```
-  
-  * <span style="color:red; font-weight:bold;">***Target debug_unpack_ios failed: Exception: Failed to codesign***</span> 
-  
-  [***解决方案***](https://www.cnblogs.com/cappuccino/p/17777342.html)：关闭iCloud同步
-  
-  ```shell
-    Failed to build iOS app
-    Error (Xcode): Target debug_unpack_ios failed: Exception: Failed to codesign
-  ```
-  * <span style="color:red; font-weight:bold;">***Don't invoke 'print' in production code.***</span> 
-    
-    * Dart.Flutter 中的常见警告，它指出在生产代码中调用 `print` 不是一个好的实践。在生产环境中，`print` 语句会输出到控制台，这可能会暴露应用程序的敏感信息，并且会降低应用程序的性能；
-    * 在生产代码中，你可以使用日志记录工具，如 `logger` 包，来代替 `print` 语句。这些工具可以帮助你记录应用程序的运行日志，并提供更多的控制和功能，如记录级别、日志过滤等；
-      * **logger**: 这是一个轻量级的日志记录框架，易于集成和使用。它支持记录级别、日志过滤等功能，可以输出到控制台、文件、甚至远程服务器。可以通过在 `pubspec.yaml` 文件中添加依赖来使用它：
-      ```yaml
-      dependencies:
-        logger: ^0.9.3
-      ```
-      ```dart
-      import 'package:logger/logger.dart';
-      
-      var logger = Logger();
-      // 使用示例
-      logger.d('Debug message');
-      logger.i('Info message');
-      logger.w('Warning message');
-      logger.e('Error message');
-      logger.v('Verbose message');
-      ```
-      * **flutter_logger**: 这是另一个简单易用的日志记录框架，特别适用于 Dart.Flutter 应用程序。它支持多种记录级别、日志过滤等功能，可以输出到控制台、文件等。可以通过在 `pubspec.yaml` 文件中添加依赖来使用它：
-      ```yaml
-      dependencies:
-        flutter_logger: ^1.0.3
-      ```
-      ```dart
-      import 'package:flutter_logger/flutter_logger.dart';
-      
-      var logger = Logger();
-      // 使用示例
-      logger.d('Debug message');
-      logger.i('Info message');
-      logger.w('Warning message');
-      logger.e('Error message');
-      logger.v('Verbose message');
-      ```
-    
-  * <span style="color:red; font-weight:bold;">In iOS 14+ ,debug mode Flutter apps can only be launched from Flutter tooling,IDEs with Flutter Plugins or from Xcode.Alternatively,build in profile or release modes to enable launching from the Home Screen.</span> 
-  
-    * 这个错误的出现，是用真机（开发者账号）运行的时候出现的
-    
-    * 解决方案：
-    
-      ```bash
-      #! /bin/sh
-      
-      # 获取当前脚本文件的目录
-      current_directory=$(dirname "$(readlink -f "$0")")
-      echo $current_directory
-      cd $current_directory
-      
-      # 真机运行
-      flutter run --release
-      ```
-  
-  ![image-20240508200637056](./assets/image-20240508200637056.png)
-  
 
 ### ***Dart.Flutter.DevTools***
 
