@@ -96,7 +96,7 @@ class HomePage extends StatelessWidget {
 }
 ```
 ## ***MaterialApp：***
-* 创建 <span style="color:red; font-weight:bold;">**Android 风格**</span>应用程序的**顶级** *Widget*。用于定义应用程序的基本结构和配置。构建基于Material Design（Google提出）风格的应用程序的入口点
+* 创建 <font color="red">**Android 风格**</font>应用程序的**顶级** *Widget*。用于定义应用程序的基本结构和配置。构建基于Material Design（Google提出）风格的应用程序的入口点
   * **title:**通常会显示在操作系统的任务管理器中以及设备的应用程序列表中；
     
     * **字符串值:** 你可以直接将应用程序的名称作为字符串传递给`title`属性。例如：`title: 'My App'`；
@@ -929,7 +929,7 @@ class HomePage extends StatelessWidget {
     * **showPerformanceOverlay：** `bool` 类型。是否显示性能叠加层，用于在屏幕上显示应用程序的性能统计信息；
     * **builder：**一个回调函数，用于构建应用程序的顶层 *Widget*。通过 `builder`，可以在应用程序顶层嵌套其他 *Widget*，以实现一些全局的状态管理或配置
 ## ***CupertinoApp***：
-* 创建 <span style="color:red; font-weight:bold;">**iOS 风格**</span>应用程序的**顶级** *Widget*。用于定义应用程序的基本结构和配置
+* 创建 <font color="red">**iOS 风格**</font>应用程序的**顶级** *Widget*。用于定义应用程序的基本结构和配置
 
   * **home**: 一个必需的属性，它接受一个 *Widget*，用于指定应用程序的首页。通常情况下，你可以将一个 `CupertinoPage` 或其他自定义的 *Widget* 作为应用程序的首页；
   * **routes**: `Map` 类型。用于指定应用程序中各个页面的路由映射关系，可以通过路由名称直接访问页面；
@@ -1116,7 +1116,7 @@ class DetailScreen extends StatelessWidget {
 使用了抽屉菜单（Drawer），包含了自定义的标题和两个菜单项；
 底部导航栏（BottomNavigationBar）包含了两个图标项。
 ```
-* ***BottomNavigationBar：***创建***底部导航栏***的组件，它通常用于在应用程序底部显示一组固定的导航选项，用户可以通过点击不同的选项来切换页面<span style="color:red; font-weight:bold;">**类似于OC中的UITabBar**</span>
+* ***BottomNavigationBar：***创建***底部导航栏***的组件，它通常用于在应用程序底部显示一组固定的导航选项，用户可以通过点击不同的选项来切换页面<font color="red">**类似于OC中的UITabBar**</font>
   * **items**: 一个必需的属性，它接受一个 `List<BottomNavigationBarItem>` 类型的列表，用于定义底部导航栏中的每个选项。每个 `BottomNavigationBarItem` 对象通常包括一个图标和一个标题；
   * **currentIndex**: 一个必需的属性，它表示当前选中的导航项的索引。通过设置这个属性，可以控制底部导航栏显示哪个选项是选中状态；
   * **onTap**: 一个回调函数，它接受一个 `int` 类型的参数，表示用户点击了底部导航栏中的哪个选项。当用户点击导航栏中的选项时，会调用该回调函数，并传递相应的选项索引；
@@ -1133,7 +1133,7 @@ class DetailScreen extends StatelessWidget {
   * **unselectedLabelStyle**: 未选中项标题的样式；
   * **showSelectedLabels**: 是否显示选中项的标题；
   * **showUnselectedLabels**: 是否显示未选中项的标题；
-* ***Drawer：***用于***创建抽屉式导航菜单的组件***，通常用于显示应用程序的主要导航选项、设置选项或其他相关内容。<span style="color:red; font-weight:bold;">**类似于OC中的侧边栏菜单 UISplitViewController**</span>
+* ***Drawer：***用于***创建抽屉式导航菜单的组件***，通常用于显示应用程序的主要导航选项、设置选项或其他相关内容。<font color="red">**类似于OC中的侧边栏菜单 UISplitViewController**</font>
   * **child**: 一个必需的属性，它接受一个 *Widget*，用于指定抽屉菜单的内容。通常情况下，你可以使用 `ListView` 或 `Column` 等 *Widget* 来包装抽屉菜单的内容；
   * **elevation**: 抽屉的阴影高度。可以使用这个属性来控制抽屉的阴影效果，设置为 0 表示没有阴影；
   * **semanticLabel**: 抽屉的语义标签。用于向屏幕阅读器（例如 *TalkBack*）等辅助功能工具描述抽屉的内容；
@@ -1142,8 +1142,8 @@ class DetailScreen extends StatelessWidget {
   * **semanticLabelPlacement**: 语义标签的放置方式，它是一个枚举值，可以是 `DrawerHeader` 或 `DrawerHeader.only`。当设置为 `DrawerHeader` 时，语义标签将显示在抽屉标题下方；当设置为 `DrawerHeader.only` 时，语义标签将只显示在抽屉标题中；
   * **scrollController**: 滚动控制器，用于控制抽屉内容的滚动。可以使用这个属性来控制抽屉内容的滚动位置；
   * **semanticLabel**: 抽屉的语义标签，用于描述抽屉的内容，这对于辅助功能非常有用；
-* ***ScaffoldMessenger：***在应用程序中传递全局消息并在屏幕上显示通知。它<span style="color:red; font-weight:bold;">**通常与 `Scaffold` 组件一起使用，用于在应用程序的顶层进行全局通信**</span>；
-  * **showSnackBar**: 用于显示一个 *SnackBar*，它是一个临时性的通知，显示在屏幕底部。*SnackBar* 可以包含文本、操作按钮或其他小部件，<span style="color:red; font-weight:bold;">**并在一段时间后自动消失**</span>；
+* ***ScaffoldMessenger：***在应用程序中传递全局消息并在屏幕上显示通知。它<font color="red">**通常与 `Scaffold` 组件一起使用，用于在应用程序的顶层进行全局通信**</font>；
+  * **showSnackBar**: 用于显示一个 *SnackBar*，它是一个临时性的通知，显示在屏幕底部。*SnackBar* 可以包含文本、操作按钮或其他小部件，<font color="red">**并在一段时间后自动消失**</font>；
   * **showBottomSheet**: 显示一个底部工作表，它是一个持久性的通知，覆盖屏幕的一部分，并且通常包含更复杂的内容。底部工作表可以是自定义的 *Widget*；
   * **removeCurrentSnackBar**: 用于从屏幕上移除当前显示的 *SnackBar*；
   * **removeCurrentBottomSheet**: 用于从屏幕上移除当前显示的底部工作表；
@@ -1154,9 +1154,9 @@ class DetailScreen extends StatelessWidget {
   * **padding**: 用于设置容器***内边距***，即子部件与容器边缘之间的间距；
   * **margin**: 用于设置容器***外边距***，即容器与其父容器或其他相邻元素之间的间距；
   * **color**: 用于设置容器的背景色；
-  * **width / height**: 用于设置容器的宽度和高度。<span style="color:red; font-weight:bold;">**可以是一个固定的像素值，也可以是一个百分比值，或者是一个 `double.infinity` 以充分利用父容器的剩余空间**</span>；
+  * **width / height**: 用于设置容器的宽度和高度。<font color="red">**可以是一个固定的像素值，也可以是一个百分比值，或者是一个 `double.infinity` 以充分利用父容器的剩余空间**</font>；
   * **constraints**: 用于设置容器的约束条件，例如最小宽度、最大宽度、最小高度和最大高度；
-  * **decoration**: 用于对容器进行装饰，例如添加背景、边框、阴影等。<span style="color:red; font-weight:bold;">**通常与 `BoxDecoration` 类型的对象一起使用；**</span>；
+  * **decoration**: 用于对容器进行装饰，例如添加背景、边框、阴影等。<font color="red">**通常与 `BoxDecoration` 类型的对象一起使用；**</font>；
   * **transform**: 用于对容器进行变换，例如平移、旋转、缩放等；
   * **foregroundDecoration**: 用于在容器前景上添加装饰，与 `decoration` 类似，***但是在子部件之上***；
   * **clipBehavior**: 用于控制容器如何剪裁其子部件。常见的值有 `Clip.none`、`Clip.antiAlias`、`Clip.hardEdge` 等；
@@ -1200,7 +1200,7 @@ class DetailScreen extends StatelessWidget {
   * **clipBehavior**: 定义子组件的剪裁行为。常见的值有 `Clip.none`、`Clip.hardEdge`、`Clip.antiAlias`；
   * **children**: `Flex` 中包含的子组件列表；
   * **key**: 用于标识 `Flex` 的唯一键；
-* ***Stack：***用于在***重叠的方式***排列子组件的 *Widget* <span style="color:red; font-weight:bold;">类似于在绘图软件中的图层</span>
+* ***Stack：***用于在***重叠的方式***排列子组件的 *Widget* <font color="red">类似于在绘图软件中的图层</font>
   * **alignment**: 定义子组件在 *Stack* 中的对齐方式。常见的值有 `Alignment.topLeft`、`Alignment.center`、`Alignment.bottomRight` 等；
   * **textDirection**: 定义子组件的文本方向，用于决定子组件中文本的排列顺序；
   * **fit**: 定义子组件在 *Stack* 中的布局方式。常见的值有 `StackFit.loose` 和 `StackFit.expand`。`StackFit.loose` 表示子组件根据其自身大小进行布局，而 `StackFit.expand` 表示子组件扩展以填充整个 *Stack*；
@@ -1232,7 +1232,7 @@ class DetailScreen extends StatelessWidget {
   * **physics**: 定义网格布局的滚动物理特性。通常使用 `ScrollPhysics` 类型的对象，例如 `BouncingScrollPhysics`、`ClampingScrollPhysics` 等；
   * **shrinkWrap**: 定义是否根据子组件的总长度来调整网格布局的大小。如果为 true，则网格布局的长度将根据子组件的总长度调整，否则网格布局将尽可能占用可用空间；
   * **padding**: 定义网格布局的内边距，即网格布局内容与网格布局边缘之间的间距；
-  * **gridDelegate**: 定义网格布局的委托对象，用于控制网格布局的排列方式。通常使用 `SliverGridDelegate` 的子类，例如 `SliverGridDelegateWithFixedCrossAxisCount`、`SliverGridDelegateWithMaxCrossAxisExtent` 等；<span style="color:red; font-weight:bold;">使用最频繁的，因为它决定了网格布局的行数、列数以及子组件的排列方式</span>
+  * **gridDelegate**: 定义网格布局的委托对象，用于控制网格布局的排列方式。通常使用 `SliverGridDelegate` 的子类，例如 `SliverGridDelegateWithFixedCrossAxisCount`、`SliverGridDelegateWithMaxCrossAxisExtent` 等；<font color="red">使用最频繁的，因为它决定了网格布局的行数、列数以及子组件的排列方式</font>
   * **children**: *GridView* 中包含的子组件列表；
   * **key**: 用于标识 *GridView* 的唯一键；
   *创建一个垂直滚动的网格布局，并显示一些简单的网格项*

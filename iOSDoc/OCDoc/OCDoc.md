@@ -1,7 +1,53 @@
 # -OC相关经验
+- [-OC相关经验](#-oc相关经验)
+  - [***OC/C.Block***](#occblock)
+  - [锁](#锁)
+  - [OC里面有没有类似于Java里面的`linkedhashset`的东西](#oc里面有没有类似于java里面的linkedhashset的东西)
+  - [可能会存在属性没有对应的 `getter` 和 `setter` 方法的情况](#可能会存在属性没有对应的-getter-和-setter-方法的情况)
+  - [***OC.AssociatedObjects（关联对象）***](#ocassociatedobjects关联对象)
+  - [KVC 和 KVO](#kvc-和-kvo)
+    - [KVC（***K***ey-***V***alue ***C***oding）：**键值**存储](#kvckey-value-coding键值存储)
+    - [KVO（***K***ey-***V***alue ***O***bserving）：**属性**观察](#kvokey-value-observing属性观察)
+    - [KVO相应的观察方法](#kvo相应的观察方法)
+    - [KVC 和 KVO的相互调用问题](#kvc-和-kvo的相互调用问题)
+      - [***在使用KVC的时候会使用的KVO吗？***](#在使用kvc的时候会使用的kvo吗)
+      - [***在使用KVO的时候会使用的KVC吗？***](#在使用kvo的时候会使用的kvc吗)
+  - [MVP](#mvp)
+  - [MVP vs MVVM](#mvp-vs-mvvm)
+  - [字符是由ASCII码一一对应的。那么在内存里面，是如何与整型（Int）进行区分的？](#字符是由ascii码一一对应的那么在内存里面是如何与整型int进行区分的)
+  - [ASCII码在内存里是用数字表示，但如果一个纯数字在内存怎么表示呢？会不会和ASCII码冲突？](#ascii码在内存里是用数字表示但如果一个纯数字在内存怎么表示呢会不会和ascii码冲突)
+  - [结构体](#结构体)
+  - [雪花算法（Snowflake）](#雪花算法snowflake)
+  - [计算机内存是怎么去表示浮点数的](#计算机内存是怎么去表示浮点数的)
+  - [IPv6](#ipv6)
+  - [一个IP能有多少个端口](#一个ip能有多少个端口)
+  - [int \*p = \&a](#int-p--a)
+  - [哈希表（Hash Table）的本质](#哈希表hash-table的本质)
+  - [*OC*.非正式协议](#oc非正式协议)
+  - [***OC.依赖注入***](#oc依赖注入)
+  - [函数（方法）签名](#函数方法签名)
+  - [方法的重载：系统将会识别为2个不同的方法](#方法的重载系统将会识别为2个不同的方法)
+  - [***OC.定时器***](#oc定时器)
+    - [GCD](#gcd)
+    - [NSTimer](#nstimer)
+    - [CADisplayLink](#cadisplaylink)
+  - [***OC.多线程***](#oc多线程)
+    - [pthread](#pthread)
+    - [NSThread](#nsthread)
+    - [GCD](#gcd-1)
+    - [NSOperation](#nsoperation)
+  - [***OC.Runtime.消息转发机制***](#ocruntime消息转发机制)
+  - [dylib](#dylib)
+  - [`+load` 和 `+initialize` 的区别](#load-和-initialize-的区别)
+  - [\[**objc\_msgSend 方法调用流程**\](# https://www.jianshu.com/p/a5d818d90a6e)](#objc_msgsend-方法调用流程-httpswwwjianshucompa5d818d90a6e)
+  - [***OC.database***](#ocdatabase)
+    - [***OC.SQLite***](#ocsqlite)
+    - [***OC.FMDB***](#ocfmdb)
+    - [***OC.Realm（强烈推荐）***](#ocrealm强烈推荐)
+  - [在OC里面NSString用`copy`修饰 还是`Strong`修饰？](#在oc里面nsstring用copy修饰-还是strong修饰)
+  - [其他](#其他)
 
-[toc]
-## <span style="color:red; font-weight:bold;">***OC/C.Block***</span>
+## <font color="red">***OC/C.Block***</font>
 
 * ***Block* 的捕获变量：** 当一个 *Block* 被创建时，它会捕获在其内部使用的外部变量。  
   
@@ -34,14 +80,14 @@
   
 * **`__block` 修饰符**
   * 当需要在 *Block* 内部修改局部变量的值时，需要使用 `__block` 修饰符来声明该变量。这样，在 *Block* 内部就可以通过引用来修改外部变量的值；
-  * <span style="color:red; font-weight:bold;">***使用 `__block` 修饰的变量在 Block 内部会被包装为一个结构体，这个结构体中包含了一个指向原始变量的指针。这样 Block 内部就可以通过这个指针来修改变量的值，而不会影响到原始变量的值；***</span>
+  * <font color="red">***使用 `__block` 修饰的变量在 Block 内部会被包装为一个结构体，这个结构体中包含了一个指向原始变量的指针。这样 Block 内部就可以通过这个指针来修改变量的值，而不会影响到原始变量的值；***</font>
   
 * ❤️**Block 的存储**
   * *Block* 是一个**对象**，它在***[堆](# 堆(Heap))上分配***内存；
   * 当一个 *Block* 捕获了一个 `__block` 修饰的变量时，*Block* 不会直接捕获这个变量的值，而是**捕获了一个指向变量的指针**；
   * 当 *Block* 在创建时，会检查其所引用的外部变量，如果有被 `__block` 修饰的变量， *Block*将这些变量的地址包装到一个结构体中，然后将这个结构体的指针传递给 *Block*；
   
-* <span style="color:red; font-weight:bold;">当在 Block 内部使用 `self` 进行弱引用处理（使用 `__weak` 关键字修饰）</span>
+* <font color="red">当在 Block 内部使用 `self` 进行弱引用处理（使用 `__weak` 关键字修饰）</font>
 
   * 在内存中，`self` 会被作为一个弱引用存储在[堆](# 堆(Heap))上；
   * 具体来说，编译器会生成一个指向 `self` 的弱引用；**这个弱引用不会增加 `self` 的引用计数，也不会阻止 `self` 被释放**。如果 `self` 被释放后，这个弱引用会被自动置为 nil，以避免访问已释放的对象而导致的崩溃；
@@ -142,7 +188,7 @@ int main(int argc, const char * argv[]) {
   * 使用 `objc_getAssociatedObject` 函数根据 key 获取关联的对象；
   * 如果需要，使用 `objc_removeAssociatedObjects` 函数来移除与对象相关的所有关联对象；
 
-***对Block*** <span style="color:red; font-weight:bold;">存取策略：`OBJC_ASSOCIATION_COPY_NONATOMIC`</span>
+***对Block*** <font color="red">存取策略：`OBJC_ASSOCIATION_COPY_NONATOMIC`</font>
 
 ```objective-c
 #import <Foundation/Foundation.h>
@@ -168,7 +214,7 @@ int main(int argc, const char * argv[]) {
 @end
 ```
 
-***对方法*** *方法用`NSStringFromSelector`包装成字符串对象进行存取。* <span style="color:red; font-weight:bold;">存取策略：`OBJC_ASSOCIATION_COPY_NONATOMIC`</span>
+***对方法*** *方法用`NSStringFromSelector`包装成字符串对象进行存取。* <font color="red">存取策略：`OBJC_ASSOCIATION_COPY_NONATOMIC`</font>
 
 ```objective-c
 #import <Foundation/Foundation.h>
@@ -193,7 +239,7 @@ static char *UIViewController_BaseVC_selector = "UIViewController_BaseVC_selecto
 @end
 ```
 
-***对基本数据类型*** *需要封装成NSNumber对象进行存取* <span style="color:red; font-weight:bold;">存取策略：`OBJC_ASSOCIATION_RETAIN_NONATOMIC`</span>
+***对基本数据类型*** *需要封装成NSNumber对象进行存取* <font color="red">存取策略：`OBJC_ASSOCIATION_RETAIN_NONATOMIC`</font>
 
 ```objective-c
 #import <Foundation/Foundation.h>
@@ -223,7 +269,7 @@ static char *UIViewController_BaseVC_setupNavigationBarHidden = "UIViewControlle
 @end
 ```
 
-***对结构体属性*** *需要`NSValue`来进行包装* <span style="color:red; font-weight:bold;">存取策略：`OBJC_ASSOCIATION_RETAIN_NONATOMIC`</span>
+***对结构体属性*** *需要`NSValue`来进行包装* <font color="red">存取策略：`OBJC_ASSOCIATION_RETAIN_NONATOMIC`</font>
 
 ```objective-c
 #import <Foundation/Foundation.h>
@@ -262,7 +308,7 @@ static char *UIViewController_BaseVC_point = "UIViewController_BaseVC_point";
 @end
 ```
 
-***对一般的对象*** <span style="color:red; font-weight:bold;">存取策略：`OBJC_ASSOCIATION_RETAIN_NONATOMIC`</span>
+***对一般的对象*** <font color="red">存取策略：`OBJC_ASSOCIATION_RETAIN_NONATOMIC`</font>
 
 ```objective-c
 #import <Foundation/Foundation.h>
@@ -297,7 +343,7 @@ static char *BaseVC_BackBtn_backBtnCategoryItem = "BaseVC_BackBtn_backBtnCategor
 
 ## KVC 和 KVO
 
-### KVC（<span style="color:red; font-weight:bold;">***K***</span>ey-<span style="color:red; font-weight:bold;">***V***</span>alue <span style="color:red; font-weight:bold;">***C***</span>oding）：**键值**<span style="color:red; font-weight:bold;">存储</span>
+### KVC（<font color="red">***K***</font>ey-<font color="red">***V***</font>alue <font color="red">***C***</font>oding）：**键值**<font color="red">存储</font>
 
 * 通过key->对象属性。不需要通过`set/get`方法；
 * 对于支持 KVC 的对象，可以通过 `setValue:forKey:` 和 `valueForKey:` 等方法来设置和获取属性值；
@@ -305,7 +351,7 @@ static char *BaseVC_BackBtn_backBtnCategoryItem = "BaseVC_BackBtn_backBtnCategor
 * 也有一些特殊情况下的对象不支持 KVC。例如：
   * 未定义键的属性：如果[***一个属性没有对应的 `getter` 和 `setter` 方法***](# 可能会存在属性没有对应的 `getter` 和 `setter` 方法的情况)，或者不符合 KVC 的命名规范，那么该属性就不支持 KVC。
 
-### KVO（<span style="color:red; font-weight:bold;">***K***</span>ey-<span style="color:red; font-weight:bold;">***V***</span>alue <span style="color:red; font-weight:bold;">***O***</span>bserving）：**属性**<span style="color:red; font-weight:bold;">观察</span>
+### KVO（<font color="red">***K***</font>ey-<font color="red">***V***</font>alue <font color="red">***O***</font>bserving）：**属性**<font color="red">观察</font>
 
 * KVO 是一种**观察者模式**的实现，它**允许一个对象（非类）监听另一个对象的属性的变化**；
 * 不是所有的类都支持KVO：
@@ -326,7 +372,7 @@ static char *BaseVC_BackBtn_backBtnCategoryItem = "BaseVC_BackBtn_backBtnCategor
 ### KVO相应的观察方法
 **`observeValueForKeyPath:ofObject:change:context:`**
 
-- 这是 [***KVO***](# KVO（<span style="color:red; font-weight:bold;">***K***</span>ey-<span style="color:red; font-weight:bold;">***V***</span>alue <span style="color:red; font-weight:bold;">***O***</span>bserving）：**属性观察) 观察者对象必须实现的方法之一；
+- 这是 [***KVO***](# KVO（<font color="red">***K***</font>ey-<font color="red">***V***</font>alue <font color="red">***O***</font>bserving）：**属性观察) 观察者对象必须实现的方法之一；
 - 当被观察对象的属性值发生变化时，系统会调用这个方法，并传递一些参数，包括被观察的属性的键路径、被观察的对象、属性的改变信息以及上下文信息；
 - 观察者对象在实现这个方法时，可以根据传递的信息执行相应的操作，比如更新 UI、处理数据等；
 - 观察者对象应该在不需要监听属性变化时取消观察，以防止悬挂指针或野指针的问题；
@@ -361,25 +407,25 @@ static char *BaseVC_BackBtn_backBtnCategoryItem = "BaseVC_BackBtn_backBtnCategor
 ```
 ### KVC 和 KVO的相互调用问题
 
-#### <span style="color:red; font-weight:bold;">***在使用KVC的时候会使用的KVO吗？***</span>
+#### <font color="red">***在使用KVC的时候会使用的KVO吗？***</font>
 
-* 虽然在使用 [***KVC***](# KVC（<span style="color:red; font-weight:bold;">***K***</span>ey-<span style="color:red; font-weight:bold;">***V***</span>alue <span style="color:red; font-weight:bold;">***C***</span>oding）：**键值存储)时不会直接用到 [***KVO***](# KVO（<span style="color:red; font-weight:bold;">***K***</span>ey-<span style="color:red; font-weight:bold;">***V***</span>alue <span style="color:red; font-weight:bold;">***O***</span>bserving）：**属性观察) ，但是它们通常会**结合使用**。特别是在设计模式中的 MVC（Model-View-Controller）中：
-  * Model 层通常会**负责存储应用程序的数据**，并且可能会实现 [***KVC***](# KVC（<span style="color:red; font-weight:bold;">***K***</span>ey-<span style="color:red; font-weight:bold;">***V***</span>alue <span style="color:red; font-weight:bold;">***C***</span>oding）：**键值存储)，以便其他部分可以通过键路径来访问和修改这些数据；
-  * 而 View 层通常**负责显示数据**，并且可能会观察（通过  [***KVO***](# KVO（<span style="color:red; font-weight:bold;">***K***</span>ey-<span style="color:red; font-weight:bold;">***V***</span>alue <span style="color:red; font-weight:bold;">***O***</span>bserving）：**属性观察) ）Model 层的一些属性，以便在数据发生变化时更新界面；
+* 虽然在使用 [***KVC***](# KVC（<font color="red">***K***</font>ey-<font color="red">***V***</font>alue <font color="red">***C***</font>oding）：**键值存储)时不会直接用到 [***KVO***](# KVO（<font color="red">***K***</font>ey-<font color="red">***V***</font>alue <font color="red">***O***</font>bserving）：**属性观察) ，但是它们通常会**结合使用**。特别是在设计模式中的 MVC（Model-View-Controller）中：
+  * Model 层通常会**负责存储应用程序的数据**，并且可能会实现 [***KVC***](# KVC（<font color="red">***K***</font>ey-<font color="red">***V***</font>alue <font color="red">***C***</font>oding）：**键值存储)，以便其他部分可以通过键路径来访问和修改这些数据；
+  * 而 View 层通常**负责显示数据**，并且可能会观察（通过  [***KVO***](# KVO（<font color="red">***K***</font>ey-<font color="red">***V***</font>alue <font color="red">***O***</font>bserving）：**属性观察) ）Model 层的一些属性，以便在数据发生变化时更新界面；
   * Controller 层则充当了**数据的处理和业务逻辑的中介**；
-* 在这种情况下，当 Model 层的属性通过 [***KVC***](# KVC（<span style="color:red; font-weight:bold;">***K***</span>ey-<span style="color:red; font-weight:bold;">***V***</span>alue <span style="color:red; font-weight:bold;">***C***</span>oding）：**键值存储) 进行更改时，View 层可能会通过  [***KVO***](# KVO（<span style="color:red; font-weight:bold;">***K***</span>ey-<span style="color:red; font-weight:bold;">***V***</span>alue <span style="color:red; font-weight:bold;">***O***</span>bserving）：**属性观察)  接收到通知，并相应地更新界面。因此，尽管在直接的语法上并不会在使用 KVC 时调用  [***KVO***](# KVO（<span style="color:red; font-weight:bold;">***K***</span>ey-<span style="color:red; font-weight:bold;">***V***</span>alue <span style="color:red; font-weight:bold;">***O***</span>bserving）：**属性观察)  的方法，但在应用程序的整体架构中，它们往往是相辅相成的；
+* 在这种情况下，当 Model 层的属性通过 [***KVC***](# KVC（<font color="red">***K***</font>ey-<font color="red">***V***</font>alue <font color="red">***C***</font>oding）：**键值存储) 进行更改时，View 层可能会通过  [***KVO***](# KVO（<font color="red">***K***</font>ey-<font color="red">***V***</font>alue <font color="red">***O***</font>bserving）：**属性观察)  接收到通知，并相应地更新界面。因此，尽管在直接的语法上并不会在使用 KVC 时调用  [***KVO***](# KVO（<font color="red">***K***</font>ey-<font color="red">***V***</font>alue <font color="red">***O***</font>bserving）：**属性观察)  的方法，但在应用程序的整体架构中，它们往往是相辅相成的；
 
-#### <span style="color:red; font-weight:bold;">***在使用KVO的时候会使用的KVC吗？***</span>
+#### <font color="red">***在使用KVO的时候会使用的KVC吗？***</font>
 
-* 在使用[***KVO***](# KVO（<span style="color:red; font-weight:bold;">***K***</span>ey-<span style="color:red; font-weight:bold;">***V***</span>alue <span style="color:red; font-weight:bold;">***O***</span>bserving）：**属性观察) 时，通常不会直接使用 [***KVC***](# KVC（<span style="color:red; font-weight:bold;">***K***</span>ey-<span style="color:red; font-weight:bold;">***V***</span>alue <span style="color:red; font-weight:bold;">***C***</span>oding）：**键值存储)，因为**它们是两个独立的特性**。然而，在某些情况下，它们**可能会间接地结合使用**；
-  * **注册观察者时的键路径**： 在注册观察者时，需要提供要观察的属性的键路径。这个键路径通常是通过 [***KVC***](# KVC（<span style="color:red; font-weight:bold;">***K***</span>ey-<span style="color:red; font-weight:bold;">***V***</span>alue <span style="color:red; font-weight:bold;">***C***</span>oding）：**键值存储) 的方式指定的，因为它需要准确地指定被观察属性的路径;
+* 在使用[***KVO***](# KVO（<font color="red">***K***</font>ey-<font color="red">***V***</font>alue <font color="red">***O***</font>bserving）：**属性观察) 时，通常不会直接使用 [***KVC***](# KVC（<font color="red">***K***</font>ey-<font color="red">***V***</font>alue <font color="red">***C***</font>oding）：**键值存储)，因为**它们是两个独立的特性**。然而，在某些情况下，它们**可能会间接地结合使用**；
+  * **注册观察者时的键路径**： 在注册观察者时，需要提供要观察的属性的键路径。这个键路径通常是通过 [***KVC***](# KVC（<font color="red">***K***</font>ey-<font color="red">***V***</font>alue <font color="red">***C***</font>oding）：**键值存储) 的方式指定的，因为它需要准确地指定被观察属性的路径;
   ```objective-c
   [object addObserver:self 
           forKeyPath:@"propertyName" 
           options:NSKeyValueObservingOptionNew 
           context:nil];
   ```
-  * **观察者获取属性值**： 在观察者对象中，当收到属性变化的通知时，可能会使用  [***KVC***](# KVC（<span style="color:red; font-weight:bold;">***K***</span>ey-<span style="color:red; font-weight:bold;">***V***</span>alue <span style="color:red; font-weight:bold;">***C***</span>oding）：**键值存储) 来获取被观察对象的属性值;
+  * **观察者获取属性值**： 在观察者对象中，当收到属性变化的通知时，可能会使用  [***KVC***](# KVC（<font color="red">***K***</font>ey-<font color="red">***V***</font>alue <font color="red">***C***</font>oding）：**键值存储) 来获取被观察对象的属性值;
   ```objective-c
   - (void)observeValueForKeyPath:(NSString *)keyPath
           ofObject:(id)object 
@@ -391,7 +437,7 @@ static char *BaseVC_BackBtn_backBtnCategoryItem = "BaseVC_BackBtn_backBtnCategor
       }
   }
   ```
-    虽然**在实现** [***KVO***](# KVO（<span style="color:red; font-weight:bold;">***K***</span>ey-<span style="color:red; font-weight:bold;">***V***</span>alue <span style="color:red; font-weight:bold;">***O***</span>bserving）：**属性观察)  **时可能会涉及到使用**  [***KVC***](# KVC（<span style="color:red; font-weight:bold;">***K***</span>ey-<span style="color:red; font-weight:bold;">***V***</span>alue <span style="color:red; font-weight:bold;">***C***</span>oding）：**键值存储)  **来指定属性路径和获取属性值**，但是它们本质上是两个不同的概念。 [***KVO***](# KVO（<span style="color:red; font-weight:bold;">***K***</span>ey-<span style="color:red; font-weight:bold;">***V***</span>alue <span style="color:red; font-weight:bold;">***O***</span>bserving）：**属性观察)  是一种观察者模式，用于监听对象属性的变化，而 [***KVC***](# KVC（<span style="color:red; font-weight:bold;">***K***</span>ey-<span style="color:red; font-weight:bold;">***V***</span>alue <span style="color:red; font-weight:bold;">***C***</span>oding）：**键值存储) 则是<u>一种机制</u>，用于通过键（key）来访问对象的属性。
+    虽然**在实现** [***KVO***](# KVO（<font color="red">***K***</font>ey-<font color="red">***V***</font>alue <font color="red">***O***</font>bserving）：**属性观察)  **时可能会涉及到使用**  [***KVC***](# KVC（<font color="red">***K***</font>ey-<font color="red">***V***</font>alue <font color="red">***C***</font>oding）：**键值存储)  **来指定属性路径和获取属性值**，但是它们本质上是两个不同的概念。 [***KVO***](# KVO（<font color="red">***K***</font>ey-<font color="red">***V***</font>alue <font color="red">***O***</font>bserving）：**属性观察)  是一种观察者模式，用于监听对象属性的变化，而 [***KVC***](# KVC（<font color="red">***K***</font>ey-<font color="red">***V***</font>alue <font color="red">***C***</font>oding）：**键值存储) 则是<u>一种机制</u>，用于通过键（key）来访问对象的属性。
 ## MVP
 
 * MVP（**M**odel-**V**iew-**P**resenter）模式是一种软件架构模式，用于设计和组织用户界面（UI）代码；
@@ -538,7 +584,7 @@ print("整数 \(integer) 在内存中的表示为: \(MemoryLayout.size(ofValue: 
   这种非正式的协议使得 UITableView 可以更加灵活地适应不同的使用场景，同时也简化了开发者的代码编写。
   ```
 
-## <span style="color:red; font-weight:bold;">***OC和JS交互***</span>
+## <font color="red">***OC和JS交互***</font>
 
 * 通常情况下是通过**字符串**进行交流
 * **JavaScriptCore 框架:**允许在 *OC* 或 *Swift* 代码中执行 *JavaScript* 代码，**并且还可以在 *JavaScript* 和 *OC/Swift*之间进行对象的相互转换。**
@@ -629,7 +675,7 @@ NSLog(@"Sum: %ld", (long)sum); // 输出: Sum: 30
 ```
 ## ***OC.依赖注入***
 
-<span style="color:red; font-weight:bold;">***在 Objective-C 中，虽然没有像一些现代语言（如Java、C#、Swift等）中那样内置的依赖注入容器，但仍然可以手动实现依赖注入模式。***</span>
+<font color="red">***在 Objective-C 中，虽然没有像一些现代语言（如Java、C#、Swift等）中那样内置的依赖注入容器，但仍然可以手动实现依赖注入模式。***</font>
 ***Logger.h：***
 
 ```objective-c
@@ -679,19 +725,19 @@ NSLog(@"Sum: %ld", (long)sum); // 输出: Sum: 30
 }
 @end
 ```
-<span style="color:Blue; font-weight:bold;">***在这个示例中，`UserService` 类在构造函数中接受一个 `Logger` 对象作为参数，然后将其存储在实例变量中。这样，调用 `UserService` 的代码可以提供自己的 `Logger` 实例，从而实现了依赖注入。***</span>
+<span style="color:Blue; font-weight:bold;">***在这个示例中，`UserService` 类在构造函数中接受一个 `Logger` 对象作为参数，然后将其存储在实例变量中。这样，调用 `UserService` 的代码可以提供自己的 `Logger` 实例，从而实现了依赖注入。***</font>
 ## 函数（方法）签名
 * 指函数的声明或定义，其中包含了***函数的名称***、***参数列表***和***返回类型***；
   * **函数名称：** 函数的标识符，用于唯一标识函数；
   * **参数列表：**包含函数接受的参数及其类型。参数列表可以为空，也可以包含一个或多个参数，每个参数包含参数名称和类型。在函数签名中，参数列表的顺序和参数类型是非常重要的，它们决定了函数调用时传递参数的方式；形参的顺序不会影响方法签名的确定。
   * **返回类型：** 指定函数执行完成后返回的值的类型。返回类型可以是任何数据类型，包括基本数据类型（例如整数、浮点数、布尔值等）以及复合数据类型（例如数组、结构体、对象等）；
 * 它描述了函数的输入参数以及返回值的类型，用于**确定函数的类型和使用方式，用于唯一标识一个特定的函数或方法**；
-## 方法的重载：<span style="color:red; font-weight:bold;">系统将会识别为2个不同的方法</span>
+## 方法的重载：<font color="red">系统将会识别为2个不同的方法</font>
 
-方法的重载（Overloading）是指在<span style="color:Blue; font-weight:bold;">***同一个类中***</span>定义<span style="color:Blue; font-weight:bold;">***多个同名但参数列表不同的方法***</span>
+方法的重载（Overloading）是指在<span style="color:Blue; font-weight:bold;">***同一个类中***</font>定义<span style="color:Blue; font-weight:bold;">***多个同名但参数列表不同的方法***</font>
 方法重载的关键是***方法的参数列表必须不同***。参数列表包括参数的类型、数量和顺序。
 
-* Swift 支持方法的重载：***仅仅参数顺序不一致，Swift 不会将其视为方法重载***。因为 Swift 方法的标识符是由方法名和参数类型构成的，**参数顺序不会影响方法的标识符**<span style="color:red; font-weight:bold;">（相对于Java语言，更加的严格）</span>
+* Swift 支持方法的重载：***仅仅参数顺序不一致，Swift 不会将其视为方法重载***。因为 Swift 方法的标识符是由方法名和参数类型构成的，**参数顺序不会影响方法的标识符**<font color="red">（相对于Java语言，更加的严格）</font>
 ```swift
 class MathFunctions {
     // 方法重载：参数为两个整数
@@ -747,7 +793,7 @@ public class OverloadExample {
     }
 }
 ```
-## <span style="color:red; font-weight:bold;">***OC.定时器***</span>
+## <font color="red">***OC.定时器***</font>
 
 ### GCD
 
@@ -792,11 +838,11 @@ public class OverloadExample {
   * **不适合所有场景：** CADisplayLink 适用于实现基于帧率的动画效果，但并不适用于所有类型的动画，例如复杂的过渡效果或基于物理引擎的动画。
   * **需谨慎管理：** 使用 CADisplayLink 进行动画更新时，需要谨慎管理内存和资源，避免出现内存泄漏或性能问题。
 
-## <span style="color:red; font-weight:bold;">***OC.多线程***</span>
+## <font color="red">***OC.多线程***</font>
 
 ### pthread
 
-* *pthread（**P**OSIX **Thread**s）*是一套<span style="color:red; font-weight:bold;">***C语言编写***</span>的**跨平台多线程API**，**使用难度大**，需要**手动管理线程生命周期**。（需要更加谨慎地处理线程的同步和互斥操作，以避免出现死锁、数据竞争等问题）
+* *pthread（**P**OSIX **Thread**s）*是一套<font color="red">***C语言编写***</font>的**跨平台多线程API**，**使用难度大**，需要**手动管理线程生命周期**。（需要更加谨慎地处理线程的同步和互斥操作，以避免出现死锁、数据竞争等问题）
   * **线程创建和管理**： pthread 库允许程序员创建、销毁、等待和控制线程的执行。通过调用 pthread_create 函数，程序可以创建新的线程并指定线程执行的函数。程序还可以使用 pthread_join 函数等待线程的结束，并使用 pthread_exit 函数退出当前线程；
   * **线程同步**： pthread 提供了一系列的同步机制，如互斥锁（Mutex）、条件变量（Condition Variable）、信号量（Semaphore）等，可以用于多线程之间的同步和互斥操作。这些同步机制可以帮助程序员避免多个线程同时访问共享资源导致的竞态条件和数据不一致性问题；
   * **线程调度和优先级**： pthread 允许程序员设置线程的调度策略和优先级，以及控制线程的调度行为。程序员可以通过设置线程的属性来指定线程的调度策略和优先级，以及其他相关的属性；
@@ -804,7 +850,7 @@ public class OverloadExample {
   * **线程局部存储**： pthread 提供了线程局部存储（Thread-Specific Data，TSD）的机制，允许程序员为每个线程分配独立的存储空间。这些存储空间对于每个线程是私有的，可以用于存储线程特定的数据；
 ### NSThread
 
-* Cocoa 框架中的一部分<span style="color:red; font-weight:bold;">***（较为底层）***</span>。面向对象操作线程，使用相对简单，需要手动管理线程生命周期；
+* Cocoa 框架中的一部分<font color="red">***（较为底层）***</font>。面向对象操作线程，使用相对简单，需要手动管理线程生命周期；
   * **线程创建和管理**： 使用 `NSThread` 类，您可以创建新的线程，并通过调用 `start` 方法来启动线程的执行。您可以在创建线程时指定线程执行的方法，并传递参数给该方法。通过 `isExecuting` 和 `isFinished` 等属性，您可以查询线程的执行状态；
   * **线程调度和优先级**： `NSThread` 允许您设置线程的调度优先级，以及控制线程的调度行为。您可以使用 `threadPriority` 属性来设置线程的优先级，范围为 0.0 到 1.0，其中 1.0 表示最高优先级。您还可以使用 `sleepForTimeInterval:` 方法来让线程休眠一段时间；
   * **线程同步**： `NSThread` 并没有提供专门的同步机制，但您可以使用其他的同步机制，如互斥锁（`NSLock`）、条件变量（`NSCondition`）等，来确保多个线程之间的同步和互斥操作。您可以在不同的线程中使用这些同步机制来避免竞态条件和数据不一致性问题；
@@ -952,17 +998,17 @@ RunLoop.main.run()
 
 ### NSOperation
 
-* <span style="color:red; font-weight:bold;">***基于GCD***</span>的封装，面向对象操作线程，提供了比[***GCD***](# GCD)更丰富的API：限制最大并发数，设置任务依赖关系；
-* 但是它<span style="color:red; font-weight:bold;">***它不能直接使用***</span>，因为它是一个抽象类，可以继承它或者使用系统定义*NSInvocationOperation*或*NSBlockOperation*。自动管理线程生命周期；
+* <font color="red">***基于GCD***</font>的封装，面向对象操作线程，提供了比[***GCD***](# GCD)更丰富的API：限制最大并发数，设置任务依赖关系；
+* 但是它<font color="red">***它不能直接使用***</font>，因为它是一个抽象类，可以继承它或者使用系统定义*NSInvocationOperation*或*NSBlockOperation*。自动管理线程生命周期；
   * **任务管理**： *NSOperation* 封装了一个执行任务的对象，可以用于执行各种类型的任务。您可以通过子类化 *NSOperation* 类，实现自定义的任务逻辑，并在其中执行所需的操作。
   * **任务依赖**： *NSOperation* 提供了任务依赖的机制，允许您指定任务之间的依赖关系。这样，您可以确保某个任务在其依赖的所有任务完成后才开始执行。通过 `addDependency:` 方法，您可以为一个操作添加一个或多个依赖。
   * **任务队列**： *NSOperationQueue* 是用于管理 *NSOperation* 对象的队列，它负责调度和执行队列中的操作。您可以将操作添加到队列中，并指定执行顺序、并发性等属性。队列可以是串行队列或并发队列，分别用于按顺序执行任务或并行执行任务。
   * **线程管理**： *NSOperation* 可以自动管理线程，无需手动创建线程。*NSOperationQueue* 内部会自动创建并管理线程池，根据需要创建和回收线程，以确保任务的高效执行。
   * **取消和暂停**： *NSOperation* 提供了取消和暂停任务的机制。您可以调用 `cancel` 方法取消任务的执行，或者调用 `setSuspended:` 方法暂停队列的执行。取消任务不会立即终止任务的执行，但会在任务执行下一个检查点时提前结束任务。
-  * **KVO 监听**： *NSOperation* 支持 [***KVO（Key-Value Observing）***](# KVO（<span style="color:red; font-weight:bold;">***K***</span>ey-<span style="color:red; font-weight:bold;">***V***</span>alue <span style="color:red; font-weight:bold;">***O***</span>bserving）：**属性观察)，允许您监视操作的执行状态和属性的变化。通过观察操作的 `isExecuting`、`isFinished` 和 `isCancelled` 等属性，您可以了解操作的执行情况。
+  * **KVO 监听**： *NSOperation* 支持 [***KVO（Key-Value Observing）***](# KVO（<font color="red">***K***</font>ey-<font color="red">***V***</font>alue <font color="red">***O***</font>bserving）：**属性观察)，允许您监视操作的执行状态和属性的变化。通过观察操作的 `isExecuting`、`isFinished` 和 `isCancelled` 等属性，您可以了解操作的执行情况。
 ## ***OC.Runtime.消息转发机制***
 
-Objective-C 中的消息转发机制是一种在***运行时动态处理未知消息***的机制：<span style="color:red; font-weight:bold;">***当一个对象接收到一个它无法识别的消息时，Objective-C 运行时系统会通过一系列的步骤来处理这个未知消息，并尝试找到合适的接收者来处理该消息***</span>。
+Objective-C 中的消息转发机制是一种在***运行时动态处理未知消息***的机制：<font color="red">***当一个对象接收到一个它无法识别的消息时，Objective-C 运行时系统会通过一系列的步骤来处理这个未知消息，并尝试找到合适的接收者来处理该消息***</font>。
 消息转发机制一般分为三个阶段：
 
 1. **动态方法解析（Dynamic Method Resolution）**：
@@ -1097,7 +1143,7 @@ if (sqlite3_open([databasePath UTF8String], &database) == SQLITE_OK) {
 ```
 ### ***OC.FMDB***
 * **需要使用SQL语言**
-* 对***[SQLite](# OC.SQLite)进行封装***的库（纯OC库，跨平台性不佳），***[SQLite](# OC.SQLite)***本身是一个轻量级的数据库引擎，在处理小型数据集时性能良好。但是在<span style="color:red; font-weight:bold;">***处理大型数据集时可能会出现性能瓶颈***</span>
+* 对***[SQLite](# OC.SQLite)进行封装***的库（纯OC库，跨平台性不佳），***[SQLite](# OC.SQLite)***本身是一个轻量级的数据库引擎，在处理小型数据集时性能良好。但是在<font color="red">***处理大型数据集时可能会出现性能瓶颈***</font>
 * 本身不提供实时数据同步功能，如果需要实现实时数据同步，你需要自己编写代码来实现
 ```objective-c
 // ViewController.m
@@ -1155,7 +1201,7 @@ if (sqlite3_open([databasePath UTF8String], &database) == SQLITE_OK) {
 @end
 ```
 ### ***OC.Realm（强烈推荐）***
-* <span style="color:red; font-weight:bold;">***不需要会SQL语言***</span>
+* <font color="red">***不需要会SQL语言***</font>
 * 跨平台
 * 实时数据同步
 
@@ -1214,7 +1260,7 @@ int main(int argc, const char * argv[]) {
 
 * [**iOS封装dylib并调用**](# https://blog.csdn.net/qq_44974089/article/details/130806590)
   
-* <span style="color:purple; font-weight:bold;">**OC热更新**</span>
+* <span style="color:purple; font-weight:bold;">**OC热更新**</font>
   
   * **动态下载资源文件**：你可以在应用中集成网络请求功能，使应用能够从服务器上下载资源文件，比如图片、配置文件等。这样，你可以在服务器端更新这些资源文件，然后让应用在需要时下载最新版本的资源文件。
   * **JavaScriptCore 和 JavaScript Bridge**：在 iOS 中，你可以使用 JavaScriptCore 框架和 JavaScript Bridge 技术，将 JavaScript 代码嵌入到你的应用中。通过这种方式，你可以将部分应用逻辑写成 JavaScript，然后在服务器端更新 JavaScript 代码，实现简单的热更新。
@@ -1222,7 +1268,7 @@ int main(int argc, const char * argv[]) {
   * **使用第三方框架或服务**：有一些第三方框架或服务提供了 iOS 应用的热更新解决方案，比如 Microsoft 的 App Center、JSPatch 等。你可以尝试集成这些框架或者服务来实现热更新。
   * 无论采用哪种方式，热更新都需要考虑到安全性和稳定性问题。确保更新的内容没有被篡改，以及在应用更新过程中的错误处理等。同时，应当遵守苹果的规定，确保应用更新的方式符合 App Store 的审核标准。
   
-* <span style="color:purple; font-weight:bold;">**为什么有些文件没有后缀名，却依然可以被识别成图片并成功读取**</span>
+* <span style="color:purple; font-weight:bold;">**为什么有些文件没有后缀名，却依然可以被识别成图片并成功读取**</font>
   
   * 这通常是因为文件系统和操作系统依赖于文件的“魔术数字”（Magic Number）来确定文件类型，而**不仅仅是依赖于文件扩展名**；
   * 魔术数字是文件头的一部分，它是一个固定的字节序列，用于标识文件的类型；
@@ -1243,9 +1289,9 @@ int main(int argc, const char * argv[]) {
   
     这些魔术数字通常是文件头的开头几个字节，用于识别文件的类型和格式。当操作系统或应用程序读取文件时，它们会检查这些字节序列，以确定文件的类型，并相应地进行处理。
   
-* <span style="color:purple; font-weight:bold;">**打开了VPN，使用Charles抓包工具会失灵**</span>
+* <span style="color:purple; font-weight:bold;">**打开了VPN，使用Charles抓包工具会失灵**</font>
 
-* <span style="color:purple; font-weight:bold;">**Git 不允许在一个仓库中嵌套另一个Git仓库**。</span>这是因为每个Git仓库都需要有一个独特的`.git`目录来存储版本控制相关的信息，而如果嵌套使用，就会导致冲突和混淆。
+* <span style="color:purple; font-weight:bold;">**Git 不允许在一个仓库中嵌套另一个Git仓库**。</font>这是因为每个Git仓库都需要有一个独特的`.git`目录来存储版本控制相关的信息，而如果嵌套使用，就会导致冲突和混淆。
   在你的情况下，有几个备选的解决方案：
   
   * **子模块（Submodule）：**
@@ -1268,7 +1314,7 @@ int main(int argc, const char * argv[]) {
   如果你希望保持这三个子文件夹的独立性，而且不希望使用子模块，你可以维护这四个仓库（主项目和三个子项目）作为独立的Git仓库。这样，你需要在每个子文件夹中独立进行版本控制。
   选择哪种方法取决于你的具体需求，每个方法都有其优劣之处。子模块通常用于处理外部依赖，而将所有内容放在一个仓库中可能更容易管理，但这也取决于你的项目结构和开发流程。
   
-* <span style="color:purple; font-weight:bold;">**`ping`命令不应该包含协议（如HTTP）或端口号**。</span>因为它是一个基于网络层的命令，主要用于测试主机之间的连接。正确的`ping`命令格式是：
+* <span style="color:purple; font-weight:bold;">**`ping`命令不应该包含协议（如HTTP）或端口号**。</font>因为它是一个基于网络层的命令，主要用于测试主机之间的连接。正确的`ping`命令格式是：
   ```bash
   ping 10.242.91.199
   ```
@@ -1278,7 +1324,7 @@ int main(int argc, const char * argv[]) {
   ```
   请注意，`telnet`命令可能需要安装，具体取决于你的操作系统。
   
-* <span style="color:purple; font-weight:bold;">**在浏览器中使用IP地址访问网站时，通常可以省略"HTTP://"。**</span>**浏览器会默认使用HTTP协议**，除非指定了其他协议（例如https）。因此，你可以直接在浏览器地址栏中输入IP地址，如下所示：
+* <span style="color:purple; font-weight:bold;">**在浏览器中使用IP地址访问网站时，通常可以省略"HTTP://"。**</font>**浏览器会默认使用HTTP协议**，除非指定了其他协议（例如https）。因此，你可以直接在浏览器地址栏中输入IP地址，如下所示：
   ```
   http://123.456.789.123
   ```
@@ -1288,7 +1334,7 @@ int main(int argc, const char * argv[]) {
   ```
   总之，大多数情况下，你可以省略`http://`，但如果需要访问https站点，就需要在IP地址前加上`https://`
   
-* <span style="color:purple; font-weight:bold;">**配置GitHub的SSH（Secure Shell）可以帮助您更安全地与GitHub仓库进行通信。**</span>以下是配置GitHub SSH的步骤：
+* <span style="color:purple; font-weight:bold;">**配置GitHub的SSH（Secure Shell）可以帮助您更安全地与GitHub仓库进行通信。**</font>以下是配置GitHub SSH的步骤：
   * **生成SSH密钥：**
     打开终端（在Linux或macOS上）或Git Bash（在Windows上），然后运行以下命令生成SSH密钥：
   ```bash
@@ -1323,9 +1369,9 @@ int main(int argc, const char * argv[]) {
   
     [***Using SSH over the HTTPS port***](# https://docs.github.com/en/authentication/troubleshooting-ssh/using-ssh-over-the-https-port)
   
-* <span style="color:purple; font-weight:bold;">**文件数据则可以通过 `multipart/form-data` 格式进行编码，并作为消息体的一部分发送到服务器（用POST）**</span>
+* <span style="color:purple; font-weight:bold;">**文件数据则可以通过 `multipart/form-data` 格式进行编码，并作为消息体的一部分发送到服务器（用POST）**</font>
 
-* <span style="color:purple; font-weight:bold;">***iOS*推送通知：**</span>**向用户设备发送消息的机制，允许开发者在用户设备上显示提醒、声音和标志等通知**
+* <span style="color:purple; font-weight:bold;">***iOS*推送通知：**</font>**向用户设备发送消息的机制，允许开发者在用户设备上显示提醒、声音和标志等通知**
   * **推送通知类型**：
     - **本地通知**：***由应用程序本身发出，无需连接到远程服务器***。本地通知可以在特定时间触发或在用户进入或退出特定地理位置时触发；
 

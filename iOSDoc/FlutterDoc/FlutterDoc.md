@@ -4,6 +4,9 @@
   - [相关资料](#相关资料)
   - [***`var`***、***`dynamic`***、***`object`***](#vardynamicobject)
   - [***`const`***和***`final`***](#const和final)
+  - [***Dart.factory***](#dartfactory)
+  - [***Dart.方法的定义（写法）***](#dart方法的定义写法)
+  - [***Dart.下划线***](#dart下划线)
   - [***Dart.级联操作符***](#dart级联操作符)
   - [***Dart.调用C***](#dart调用c)
   - [***Dart***.***`part`***](#dartpart)
@@ -15,7 +18,7 @@
   - [***Dart***.***Context***（上下文）](#dartcontext上下文)
   - [***Dart.Flutter.State***](#dartflutterstate)
   - [***Dart.Flutter.`setState`***](#dartfluttersetstate)
-  - [***Dart.Flutter.状态管理***](#dartflutter状态管理)
+  - [***❤️Dart.Flutter.状态管理*** ](#️dartflutter状态管理-)
     - [scoped\_model](#scoped_model)
     - [BloC：*B*usiness *Lo*gic *C*omponent](#blocbusiness-logic-component)
     - [flutter\_redux](#flutter_redux)
@@ -31,15 +34,15 @@
     - [相对布局](#相对布局)
     - [一些常用的UI库](#一些常用的ui库)
     - [***Dart.Flutter.动画***](#dartflutter动画)
-  - [***Dart.Flutter.database***](#dartflutterdatabase)
-  - [***Dart.Flutter***.*Provider*](#dartflutterprovider)
+  - [***🪣Dart.Flutter.Database***](#dartflutterdatabase)
+  - [***❤️Dart.Flutter***.*Provider*](#️dartflutterprovider)
   - [***Dart.Flutter.手势✋🏻***](#dartflutter手势)
     - [点击（轻触）手势（***Tap Gesture***）](#点击轻触手势tap-gesture)
     - [长按手势（***Long Press Gesture***）](#长按手势long-press-gesture)
     - [拖动手势（***Drag Gesture***）](#拖动手势drag-gesture)
     - [缩放手势（***Scale Gesture***）](#缩放手势scale-gesture)
     - [滑动手势（***Swipe Gesture***）](#滑动手势swipe-gesture)
-    - [***解决手势冲突（控制手势的响应范围以及触发条件）***](#解决手势冲突控制手势的响应范围以及触发条件)
+    - [***❤️解决手势冲突（控制手势的响应范围以及触发条件）***](#️解决手势冲突控制手势的响应范围以及触发条件)
   - [***Dart.Flutter.GetX***](#dartfluttergetx)
     - [资料来源](#资料来源)
     - [作用](#作用)
@@ -51,7 +54,7 @@
   - [***Dart.事件循环（Event Loop）***](#dart事件循环event-loop)
   - [***Dart.线程处理***](#dart线程处理)
     - [***Dart.Isolate***](#dartisolate)
-    - [***Dart.Future***](#dartfuture)
+    - [***❤️Dart.Future***](#️dartfuture)
       - [快速入手：](#快速入手)
       - [异步操作的结果：](#异步操作的结果)
       - [代码执行优先级：](#代码执行优先级)
@@ -59,15 +62,16 @@
       - [***Dart.async***](#dartasync)
       - [***Dart***.*`await`* 和 ***Dart***.*`async`*](#dartawait-和-dartasync)
       - [***Dart.error***](#darterror)
-      - [***Dart.Flutter.FutureBuilder***](#dartflutterfuturebuilder)
+      - [***❤️Dart.Flutter.FutureBuilder***](#️dartflutterfuturebuilder)
       - [***Dart.Flutter.AsyncSnapshot***](#dartflutterasyncsnapshot)
-    - [***Dart.Stream***](#dartstream)
+    - [***❤️Dart.Stream***](#️dartstream)
     - [资料来源](#资料来源-1)
       - [相关细节](#相关细节)
       - [***Dart.Flutter.Widget.StreamBuilder***](#dartflutterwidgetstreambuilder)
       - [*Dart.Flutter*.***StreamController***](#dartflutterstreamcontroller)
   - [***Dart.Flutter.Widget.InheritedWidget***](#dartflutterwidgetinheritedwidget)
   - [***Dart.Flutter.路由***](#dartflutter路由)
+  - [***❤️Dart.Flutter.页面的销毁***](#️dartflutter页面的销毁)
   - [***Dart.Flutter.音视频***](#dartflutter音视频)
   - [***Dart.Flutter.原生Api调用交互***（未完）](#dartflutter原生api调用交互未完)
   - [***Dart.Flutter.其他功能***](#dartflutter其他功能)
@@ -77,31 +81,33 @@
     - [***启动页***](#启动页)
     - [***Dart.Flutter.调取系统摄像头***（未完）](#dartflutter调取系统摄像头未完)
     - [***Dart.Flutter.调取系统相册***（未完）](#dartflutter调取系统相册未完)
+    - [***Dart.Flutter.热更新***（未完）](#dartflutter热更新未完)
   - [其他](#其他)
-    - [***新建Dart.Flutter工程*** （在Mac平台，使用 ***VSCode*** 编译器）](#新建dartflutter工程-在mac平台使用-vscode-编译器)
     - [***Dart.Flutter.DevTools***](#dartflutterdevtools)
     - [***RESTful API***](#restful-api)
     - [***Retrofit***](#retrofit)
-    - [***Dart.Flutter.对象循环引用问题***](#dartflutter对象循环引用问题)
+    - [***❤️Dart.Flutter.对象循环引用问题***](#️dartflutter对象循环引用问题)
     - [***Dart.其他用途***](#dart其他用途)
 ## 相关资料
 [***Flutter 面试知识点集锦· GitBook***](https://guoshuyu.cn/home/wx/Flutter-msjj.html)
 [***Dart/Flutter社区生态：Pub.dev***](https://pub.dev/)
 
-## <span style="color:red; font-weight:bold;">***`var`***</span>、<span style="color:red; font-weight:bold;">***`dynamic`***</span>、<span style="color:red; font-weight:bold;">***`object`***</span>
-* <span style="color:red; font-weight:bold;">***`var`***</span>定义的类型是不可变的；
-* <span style="color:red; font-weight:bold;">***`dynamic`***</span>和<span style="color:red; font-weight:bold;">***`object`***</span>类型是可以变的，而<span style="color:red; font-weight:bold;">***`dynamic`***</span>与<span style="color:red; font-weight:bold;">***`object`***</span>的区别是在静态类型检查上；
-  * <span style="color:red; font-weight:bold;">***`dynamic`***</span>：编译时**不**进行静态类型检查的类型（更灵活），而是在运行期间进行类型检查。（被编译后，实际是一个<span style="color:red; font-weight:bold;">***`object`***</span>类型）
-  * <span style="color:red; font-weight:bold;">***`object`***</span>：编译时会进行类型检查（更安全）
-## <span style="color:red; font-weight:bold;">***`const`***</span>和<span style="color:red; font-weight:bold;">***`final`***</span>
+## <font color="red">***`var`***</font>、<font color="red">***`dynamic`***</font>、<font color="red">***`object`***</font>
+
+* <font color="red">***`var`***</font>定义的类型是不可变的；
+* <font color="red">***`dynamic`***</font>和<font color="red">***`object`***</font>类型是可以变的，而<font color="red">***`dynamic`***</font>与<font color="red">***`object`***</font>的区别是在静态类型检查上；
+  * <font color="red">***`dynamic`***</font>：编译时**不**进行静态类型检查的类型（更灵活），而是在运行期间进行类型检查。（被编译后，实际是一个<font color="red">***`object`***</font>类型）
+  * <font color="red">***`object`***</font>：编译时会进行类型检查（更安全）
+## <font color="red">***`const`***</font>和<font color="red">***`final`***</font>
+
 * ***相同点***  
-  * <span style="color:red; font-weight:bold;">***`final`***</span>、<span style="color:red; font-weight:bold;">***`const`***</span>必须初始化；
-  *  <span style="color:red; font-weight:bold;">***`final`***</span>、<span style="color:red; font-weight:bold;">***`const`***</span>只能赋值一次；
+  * <font color="red">***`final`***</font>、<font color="red">***`const`***</font>必须初始化；
+  *  <font color="red">***`final`***</font>、<font color="red">***`const`***</font>只能赋值一次；
   * 均表示不可被修改  
 *  ***不同点***
   
-  * <span style="color:red; font-weight:bold;">***`final`***</span>可修饰实例变量、<span style="color:red; font-weight:bold;">***`const`***</span>不可以修饰实例变量；
-  * 访问类中<span style="color:red; font-weight:bold;">***`const`***</span>修饰的变量需要<span style="color:red; font-weight:bold;">***`static`***</span>修饰；
+  * <font color="red">***`final`***</font>可修饰实例变量、<font color="red">***`const`***</font>不可以修饰实例变量；
+  * 访问类中<font color="red">***`const`***</font>修饰的变量需要<font color="red">***`static`***</font>修饰；
   ```dart
   class MyClass {
     // 如果要声明一个类中的静态变量，并且希望它是编译时常量，可以使用 static const：
@@ -120,7 +126,7 @@
     debugPrint('Accessing const variable via class: ${MyClass.myConstVar}');
   }
   ```
-  * <span style="color:red; font-weight:bold;">***const***</span>修饰的List集合任意索引不可修改，<span style="color:red; font-weight:bold;">***final***</span>修饰的可以修改；
+  * <font color="red">***const***</font>修饰的List集合任意索引不可修改，<font color="red">***final***</font>修饰的可以修改；
   ```dart
   void main() {
     // 使用 const 修饰的 List，其中的元素是编译时常量，不可修改
@@ -140,10 +146,10 @@
     debugPrint('Final List: $finalList');
   }
   ```
-  *  <span style="color:red; font-weight:bold;">***`const`***</span>用来修饰变量 只能被赋值一次，在**编译**时赋值；**仅用于标识编译时常量**
-     <span style="color:red; font-weight:bold;">***`final`***</span>用来修饰变量 只能被赋值一次，在**运行**时赋值；
-  *  <span style="color:red; font-weight:bold;">***`final`***</span>**只可用来修饰变量**；
-  * <span style="color:red; font-weight:bold;">***`const`***</span>关键字即可修饰变量也可用来修饰常量构造函数；当<span style="color:red; font-weight:bold;">***const***</span>修饰类的构造函数时，它要求该类的所有成员都必须是<span style="color:red; font-weight:bold;">***final***</span>的；
+  *  <font color="red">***`const`***</font>用来修饰变量 只能被赋值一次，在**编译**时赋值；**仅用于标识编译时常量**
+     <font color="red">***`final`***</font>用来修饰变量 只能被赋值一次，在**运行**时赋值；
+  *  <font color="red">***`final`***</font>**只可用来修饰变量**；
+  * <font color="red">***`const`***</font>关键字即可修饰变量也可用来修饰常量构造函数；当<font color="red">***const***</font>修饰类的构造函数时，它要求该类的所有成员都必须是<font color="red">***final***</font>的；
    ```dart
    class MyClass {
      final int x;
@@ -339,16 +345,16 @@ gcc -shared -o libexample.so example.c
 ```
 然后运行Dart代码，确保Dart可以找到并加载生成的共享库。
 
-<span style="color:red; font-weight:bold;">***请注意，这只是一个简单的示例，实际应用可能需要更复杂的接口定义和错误处理。***</span>
+<font color="red">***请注意，这只是一个简单的示例，实际应用可能需要更复杂的接口定义和错误处理。***</font>
 
-## ***Dart***.<span style="color:red; font-weight:bold;">***`part`***</span>
+## ***Dart***.<font color="red">***`part`***</font>
 
-* 用于将一个源文件分割成多个部分，每个部分被称为一个<span style="color:red; font-weight:bold;">*`part`*</span>。通常情况下，一个库（库是Dart中代码组织的单元）可以由多个源文件组成，这些源文件通过<span style="color:red; font-weight:bold;">*`part`*</span>关键字进行引入;
+* 用于将一个源文件分割成多个部分，每个部分被称为一个<font color="red">*`part`*</font>。通常情况下，一个库（库是Dart中代码组织的单元）可以由多个源文件组成，这些源文件通过<font color="red">*`part`*</font>关键字进行引入;
 * 注意事项：
   * 一个库可以有多个部分文件，但是每个部分文件只能属于一个库；
-  * <span style="color:red; font-weight:bold;">*`part`*</span>关键字只能在源文件的最顶部使用，并且必须是文件的第一个非空白、非注释行；
-* 使用<span style="color:red; font-weight:bold;">*`part`*</span>关键字的两个关键点：
-  * **主文件**：包含库的声明以及引入其他部分的声明。通常以`.dart`作为文件扩展名。主文件使用<span style="color:red; font-weight:bold;">*library*</span>关键字声明库；
+  * <font color="red">*`part`*</font>关键字只能在源文件的最顶部使用，并且必须是文件的第一个非空白、非注释行；
+* 使用<font color="red">*`part`*</font>关键字的两个关键点：
+  * **主文件**：包含库的声明以及引入其他部分的声明。通常以`.dart`作为文件扩展名。主文件使用<font color="red">*library*</font>关键字声明库；
   ```dart
   // main.dart
   library my_library;
@@ -359,8 +365,8 @@ gcc -shared -o libexample.so example.c
   // 主文件中的其他代码
   ```
   * **部分文件**：
-    * 部分文件包含库的一部分代码，它们不包含库的声明，而是使用<span style="color:red; font-weight:bold;">*`part of`*</span>关键字引入到主文件中。通常也以`.dart`作为文件扩展名；
-    * 使用<span style="color:red; font-weight:bold;">*`part of`*</span>关键字，将部分文件与主文件关联起来，形成一个完整的库；
+    * 部分文件包含库的一部分代码，它们不包含库的声明，而是使用<font color="red">*`part of`*</font>关键字引入到主文件中。通常也以`.dart`作为文件扩展名；
+    * 使用<font color="red">*`part of`*</font>关键字，将部分文件与主文件关联起来，形成一个完整的库；
     * 这种方式可以将大型代码库拆分成更小的模块，提高代码的可维护性和可读性；
   ```dart
   // part1.dart
@@ -373,15 +379,16 @@ gcc -shared -o libexample.so example.c
 * 反射在某些情况下非常有用，但在一般情况下，推荐**尽量避免使用反射**；
   * 因为它可能会导致性能损失；
   * 并且使代码更难以理解和维护；
-##  <span style="color:red; font-weight:bold;">***Dart.mixin.with.on（混入）***</span>
-* <span style="color:red; font-weight:bold;">*`Mixin`*</span>是一个广泛存在于各种编程语言中的概念，但在某些语言中可能会以不同的形式或名称出现；
-* <span style="color:red; font-weight:bold;">*`Mixin`*</span>是Dart 2.1 加入的特性，以前版本通常使用*abstract class*代替；
+* 很多编程语言都有反射的机制。比如：OC、Java
+##  <font color="red">***Dart.mixin.with.on（混入）***</font>
+* <font color="red">*`Mixin`*</font>是一个广泛存在于各种编程语言中的概念，但在某些语言中可能会以不同的形式或名称出现；
+* <font color="red">*`Mixin`*</font>是Dart 2.1 加入的特性，以前版本通常使用*abstract class*代替；
 * 为了解决继承方面的问题而引入的机制，Dart为了支持多重继承；
-* <span style="color:red; font-weight:bold;">*`Mixin`*</span>的对象是类，<span style="color:red; font-weight:bold;">*`Mixin`*</span>绝不是继承，也不是接口，而是一种全新的特性，可以<span style="color:red; font-weight:bold;">*`Mixin`*</span>多个类，<span style="color:red; font-weight:bold;">*`Mixin`*</span>的使用需要满足一定条件；
-  * **不支持构造函数**（<span style="color:red; font-weight:bold;">***最大的特殊处***</span>）：<span style="color:red; font-weight:bold;">*`Mixin`*</span> 类***不能有构造函数***，因为它们**不能被实例化**（可以避免继承多个类而产生的父类构造方法冲突）。如果需要在 <span style="color:red; font-weight:bold;">*`Mixin`*</span> 中初始化状态，则可以使用初始化列表或<span style="color:red; font-weight:bold;">*`on`*</span>关键字来解决；
-  * **可以有字段**：<span style="color:red; font-weight:bold;">*`Mixin`*</span> 类可以有字段，但只能是**静态字段**；
-  * **可以调用父类方法**：<span style="color:red; font-weight:bold;">*`Mixin`*</span> 类可以调用目标类的父类的方法，这使得 <span style="color:red; font-weight:bold;">*`Mixin`*</span> 更加灵活；
-  * **可以组合多个** <span style="color:red; font-weight:bold;">*`Mixin`*</span>：一个类可以同时使用多个 <span style="color:red; font-weight:bold;">*`Mixin`*</span>，通过逗号分隔。<span style="color:red; font-weight:bold;">*`Mixin`*</span> 的组合顺序很重要，因为如果多个 <span style="color:red; font-weight:bold;">*`Mixin`*</span> 中有相同的方法或属性，那么最后一个 <span style="color:red; font-weight:bold;">*`Mixin`*</span> 中的方法或属性会覆盖前面的；
+* <font color="red">*`Mixin`*</font>的对象是类，<font color="red">*`Mixin`*</font>绝不是继承，也不是接口，而是一种全新的特性，可以<font color="red">*`Mixin`*</font>多个类，<font color="red">*`Mixin`*</font>的使用需要满足一定条件；
+  * **不支持构造函数**（<font color="red">***最大的特殊处***</font>）：<font color="red">*`Mixin`*</font> 类***不能有构造函数***，因为它们**不能被实例化**（可以避免继承多个类而产生的父类构造方法冲突）。如果需要在 <font color="red">*`Mixin`*</font> 中初始化状态，则可以使用初始化列表或<font color="red">*`on`*</font>关键字来解决；
+  * **可以有字段**：<font color="red">*`Mixin`*</font> 类可以有字段，但只能是**静态字段**；
+  * **可以调用父类方法**：<font color="red">*`Mixin`*</font> 类可以调用目标类的父类的方法，这使得 <font color="red">*`Mixin`*</font> 更加灵活；
+  * **可以组合多个** <font color="red">*`Mixin`*</font>：一个类可以同时使用多个 <font color="red">*`Mixin`*</font>，通过逗号分隔。<font color="red">*`Mixin`*</font> 的组合顺序很重要，因为如果多个 <font color="red">*`Mixin`*</font> 中有相同的方法或属性，那么最后一个 <font color="red">*`Mixin`*</font> 中的方法或属性会覆盖前面的；
 ```dart
 import 'package:flutter/foundation.dart';
 
@@ -412,11 +419,11 @@ void main() {
   * 当基类指针或引用指向派生类对象时，调用虚函数时将根据对象的实际类型来确定要调用的函数；
 * 知识扩充：**C++ 多继承**
   * 这意味着一个派生类可以从多个基类中继承属性和行为；
-  * <span style="color:red; font-weight:bold;">*多继承也可能导致一些复杂性和潜在的问题（[**菱形继承问题**](# 菱形继承问题（Diamond Inheritance Problem）)、命名冲突），因此在使用多继承时需要谨慎（Dart.Mixin.with）*</span>;
+  * <font color="red">*多继承也可能导致一些复杂性和潜在的问题（[**菱形继承问题**](#Diamond_Inheritance_Problem)、命名冲突），因此在使用多继承时需要谨慎（Dart.Mixin.with）*</font>;
 * 知识扩充：**C++ 虚继承**
-  * 解决<span style="color:red; font-weight:bold;">[***菱形继承问题***](# 菱形继承问题（Diamond Inheritance Problem）)</span>的一种机制；
+  * 解决<font color="red">[***菱形继承问题***](#Diamond_Inheritance_Problem)</font>的一种机制；
   * 可以确保在多继承中共享的基类子对象<u>**只被继承一次**</u>，从而避免菱形继承问题所带来的二义性和不确定性；
-  * 使用 <span style="color:red; font-weight:bold;">*`virtual`*</span> 关键字；
+  * 使用 <font color="red">*`virtual`*</font> 关键字；
 ```c++
 #include <iostream>
 // 基类 Animal
@@ -465,7 +472,7 @@ int main() {
   虚继承在解决菱形继承问题时非常有用，但需要谨慎使用，因为它可能导致派生类的构造函数和析构函数变得更加复杂。
 */
 ```
-* ### <span style="color:red; font-weight:bold;">***菱形继承问题（Diamond Inheritance Problem）***</span>
+* ### <font color="red" id="Diamond_Inheritance_Problem">***菱形继承问题（Diamond Inheritance Problem）***</font>
 
   在多继承中，如果一个类同时继承了两个类，而这两个类又分别继承自同一个基类，那么派生类将会拥有两份来自共同基类的成员变量和函数，这***可能导致二义性和不确定性***；
 ```c++
@@ -519,7 +526,7 @@ int main() {
 */
 ```
 ## 懒加载（Dart.Flutter vs Swift）
-* Dart.Flutter懒加载关键字<span style="color:red; font-weight:bold;">*`late`*</span>
+* Dart.Flutter懒加载关键字<font color="red">*`late`*</font>
 ```dart
 import 'package:flutter/material.dart';
 
@@ -561,7 +568,7 @@ class MyApp extends StatelessWidget {
   }
 }
 ```
-* Swift懒加载关键字<span style="color:red; font-weight:bold;">*`lazy`*</span>
+* Swift懒加载关键字<font color="red">*`lazy`*</font>
 ```swift
 import 'package:flutter/foundation.dart';
 
@@ -578,7 +585,7 @@ let obj = MyClass()
 // 在首次访问 x 变量时进行初始化
 debugPrint(obj.x) // 输出: 10
 ```
-## ***Dart.Flutter.Widget 树***
+## <font id="Widget树">***Dart.Flutter.Widget 树***</font>
 
 * 有状态的*Widget*通常由两部分组成：
   * 一个是状态对象（State Object），用于存储和管理状态；
@@ -591,13 +598,14 @@ debugPrint(obj.x) // 输出: 10
 * Dart.Flutter 使用 *Widget* 树来构建应用程序的用户界面，并在需要时重新构建部分或全部界面；
 * 当 *Widget* 树中的任何一个节点发生变化时（比如属性变化、状态变化等），Dart.Flutter 会根据变化情况重新构建 *Widget* 树，并更新应用程序的用户界面。**重新构建不是在原有的基础上直接修改，而是重新创建整个（局部的） *Widget* 树**。这种重新构建的方式有以下几个特点：
   * **不可变性**：***Widget* 树中的节点是不可变的，一旦创建就不能被修改**。因此，当节点的属性变化时，Dart.Flutter 不会直接修改原有的节点，而是**创建一个新的节点来替换旧的节点**；
-  * [***Diff 算法***](# Diff 算法)：Dart.Flutter 使用一种称为 `Diff` 算法的技术来**比较新旧 *Widget* 树的差异**，并仅在**必要时更新** UI。`Diff` 算法会逐级比较新旧 *Widget* 树的节点，找出需要更新的部分，并仅重新构建和更新这部分节点，而不是重新构建整个 *Widget* 树；
+  * [***Diff 算法***](#Diff)：Dart.Flutter 使用一种称为 `Diff` 算法的技术来**比较新旧 *Widget* 树的差异**，并仅在**必要时更新** UI。`Diff` 算法会逐级比较新旧 *Widget* 树的节点，找出需要更新的部分，并仅重新构建和更新这部分节点，而不是重新构建整个 *Widget* 树；
   * **重建顶级节点**：虽然 *Widget* 树中的大部分节点可能保持不变，但在某些情况下，比如状态变化或路由导航等，顶级节点可能会发生变化。在这种情况下，Dart.Flutter 会重新构建整个 *Widget* 树，从根节点开始，而不是从变化的节点开始；
   * **重用已构建的部分**：为了提高性能，Dart.Flutter 会尽可能地重用已构建的部分 *Widget* 树。如果某些节点在新旧 *Widget* 树中是相同的（例如，它们具有相同的类型和属性），Dart.Flutter 将重用已构建的节点，而不是重新创建它们；
     *虽然重新构建 Widget 树看起来像是创建一个全新的树，但实际上 Flutter 会**尽可能地重用已有的节点**，并仅在必要时更新变化的部分，以提高性能和效率*
 ## ***Dart.Flutter.依赖注入***
+
 * ***Dart.Flutter 框架本身没有内置的依赖注入机制***，但由于依赖注入在 Dart.Flutter 开发中非常常见，因此有许多第三方库提供了依赖注入的功能：
-  * [***GetX***](# Dart.Flutter.GetX)：[***GetX***](# Dart.Flutter.GetX)的依赖注入功能通常与 [***GetxController***](# GetxController)、`GetxService` 和 `Get.put()` 方法一起使用：
+  * [***GetX***](#GetX)：[***GetX***](#GetX)的依赖注入功能通常与 [***GetxController***](#GetxController)、`GetxService` 和 `Get.put()` 方法一起使用：
     
     需要在 *pubspec.yaml* 文件中添加 [***GitHub.GetX***](https://github.com/jonataslaw/getx)  包的依赖：
     
@@ -721,7 +729,7 @@ debugPrint(obj.x) // 输出: 10
     }
     ```
 
-## ***Dart***.<span style="color:red; font-weight:bold;">***Context***</span>（上下文）
+## <font id="Context">***Dart***.<font color="red">***Context***</font>（上下文）</font>
 
 * 在计算机科学中，上下文（*Context*）是指一个***程序运行时的环境信息***，其中包括了程序执行所需的各种条件（背景信息）、状态和设置，帮助程序正确地执行任务或处理事件；上下文可以包括但不限于以下内容：
 
@@ -800,15 +808,15 @@ debugPrint(obj.x) // 输出: 10
   );
   ```
 
-## <span style="color:red; font-weight:bold;">***Dart.Flutter.State***</span>
+## <font color="red">***Dart.Flutter.State***</font>
 
-* 状态（<span style="color:red; font-weight:bold;">***State***</span>）是指在应用程序生命周期内<span style="color:red; font-weight:bold;">***可能发生变化的数据***</span>（**可以是任意数据类型**，包括布尔值、整数、字符串、列表、对象等等）；
-* ***Widget***=> ***Element***（[***BuildContext***](# Dart.Context（上下文）)）=>***RenderObject*** =>***Layer***=>***Layer Tree***（Werl）
+* 状态（<font color="red">***State***</font>）是指在应用程序生命周期内<font color="red">***可能发生变化的数据***</font>（**可以是任意数据类型**，包括布尔值、整数、字符串、列表、对象等等）；
+* ***Widget***=> ***Element***（[***BuildContext***](#Context)）=>***RenderObject*** =>***Layer***=>***Layer Tree***（首字母简称：Werl）
 * ***Layer***的组成由*RenderObject*中的 `isRepaintBoundary` 标志位决定；
 * 相关的*RenderObject*在一起组成了***Layer***，而由***Layer***构成的***Layer Tree***最后会被提交到 Flutter Engine 绘制出画面；
 * 用于管理*Widget*状态的类（实例对象）；
 * 每个*Widget*状态都代表了一帧。在每次*Widget*重绘的时候，通过*State*重新赋予*Widget*需要的绘制信息；
-* [***BuildContext***](# Dart.Context（上下文）)：有关当前*Widget（*及其祖先*Widget*）的一些元数据（比如位置信息）；
+* [***BuildContext***](#Context)：有关当前*Widget（*及其祖先*Widget*）的一些元数据（比如位置信息）；
   * ***Element***：是构建*Widget*树的基本单位（具体部件实例）。它负责管理该部件及其子部件的生命周期、布局、绘制等操作；
     * *RenderObject*：通过*Element*转化为*RenderObject*去实现*Widget*绘制；
     * *Widget*：每个*Widget*对应一个*Element*；
@@ -820,8 +828,8 @@ debugPrint(obj.x) // 输出: 10
   * 这样*Element*每次调用 `Widget build()` 时，是通过 `state.build(this)`； 
   * 得到的新*Widget* ，所以写在*State*的数据就得以复用了；
 * ***StatefulWidget* 的 `createState` 是在*StatefulElement*的构建方法里创建的**。这就保证了只要*Element*不被重新创建，*State*就一直被复用；
-* [***`setState`***](# Dart.Flutter.`setState`) ，其实是调用了 `markNeedsBuild` 。**`markNeedsBuild` 内部会标记 `element` 为 `diry`，然后在下一帧 `WidgetsBinding.drawFrame` 才会被绘制，这可以也看出**<span style="color:red; font-weight:bold;">**`setState` 并不是立即生效的**</span>；
-* 要避免每次进入数据时都刷新`build`，可以使用`StatefulWidget`来保存状态，并在需要更新时手动调用[***`setState`***](# Dart.Flutter.`setState`) 方法来触发更新。另外，还可以使用一些状态管理库（如[***Provider***](# Dart.Flutter.Provider)、[***GetX***]( # Dart.Flutter.GetX)、[***Bloc***](# BloC：<span style="color:red; font-weight:bold;">*B*</span>usiness <span style="color:red; font-weight:bold;">*Lo*</span>gic <span style="color:red; font-weight:bold;">*C*</span>omponent)等）来帮助管理状态，以便在需要时更新UI而不必刷新整个`build`。❤️
+* [***`setState`***](#setState) ，其实是调用了 `markNeedsBuild` 。**`markNeedsBuild` 内部会标记 `element` 为 `diry`，然后在下一帧 `WidgetsBinding.drawFrame` 才会被绘制，这可以也看出**<font color="red">**`setState` 并不是立即生效的**</font>；
+* 要避免每次进入数据时都刷新`build`，可以使用`StatefulWidget`来保存状态，并在需要更新时手动调用[***`setState`***](#setState) 方法来触发更新。另外，还可以使用一些状态管理库（如[***Provider***](#Provider)、[***GetX***]( #GetX)、[***Bloc***](#BloC)等）来帮助管理状态，以便在需要时更新UI而不必刷新整个`build`。❤️
 ```dart
 import 'package:flutter/material.dart';
 
@@ -878,9 +886,9 @@ class _CounterWidgetState extends State<CounterWidget> {
   因为状态被保存在 StatefulWidget 中，而不是每次重新创建
 */
 ```
-* ### ***Dart.Flutter.State***的生命周期（8个）
+* ### <font id="UI.生命周期">***Dart.Flutter.State***的生命周期（8个）</font>
 
-<span style="color:red; font-weight:bold;">**是指 *StatefulWidget* 对象的状态变化和生命周期方法调用的过程**</span>
+<font color="red">**是指 *StatefulWidget* 对象的状态变化和生命周期方法调用的过程**</font>
 
   * `createState()`
     - 调用时机：在 *StatefulWidget* 首次被创建时调用。
@@ -905,22 +913,23 @@ class _CounterWidgetState extends State<CounterWidget> {
   * `dispose()`
     - 调用时机：在 *State* 对象从 *Widget* 树中被永久移除时调用。
     - 作用：通常用于执行一些清理操作，比如取消订阅、释放资源等。通常来说，`super.dispose()` 应该放在最后调用，因为这是 Dart.Flutter 框架设计的推荐做法，以确保在小部件的生命周期结束时执行所有必要的清理操作。（区别于OC）
-* [***InheritedWidget***](# Dart.Flutter.Widget.InheritedWidget)
+* [***InheritedWidget***](#InheritedWidget)
 
-## ***Dart.Flutter.`setState`***
+## <font id="setState">***Dart.Flutter.`setState`***</font>
+
 * 是 Flutter 的单向数据流模型。当调用一个 *Widget* 的 `setState` 方法时，Flutter 将会标记该 *Widget* 为***dirty***，表示该 *Widget* 及其子树需要被重新构建；
 * 重新构建时，Flutter 会调用该 *Widget* 的 `build` 方法来生成新的 UI 树，从而实现 UI 的更新；
 * `setState` 方法只会重新构建其调用的 *Widget* 及其子树，并不会影响到其他部分的 UI；
-* 如果需要**更新全局状态**或者**在不同*Widget*之间共享状态**，可能需要使用一些状态管理工具。比如：[***Provider***](# Dart.Flutter.Provider)、[***GetX***]( # Dart.Flutter.GetX)、[***Bloc***](# BloC：<span style="color:red; font-weight:bold;">*B*</span>usiness <span style="color:red; font-weight:bold;">*Lo*</span>gic <span style="color:red; font-weight:bold;">*C*</span>omponent) 、***Riverpod***等；
-##  <span style="color:red; font-weight:bold;">***❤️Dart.Flutter.状态管理*** </span>
+* 如果需要**更新全局状态**或者**在不同*Widget*之间共享状态**，可能需要使用一些状态管理工具。比如：[***Provider***](#Provider)、[***GetX***]( #GetX)、[***Bloc***](#Bloc) 、***Riverpod***等；
+##  <font color="red">***❤️Dart.Flutter.状态管理*** </font>
 
-* 在所有 **响应式编程** 中，状态管理一直老生常谈的话题，而在 Flutter 中，目前主流的有[***scope_mode***](# scoped_model) 、[***BloC 设计模式***](# BloC：<span style="color:red; font-weight:bold;">*B*</span>usiness <span style="color:red; font-weight:bold;">*Lo*</span>gic <span style="color:red; font-weight:bold;">*C*</span>omponent) 、[***flutter_redux***](# flutter_redux) 、[***fish_redux***](# fish_redux) 等四种设计；
+* 在所有 **响应式编程** 中，状态管理一直老生常谈的话题，而在 Flutter 中，目前主流的有[***scope_mode***](#scoped_model) 、[***BloC 设计模式***](# BloC：<font color="red">*B*</font>usiness <font color="red">*Lo*</font>gic <font color="red">*C*</font>omponent) 、[***flutter_redux***](#flutter_redux) 、[***fish_redux***](#fish_redux) 等四种设计；
 * 它们的 *复杂度* 和 *上手难度* 是逐步递增的，但同时 **可拓展性** 、**解耦度** 和 **复用能力** 也逐步提升。
 
-### scoped_model
+### <font id="scoped_model">scoped_model</font>
 
-* 是 Dart.Flutter 最为简单的状态管理框架，它充分利用了 Dart.Flutter 中的一些特性，只有一个 `.dart` 文件的它，极简的实现了一般场景下的状态管理；<span style="color:red; font-weight:bold;">***（观察模型，发送/接受通知）***</span>
-* 内部实现借助***AnimatedBuildler***利用了[***InheritedWidget***](# Dart.Flutter.Widget.InheritedWidget)：
+* 是 Dart.Flutter 最为简单的状态管理框架，它充分利用了 Dart.Flutter 中的一些特性，只有一个 `.dart` 文件的它，极简的实现了一般场景下的状态管理；<font color="red">***（观察模型，发送/接受通知）***</font>
+* 内部实现借助***AnimatedBuildler***利用了[***InheritedWidget***](#InheritedWidget)：
   * 在 `scoped_model` 中，可以通过 `ScopedModel.of<CountModel>(context)` 获取我们的 Model 。其中最主要是因为其内部的 `build` 的时候，包裹了一个 `_InheritedModel` 控件，而它继承了 `InheritedWidget` 
   * 业务处理流程总结：
     * `AnimatedBuildler` 继承了 `AnimatedWidget` ，在 `AnimatedWidget` 的生命周期中会对 `Listenable` 接口添加监听，而 `Model` 恰好就实现了 `Listenable` 接口；
@@ -988,15 +997,16 @@ class CountModel extends Model {
   }
 }
 ```
-### BloC：<span style="color:red; font-weight:bold;">*B*</span>usiness <span style="color:red; font-weight:bold;">*Lo*</span>gic <span style="color:red; font-weight:bold;">*C*</span>omponent
-* 它属于一种设计模式，在 Dart.Flutter 中它主要是通过 [***Stream***](# Dart.Stream) 与 [***SteamBuilder***](# Dart.Flutter.SteamBuilder) 来实现设计的，所以 ***BloC*** 实现起来也相对简单；
-* 当然，如果和 `rxdart` 结合可以简化 [***StreamController***](# Dart.Flutter.StreamController)  的一些操作，同时如果你需要利用 `BloC` 模式实现状态共享，那么自己也可以封装多一层 [***InheritedWidgets***](# Dart.Flutter.Widget.InheritedWidget) 的嵌套；
+### <font id="BloC">BloC：<font color="red">*B*</font>usiness <font color="red">*Lo*</font>gic <font color="red">*C*</font>omponent</font>
+
+* 它属于一种设计模式，在 Dart.Flutter 中它主要是通过 [***Stream***](#Stream) 与 [***SteamBuilder***](#SteamBuilder) 来实现设计的，所以 ***BloC*** 实现起来也相对简单；
+* 当然，如果和 `rxdart` 结合可以简化 [***StreamController***](#StreamController)  的一些操作，同时如果你需要利用 `BloC` 模式实现状态共享，那么自己也可以封装多一层 [***InheritedWidgets***](#InheritedWidget) 的嵌套；
 * **BloC**没实现路由管理；
 * **BloC** 是 Flutter 中组织代码的起点，它将业务逻辑与可视化分开；
 * 业务处理流程总结：
-  * 定义一个 ***PageBloc*** 对象，利用 [***StreamController***](# Dart.Flutter.StreamController) 创建 ***Sink*** 与 [***Stream***](# Dart.Stream)；
-  * ***PageBloc*** 对外暴露 ***Stream*** 用来与 [***SteamBuilder***](# Dart.Flutter.SteamBuilder)   结合；暴露 `add` 方法提供外部调用，内部通过 ***Sink*** 更新 ***Stream***；
-  * 利用 [***SteamBuilder***](# Dart.Flutter.SteamBuilder)   加载监听 [***Stream***](# Dart.Stream) 数据流，通过 [***snapShot***](# Dart.Flutter.AsyncSnapshot) 中的 `data` 更新控件；
+  * 定义一个 ***PageBloc*** 对象，利用 [***StreamController***](#StreamController) 创建 ***Sink*** 与 [***Stream***](#Stream)；
+  * ***PageBloc*** 对外暴露 ***Stream*** 用来与 [***SteamBuilder***](#SteamBuilder)   结合；暴露 `add` 方法提供外部调用，内部通过 ***Sink*** 更新 ***Stream***；
+  * 利用 [***SteamBuilder***](#SteamBuilder)   加载监听 [***Stream***](#Stream) 数据流，通过 [***snapShot***](#AsyncSnapshot) 中的 `data` 更新控件；
 ```dart
 class _BlocPageState extends State<BlocPage> {
   final PageBloc _pageBloc = new PageBloc();
@@ -1053,7 +1063,8 @@ class PageBloc {
   }
 }
 ```
-### flutter_redux
+### <font id="flutter_redux">flutter_redux</font>
+
 *redux：【adj.】被带回的；复活的*
 *reducer：【n.】[助剂] 还原剂；减径管*
 
@@ -1068,7 +1079,7 @@ dependencies:
 *  可以看做是利用了 ***Stream*** 特性的 ***scope_model*** 升级版，通过 ***redux*** 设计模式来完成解耦和拓展；
 * 在 *Redux* 架构中，***Store***、***Action*** 、***Reducer***以及 ***Middleware***。它们分别承担着不同的角色，协同工作**以实现状态管理和数据流控制**；
   * ***Store***
-    - ***Store***是整个 **Redux 应用程序的核心**。<span style="color:red; font-weight:bold;">*它负责存储应用程序的状态，并提供了一种方式来访问和更新这个状态*</span>；
+    - ***Store***是整个 **Redux 应用程序的核心**。<font color="red">*它负责存储应用程序的状态，并提供了一种方式来访问和更新这个状态*</font>；
     - ***Store*** 保存了应用程序的状态树，并通过 `getState()` 方法提供对当前状态的访问。它还提供了 `dispatch(action)` 方法来分发（*dispatch*）操作（*Action*）到 ***Reducer*** 中进行处理，并更新状态；
     - 在 *Redux* 中，只能有一个全局的 ***Store*** 存在，这使得整个应用程序的状态变得易于管理和追踪；
   
@@ -1083,7 +1094,7 @@ dependencies:
   ```
   
   * ***Action***
-    - 一个**普通的 JavaScript 对象，描述了发生了什么事情**。<span style="color:red; font-weight:bold;">*它是改变应用程序状态的唯一途径*</span>；
+    - 一个**普通的 JavaScript 对象，描述了发生了什么事情**。<font color="red">*它是改变应用程序状态的唯一途径*</font>；
     - ***Action*** 对象必须包含一个 `type` 属性，用来表示操作类型，通常以***字符串***的形式表示。除了 `type` 属性外，***Action*** 对象还可以携带一些附加数据，这些数据会传递给 ***`Reducer`*** 来更新状态。
   
   ```dart
@@ -1092,7 +1103,7 @@ dependencies:
   ```
   
   * ***Action***.***`Reducer`*** 
-    - ***`Reducer`***  是一个**纯函数**， <span style="color:blue; font-weight:bold;">负责处理来自 ***Action*** 的操作</span>，<span style="color:red; font-weight:bold;">*更新应用程序的状态，并返回一个新的状态*</span>；
+    - ***`Reducer`***  是一个**纯函数**， <font color="blue">负责处理来自 ***Action*** 的操作</font>，<font color="red">*更新应用程序的状态，并返回一个新的状态*</font>；
     - ***`Reducer`***  接收当前的状态和一个操作（***Action***）作为参数，并根据操作的类型来决定如何更新状态。它应该返回一个全新的状态对象，而不是修改原始的状态对象；
     - 在 *Redux* 中，可能有多个***`Reducer`*** ，但每个 ***`Reducer`***  只负责管理状态树的一部分，它们一起构成了应用程序的整体状态管理；
   
@@ -1229,7 +1240,8 @@ class MyHomePage extends StatelessWidget {
   }
 }
 ```
-### fish_redux
+### <font id="fish_redux">fish_redux</font>
+
 * 基于*Redux*架构，旨在简化复杂应用程序的状态管理和 UI 构建过程；
 * 支持插件化架构：持久化插件、路由插件、国际化插件等；
 * 提供异步支持：Effect 的机制。可以在 ***Action***的生命周期中执行异步操作，并将结果发送回***`Reducer`*** 进行状态更新
@@ -1239,7 +1251,7 @@ dependencies:
     sdk: flutter
   fish_redux: ^0.5.4
 ```
-***创建一个名为 `counter_page` 的文件夹，并在其中创建以下文件*** <span style="color:red; font-weight:bold;">*简单的计数器应用程序*</span>
+***创建一个名为 `counter_page` 的文件夹，并在其中创建以下文件*** <font color="red">*简单的计数器应用程序*</font>
 *`state.dart`：定义页面状态*
 ```dart
 import 'package:fish_redux/fish_redux.dart';
@@ -1370,6 +1382,7 @@ void initState(CounterState state, Context<CounterState> ctx) {
 }
 ```
 ## ***Dart.Flutter.对象间传值***
+
 * **构造函数参数传值：**在创建对象时，通过构造函数参数将数据传递给新对象。这是一种简单直接的方式，适用于需要传递初始数据的情况。
 * **`Setter` 方法传值：**在创建对象后，通过调用对象的 `setter` 方法来设置数据。这种方式允许您在对象创建后随时更新数据;
 ```dart
@@ -1386,8 +1399,8 @@ class MyWidget extends StatelessWidget {
   }
 }
 ```
-* **全局状态管理：** 使用一些全局状态管理工具，如 [***Provider***](# Dart.Flutter.Provider)、[***GetX***](# Dart.Flutter.GetX)、***Riverpod*** 等，来管理数据的全局状态，以便在应用程序的不同部分共享数据。
-* <span style="color:red; font-weight:bold;">**传递回调函数**</span>：在创建子组件时，通过传递回调函数来实现父组件向子组件传递数据。子组件可以调用回调函数来更新父组件的状态。
+* **全局状态管理：** 使用一些全局状态管理工具，如 [***Provider***](#Provider)、[***GetX***](#GetX)、***Riverpod*** 等，来管理数据的全局状态，以便在应用程序的不同部分共享数据。
+* <font color="red">**传递回调函数**</font>：在创建子组件时，通过传递回调函数来实现父组件向子组件传递数据。子组件可以调用回调函数来更新父组件的状态。
 ```dart
 class ParentWidget extends StatefulWidget {
   @override
@@ -1429,7 +1442,7 @@ class ChildWidget extends StatelessWidget {
 ## ***Dart.Flutter.key***
 * key是***Widgets***，***Elements***和***SemanticsNodes***的标识符；
 * key有**`LocalKey`** 和 **`GlobalKey`**两种；
-  * **`LocalKey`**  是一个*抽象类*，用于标识和区分[***Widget树***](# Widget 树)中的不同节点。它是***所有用于本地（局部）标识的关键类的基类***。常见的用法是在需要在同一父级下修改控件顺序或数量时使用 `LocalKey`
+  * **`LocalKey`**  是一个*抽象类*，用于标识和区分[***Widget树***](#Widget树)中的不同节点。它是***所有用于本地（局部）标识的关键类的基类***。常见的用法是在需要在同一父级下修改控件顺序或数量时使用 `LocalKey`
     *演示了如何使用 `LocalKey` 来标识 `Container` 和 `Text` Widget，并在它们之间交换位置👇🏻*
   ```dart
   import 'package:flutter/material.dart';
@@ -1511,7 +1524,7 @@ class ChildWidget extends StatelessWidget {
     * 允许 *Widget* 在应用中的**任何位置更改父级而不会丢失 ** *State*；
     *演示了如何使用 `GlobalKey` 来引用 `TextField` 控件的状态，并在按下按钮时清除文本框中的文本*
     
-    <span style="color:red; font-weight:bold;">*核心思想：将数据进行📌标记，而非对控件进行📌标记*</span>
+    <font color="red">*核心思想：将数据进行📌标记，而非对控件进行📌标记*</font>
     
     ```dart
     import 'package:flutter/material.dart';
@@ -1565,7 +1578,7 @@ class ChildWidget extends StatelessWidget {
 ## ***Dart.Flutter.UI***
 ### ***Dart.Flutter.MaterialApp*** 和 ***Dart.Flutter.CupertinoApp*** 的生命周期方法
 
-* ***MaterialApp*** 和 ***CupertinoApp*** 都有各自的生命周期方法，它们继承自 ***WidgetsApp***，因此具有相似的[**生命周期**](# ***Dart.Flutter.State***的生命周期（8个）)
+* ***MaterialApp*** 和 ***CupertinoApp*** 都有各自的生命周期方法，它们继承自 ***WidgetsApp***，因此具有相似的[**生命周期**](#UI.生命周期)
 
 ### `MyHomePage`和`_MyHomePageState`的分离
 
@@ -1579,26 +1592,26 @@ class ChildWidget extends StatelessWidget {
 * **代码重用**：通过将状态提取到单独的 *State* 类中，可以方便地将同一份状态在多个 *Widget* 之间共享，从而实现代码的重用。如果 *Widget* 和 *State* 写在同一个类中，可能会导致代码重复或难以重用；
 * **状态管理**：将状态和 UI 描述分离可以更好地管理状态的生命周期。*StatefulWidget* 和 *State* 之间的分离允许状态在 UI 生命周期中保持一致，并在需要时通知框架更新 UI；
 * **框架要求**：***Dart.Flutter 框架本身也要求 StatefulWidget 和其关联的 State 必须是分开的，这是 Dart.Flutter 设计的一部分。***Dart.Flutter 的设计哲学是将 UI 描述和状态管理分开，以便更好地实现代码的组织和管理；
-  <span style="color:red; font-weight:bold;">**综上所述，尽管在某些情况下将 *Widget* 和其关联的 *State* 写在同一个类中是可行的，但是将它们分开定义通常更利于代码的组织、可读性和维护性。**</span>
-### 关于<span style="color:red; font-weight:bold;">*`const`*</span> *MyApp({Key? key})* : <span style="color:red; font-weight:bold;">*`super`*</span> *(key: key)*;
+  <font color="red">**综上所述，尽管在某些情况下将 *Widget* 和其关联的 *State* 写在同一个类中是可行的，但是将它们分开定义通常更利于代码的组织、可读性和维护性。**</font>
+### 关于<font color="red">*`const`*</font> *MyApp({Key? key})* : <font color="red">*`super`*</font> *(key: key)*;
 
 * 是一个常量构造函数，用于创建一个名为*MyApp*的小部件，并将一个可选的`Key`作为参数传递给父类的构造函数；
-* 在某些情况下，可以省略<span style="color:red; font-weight:bold;">*`const`*</span> ***MyApp({Key? key})*** : <span style="color:red; font-weight:bold;">*`super`*</span> ***(key: key)***，具体取决于你的需求和代码结构。这取决于以下几个因素：
+* 在某些情况下，可以省略<font color="red">*`const`*</font> ***MyApp({Key? key})*** : <font color="red">*`super`*</font> ***(key: key)***，具体取决于你的需求和代码结构。这取决于以下几个因素：
   * **默认行为：** 如果你的 *MyApp* 小部件不需要任何特殊的构造函数行为，并且不需要传递`key`参数给父类构造函数，那么你可以省略这个构造函数，因为Dart会提供一个默认构造函数；
   * **Key的需要：** 如果你的小部件需要在小部件树中唯一标识自己，那么你通常需要传递一个`Key`给父类构造函数。在这种情况下，你可能需要保留这个构造函数，并传递`key`参数给父类；
-  * **const构造函数的需求：** 如果你的小部件需要作为常量构造函数使用（例如，当你希望在编译时计算小部件时），那么你需要保留<span style="color:red; font-weight:bold;">*`const`*</span>关键字并保留该构造函数；
-* <span style="color:red; font-weight:bold;">*`const`*</span> ***MyApp({Key? key})***：这是构造函数的名称，表示创建一个名为 *MyApp* 的*Widget*；
-  * <span style="color:red; font-weight:bold;">*const*</span>关键字表示此构造函数是一个**常量**构造函数，即在编译时将其计算为常量；
+  * **const构造函数的需求：** 如果你的小部件需要作为常量构造函数使用（例如，当你希望在编译时计算小部件时），那么你需要保留<font color="red">*`const`*</font>关键字并保留该构造函数；
+* <font color="red">*`const`*</font> ***MyApp({Key? key})***：这是构造函数的名称，表示创建一个名为 *MyApp* 的*Widget*；
+  * <font color="red">*const*</font>关键字表示此构造函数是一个**常量**构造函数，即在编译时将其计算为常量；
   * 这意味着如果 *MyApp*的实例在代码中的多个位置都是相同的，那么Dart.Flutter**只会创建一个实例**，并在需要时重复使用它。
 * ***({Key? key})***：这是构造函数的**参数列表**；
   * 在这种情况下，它只有一个参数`key`，它是一个`Key`类型的可选参数；
   * `Key`是Dart.Flutter中**用于识别小部件的一种方式**；
   * `key`参数通常用于在小部件树中唯一标识小部件，以便在更新小部件树时进行识别和比较。在这里，`Key?`表示`key`参数可以是空值。
-* <span style="color:red; font-weight:bold;">*`super`*</span> ***({Key: key})***：这表示调用父类构造函数，并将`key`参数传递给父类构造函数；
-  * 在这里，<span style="color:red; font-weight:bold;">*super*</span>关键字用于调用父类的构造函数；
+* <font color="red">*`super`*</font> ***({Key: key})***：这表示调用父类构造函数，并将`key`参数传递给父类构造函数；
+  * 在这里，<font color="red">*super*</font>关键字用于调用父类的构造函数；
   * 这里的父类可能是*StatefulWidget*或其子类。这是因为通常在Dart.中，自定义小部件会继承自*StatefulWidget*或其子类以便管理状态；
   * 传递`key`参数给父类构造函数是为了让父类能够正确地处理此小部件的唯一标识符；
-  <span style="color:red; font-weight:bold;">*使用`key`的demo*</span>
+  <font color="red">*使用`key`的demo*</font>
 ```dart
 import 'package:flutter/material.dart';
 
@@ -1645,7 +1658,8 @@ class _MyWidgetState extends State<MyWidget> {
   }
 }
 ```
-### `Diff` 算法
+### <font id="Diff">`Diff` 算法</font>
+
 * 在 Dart.Flutter 中，`Diff` 算法指的是用于**比较新旧 *Widget* 树的差异，并确定哪些部分需要更新**的算法。这个算法被称为 "Diff" 是因为它会找出两个树之间的差异，并尽可能地最小化更新的成本，**只更新必要的部分**。
 * `Diff` 算法的基本思想是递归地比较新旧 *Widget* 树的每个节点，找出它们之间的差异。这个比较是根据节点的类型、属性、以及子节点的情况来进行的。当发现节点之间存在差异时，`Diff` 算法会尝试**尽可能地复用已有的节点，并更新其属性**，而不是直接销毁和重建节点。
 * 以下是 `Diff` 算法的基本步骤：
@@ -1655,6 +1669,7 @@ class _MyWidgetState extends State<MyWidget> {
   * **更新差异部分**：根据比较的结果，确定哪些部分需要更新，并执行相应的更新操作；
   通过这种方式，`Diff` 算法可以高效地找出新旧 *Widget* 树之间的差异，并尽可能地减少更新的成本。这种优化可以帮助 Flutter 在处理复杂 UI 结构时保持良好的性能。
 ### 系统.其他
+
 * 键盘的弹出和收起都会触发页面 `build`
 * 获取手机可视化区域
 ```dart
@@ -2421,7 +2436,7 @@ class FlareAnimationDemo extends StatelessWidget {
 ```
 ## ***🪣Dart.Flutter.Database***
 
-<span style="color:red; font-weight:bold;">**Dart.Flutter 官方目前没有提供一个 Dart.Flutter 原生自带的数据库解决方案。**</span>Dart.Flutter 团队的重点是提供一个灵活、高性能的 UI 框架，以便开发人员可以构建跨平台的用户界面。对于数据存储和管理，Dart.Flutter 官方更多地依赖于第三方库和平台特定的解决方案
+<font color="red">**Dart.Flutter 官方目前没有提供一个 Dart.Flutter 原生自带的数据库解决方案。**</font>Dart.Flutter 团队的重点是提供一个灵活、高性能的 UI 框架，以便开发人员可以构建跨平台的用户界面。对于数据存储和管理，Dart.Flutter 官方更多地依赖于第三方库和平台特定的解决方案
 ```
 SQLite 是一种跨平台的关系型数据库管理系统 (RDBMS)，它是由 D. Richard Hipp 在 2000 年开发的，最初是为了满足其他项目的需求。
 SQLite 是一个开源项目，它的代码被放在公共域中，允许任何人免费使用、修改和分发。
@@ -2433,17 +2448,17 @@ Core Data 提供了比 SQLite 更高级和更复杂的功能，但与 SQLite 相
 
 可以使用 Android 提供的 SQLiteOpenHelper 类或者第三方库（如 Room Persistence Library）来简化 SQLite 数据库的管理和操作。
 ```
-* [***Dart.Flutter.GetStorage***](# https://pub.dev/packages/get_storage)
-  * [**GetStorage**](# https://pub.dev/packages/get_storage)，是 Dart.Flutter 生态中的一个**轻量级**的本地（数据持久化方案）存储解决方案；
+* [***Dart.Flutter.GetStorage***](https://pub.dev/packages/get_storage)
+  * [***GetStorage***](https://pub.dev/packages/get_storage)，是 Dart.Flutter 生态中的一个**轻量级**的本地（数据持久化方案）存储解决方案；
   * 它是一个简单易用的 key-value 存储库，用于在 Flutter 应用程序中持久化存储简单的数据；
-  * 使用单例模式：整个应用程序生命周期内，只有一个 [**GetStorage()**](# https://pub.dev/packages/get_storage) 实例存在，而且这个实例可以在应用程序的任何地方被访问和使用；
+  * 使用单例模式：整个应用程序生命周期内，只有一个 [***GetStorage()***](https://pub.dev/packages/get_storage) 实例存在，而且这个实例可以在应用程序的任何地方被访问和使用；
   * 主要特性：
-    * **简单易用**：[**GetStorage**](# https://pub.dev/packages/get_storage) 提供了简单的 API，使得存储和读取数据变得非常容易；
-    * **轻量级**： [**GetStorage**](# https://pub.dev/packages/get_storage) 是一个轻量级的解决方案，不需要依赖复杂的数据库引擎或第三方库；
-    * **跨平台**： [**GetStorage**](# https://pub.dev/packages/get_storage) 适用于 *Android*、*iOS*、*Web*、*Linux*、*Mac* 以及 *Fuchsia* 和 *Windows* 的持久键/值存储，使得在不同平台之间共享数据变得更加方便；
-    * **高性能**： [**GetStorage**](# https://pub.dev/packages/get_storage) 设计用于高性能，适用于存储小规模数据。如：**偏好设置、临时状态等、应用程序的主题设置、认证令牌、http请求的缓存、简单的地图存储**等；
-    * **无需序列化**： [**GetStorage**](# https://pub.dev/packages/get_storage) 可以存储各种基本数据类型（如整数、字符串、布尔值等），而**不需要进行序列化**操作；
-  * 不需要使用[**GetStorage**](# https://pub.dev/packages/get_storage)的情况：
+    * **简单易用**：[***GetStorage***](https://pub.dev/packages/get_storage)提供了简单的 API，使得存储和读取数据变得非常容易；
+    * **轻量级**： [***GetStorage***](https://pub.dev/packages/get_storage) 是一个轻量级的解决方案，不需要依赖复杂的数据库引擎或第三方库；
+    * **跨平台**： [***GetStorage***](https://pub.dev/packages/get_storage) 适用于 *Android*、*iOS*、*Web*、*Linux*、*Mac* 以及 *Fuchsia* 和 *Windows* 的持久键/值存储，使得在不同平台之间共享数据变得更加方便；
+    * **高性能**： [***GetStorage***](https://pub.dev/packages/get_storage)设计用于高性能，适用于存储小规模数据。如：**偏好设置、临时状态等、应用程序的主题设置、认证令牌、http请求的缓存、简单的地图存储**等；
+    * **无需序列化**：[***GetStorage***](https://pub.dev/packages/get_storage) 可以存储各种基本数据类型（如整数、字符串、布尔值等），而**不需要进行序列化**操作；
+  * 不需要使用[***GetStorage***](https://pub.dev/packages/get_storage)的情况：
     * 需要数据库索引的时候；
     * 当需要在开始另一个操作之前始终检查文件是否已写入存储磁盘时。（内存中的存储是立即完成的，并且可以使用 `box.read()` 立即读取，并且**备份到磁盘是在后台完成的**。<u>确保备份完成，可以使用`await`，但如果需要一直调用`await`，那么使用内存存储就没有意义了</u>）。
 * [***SQFlite***](https://github.com/tekartik/sqflite)
@@ -2755,23 +2770,25 @@ class MyApp extends StatelessWidget {
   }
 }
 ```
-## ***❤️Dart.Flutter***.<span style="color:red; font-weight:bold;">*Provider*</span>
+## ***❤️Dart.Flutter***.<font color="red" id="Provider">*Provider*</font>
 * 主要用于解决 Dart.Flutter 应用程序中的***数据共享和管理***问题；
-* 第三方，需要引入包；
-```yaml
-dependencies:
-  flutter:
-    sdk: flutter
-  provider: ^5.0.0
-```
-* *Dart.Flutter.Provider* 提供了一种称为 [***Scoped Model***](# scoped_model) 的模式，允许开发者将状态和逻辑组织成**可重用**的模块，并将其嵌入到应用程序的组件树中；
-* *Dart.Flutter.Provider*.<span style="color:red; font-weight:bold;">*ChangeNotifierProvider*</span>：用于向子部件传递一个继承自 *ChangeNotifier* 类的状态，并在该对象发生更改时*重新构建依赖于它的子部件*；（**用于包裹目标*Widget***）
-  * *Dart.Flutter.Provider*.<span style="color:red; font-weight:bold;">*ChangeNotifier*</span>： *ChangeNotifier*是一个Dart.Flutter提供的**用于管理状态并通知侦听器的类**；
+
+* *第三方，需要引入包*
+
+  ```yaml
+  dependencies:
+    flutter:
+      sdk: flutter
+    provider: ^5.0.0
+  ```
+* *Dart.Flutter.Provider* 提供了一种称为 [***Scoped Model***](#scoped_model) 的模式，允许开发者将状态和逻辑组织成**可重用**的模块，并将其嵌入到应用程序的组件树中；
+* *Dart.Flutter.Provider*.<font color="red">*ChangeNotifierProvider*</font>：用于向子部件传递一个继承自 *ChangeNotifier* 类的状态，并在该对象发生更改时*重新构建依赖于它的子部件*；（**用于包裹目标*Widget***）
+  * *Dart.Flutter.Provider*.<font color="red">*ChangeNotifier*</font>： *ChangeNotifier*是一个Dart.Flutter提供的**用于管理状态并通知侦听器的类**；
   * 通常用于管理可变状态，是一个轻量级的状态管理工具；
   * **自动更新 UI**：当状态发生变化时，*ChangeNotifierProvider* 会自动重新构建其子部件树，以反映状态的最新值；
   * 遵循了**提供者模式**：它将状态提供给 *Widget* 树中的子部件，并且在状态发生变化时自动通知相关的部件进行更新；
   * **依赖注入**：*ChangeNotifierProvider* 使用依赖注入的方式将状态提供给 *Widget* 树中的子部件。通过调用 `Provider.of<MyModel>(context)`，子部件可以获取与其关联的状态，并在需要时订阅其变化；
-  * **性能优化**：<span style="color:red; font-weight:bold;">*ChangeNotifierProvider* 使用了*Dart.Flutter.Provider*包中的 `listen: false` 参数来避免不必要的重建。从而提高性能</span>；
+  * **性能优化**：<font color="red">*ChangeNotifierProvider* 使用了*Dart.Flutter.Provider*包中的 `listen: false` 参数来避免不必要的重建。从而提高性能</font>；
 ```dart
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -2846,7 +2863,7 @@ class MyHomePage extends StatelessWidget {
   每当按下 FloatingActionButton 时，会调用 counter.increment() 来增加计数器的值，这将触发 UI 的更新。
 */
 ```
-* *Dart.Flutter.Provider*.<span style="color:red; font-weight:bold;">*value*</span>：提供不变的值、提供构建开销低的数据；
+* *Dart.Flutter.Provider*.<font color="red">*value*</font>：提供不变的值、提供构建开销低的数据；
   * **提供单个值**：只能用来提供单个值，而不是像 *ChangeNotifierProvider* 那样提供一个实例；
   * **不会重新构建子树**：一旦值被提供，相关子部件不会因值的更改而重建。这在某些情况下可以提高性能；
   * **不监听值变化**：与 *ChangeNotifierProvider* 不同，*provider.value* 不会监听其值的变化。因此，如果提供的值发生变化，相关的子部件不会自动重新构建。如果你需要监听值的变化并触发更新，你可能需要使用其他提供者；
@@ -2896,15 +2913,15 @@ class MyHomePage extends StatelessWidget {
   }
 }
 ```
-* *Dart.Flutter.provider*.<span style="color:red; font-weight:bold;">*`Provider.of<MyModel>(context)`*</span>：从任何位置获取已提供的值（通常是状态），而不需要将*Widget* `.Build`方法作为中间人。
+* *Dart.Flutter.provider*.<font color="red">*`Provider.of<MyModel>(context)`*</font>：从任何位置获取已提供的值（通常是状态），而不需要将*Widget* `.Build`方法作为中间人。
   * **工作原理**：查找 *Widget* 树中**最近的一个匹配类型**的*Provider*，并返回其值。如果找不到匹配的*Provider*，则会引发异常；
   * **依赖注入**：使用依赖注入的方式将状态提供给*Widget*树中的子部件；
   * **获取提供的状态**：可以获取与*MyModel*类关联的*Provider*中提供的状态，并在 UI 中使用该状态；
   * **监听状态变化**：通过调用 `Provider.of` 获取的状态会自动订阅状态变化，当状态发生变化时，与之关联的部件将会重新构建以反映最新的状态值。这使得在状态发生变化时更新 UI 成为一种简单的任务，无需手动管理更新逻辑。
-  * **与 Consumer 的比较**：<span style="color:red; font-weight:bold;">与*Consumer*不同，`Provider.of` 不接收`builder`函数作为参数，而是直接返回提供的状态。因此，当使用 `Provider.of` 时，需要手动处理 UI 的构建逻辑。而 `Consumer` 会自动调用 builder 函数来构建 UI，以反映最新的状态值</span>；
+  * **与 Consumer 的比较**：<font color="red">与*Consumer*不同，`Provider.of` 不接收`builder`函数作为参数，而是直接返回提供的状态。因此，当使用 `Provider.of` 时，需要手动处理 UI 的构建逻辑。而 `Consumer` 会自动调用 builder 函数来构建 UI，以反映最新的状态值</font>；
   * **局部状态管理**：允许在*Widget*树的任何位置获取提供的状态，并在需要时使用它。这使得状态管理更加灵活，能够根据需求将状态与 UI 组件进行分离；
   * 过度使用`Provider.of<MyModel>(context)`可能会导致代码难以理解和维护，因为它使得部件的依赖关系不明确；
-* *Dart.Flutter.Widget*.<span style="color:red; font-weight:bold;">*Consumer*</span>：*provider* 包提供的一个 *Widget*，监听***特定的*** *Provider*，特别是当需要在*Provider*的值发生变化时**只重新构建部分部件树时**；
+* *Dart.Flutter.Widget*.<font color="red">*Consumer*</font>：*provider* 包提供的一个 *Widget*，监听***特定的*** *Provider*，特别是当需要在*Provider*的值发生变化时**只重新构建部分部件树时**；
   * **订阅状态**：接收一个 `builder` 函数作为参数，当状态发生变化时，*builder*函数将被调用，并根据最新的状态值构建相应的部件；
   * **精确订阅**：可以将*Consumer*包裹在具体依赖的状态上，只有该状态发生变化时，*Consumer*才会重新构建；
   * **避免重建**：在接收到通知时只会重新构建其子部件，而不会重新构建整个部件树，提高了性能；
@@ -3478,7 +3495,7 @@ IgnorePointer(
   child: // Your child widget here
 )
 ```
-## ***Dart.Flutter.GetX***
+## <font id="GetX">***Dart.Flutter.GetX***</font>
 
 ### 资料来源
 
@@ -3486,10 +3503,10 @@ IgnorePointer(
 
 ### 作用
 
-* 跨页面交互、路由管理、全局[***BuildContext***](# Dart.Context（上下文）)、国际化，主题实现
-* [**GetX**](# https://pub.dev/packages/get) 也能够使用相同的代码在 *Android*、*iOS*、*Web*、*Mac*、*Linux*、*Windows* 和服务器上运行
-* 使用[**Get Server**](# https://github.com/jonataslaw/get_server)**可以在后端完全重用在前端编写的代码**
-* [**GetX**](# https://pub.dev/packages/get) 每个功能都位于单独的容器中，并且只有在使用后才启动
+* 跨页面交互、路由管理、全局[***BuildContext***](#Context)、国际化，主题实现
+* [***GetX***](https://pub.dev/packages/get) 也能够使用相同的代码在 *Android*、*iOS*、*Web*、*Mac*、*Linux*、*Windows* 和服务器上运行
+* 使用[***Get Server***](https://github.com/jonataslaw/get_server)**可以在后端完全重用在前端编写的代码**
+* [***GetX***](https://pub.dev/packages/get) 每个功能都位于单独的容器中，并且只有在使用后才启动
   * 如果仅使用状态管理，则仅编译状态管理
   * 如果仅使用路由，则不会编译任何来自状态管理的内容
 
@@ -3525,10 +3542,10 @@ class MyApp extends StatelessWidget {
 ```
 ### ***`Obx`***
 
-* `Obx`：<span style="color:red; font-weight:bold;">数据的**单向绑定**</span>（数据的改变👉🏻UI更新）。是用于观察**可观察对象**（通常是`Rx`变量或[***GetxController***](# GetxController)中的`Rx`变量）的小部件。
-* ***三种***声明响应式：<span style="color:blue; font-weight:bold;">***只有当响应式变量的值发生变化时，才会会执行刷新操作，如当变量从“a”再变为“a”，是不会执行刷新操作***</span>
+* `Obx`：<font color="red">数据的**单向绑定**</font>（数据的改变👉🏻UI更新）。是用于观察**可观察对象**（通常是`Rx`变量或[***GetxController***](#GetxController)中的`Rx`变量）的小部件。
+* ***三种***声明响应式：<font color="blue">***只有当响应式变量的值发生变化时，才会会执行刷新操作，如当变量从“a”再变为“a”，是不会执行刷新操作***</font>
   
-  * <span style="color:red; font-weight:bold;">使用 `Rx{Type}`</span>
+  * <font color="red">使用 `Rx{Type}`</font>
   ```dart
   // 建议使用初始值，但不是强制性的
   final name = RxString('');
@@ -3538,7 +3555,7 @@ class MyApp extends StatelessWidget {
   final items = RxList<String>([]);
   final myMap = RxMap<String, int>({});
   ```
-  * <span style="color:red; font-weight:bold;">使用 `Rx`，规定泛型 Rx</span>
+  * <font color="red">使用 `Rx`，规定泛型 Rx</font>
   ```dart
   final name = Rx<String>('');
   final isLogged = Rx<Bool>(false);
@@ -3550,7 +3567,7 @@ class MyApp extends StatelessWidget {
   // 自定义类 - 可以是任何类
   final user = Rx<User>();
   ```
-  * <span style="color:red; font-weight:bold;">只需添加` .obs` 作为value的属性。</span>***推荐使用***
+  * <font color="red">只需添加` .obs` 作为value的属性。</font>***推荐使用***
   ```dart
   final name = ''.obs;
   final isLogged = false.obs;
@@ -3564,7 +3581,7 @@ class MyApp extends StatelessWidget {
   ```
 * 自定义类的`Obx`使用：
 
-<span style="color:red; font-weight:bold;">***方式一：直接声明变量（类内部赋默认值）***</span>（name.value）
+<font color="red">***方式一：直接声明变量（类内部赋默认值）***</font>（name.value）
 
 ```dart
 class People{
@@ -3587,7 +3604,7 @@ onPressed: (){
   people.age.value = 15; 
 },
 ```
-  <span style="color:red; font-weight:bold;">***方式二：构造函数（类外部赋值）***</span>（value.name）
+  <font color="red">***方式二：构造函数（类外部赋值）***</font>（value.name）
 ```dart
 class People{
   // 构造函数
@@ -3656,15 +3673,15 @@ class Demo1 extends StatelessWidget {
   }
 }
 ```
-### ***GetxController***
+### <font id="GetxController">***GetxController***</font>
 
-* ***GetxController*** 提供了三种使用方式： <span style="color:blue; font-weight:bold;">使用`Get.put()`实例化类，使用对当下所有子路由可用（在整个应用程序的生命周期内保持存在）。后续也可以通过`Get.find()`找到对应的`GetxController `；</span><span style="color:green; font-weight:bold;">前提是没有显式地调用 `Get.delete()` 方法将其销毁为止</span>
+* ***GetxController*** 提供了三种使用方式： <font color="blue">使用`Get.put()`实例化类，使用对当下所有子路由可用（在整个应用程序的生命周期内保持存在）。后续也可以通过`Get.find()`找到对应的`GetxController `；</font><font color="gray">前提是没有显式地调用 `Get.delete()` 方法将其销毁为止</font>
   * `Obx`：响应式状态管理，当数据源变化时，将**自动**执行刷新组件的方法
   * `GetX`：响应式状态管理，当数据源变化时，将**自动**执行刷新组件的方法
-    <span style="color:red; font-weight:bold;">***一般来说，对于大多数场景都是可以使用响应式变量。***</span>
+    <font color="red">***一般来说，对于大多数场景都是可以使用响应式变量。***</font>
   * `GetBuilder`：简单状态管理，当数据源变化时，需要**手动**执行刷新组件的方法，此状态管理器内部实际上是对*StatefulWidget*的封装，占用资源极少！
-    <span style="color:red; font-weight:bold;">***但是每个响应式变量`（.obs）`，都需要生成对应的GetStream，如果对象足够多，将生成大量的GetStream，必将对内存造成较大的压力。***</span>
-    <span style="color:red; font-weight:bold;">***该情况下，就要考虑使用简单状态管理了。***</span>
+    <font color="red">***但是每个响应式变量`（.obs）`，都需要生成对应的GetStream，如果对象足够多，将生成大量的GetStream，必将对内存造成较大的压力。***</font>
+    <font color="red">***该情况下，就要考虑使用简单状态管理了。***</font>
 
 ## ***Dart.Flutter.网络请求***
 
@@ -3718,7 +3735,7 @@ class MyApp extends StatelessWidget {
 }
 ```
 * [***Dio***](https://github.com/cfug/dio)
-  * [***Dio***](https://github.com/cfug/dio)是一个强大、高效的 Dart.Flutter 网络请求框架，支持 [***RESTful API***](# RESTful API)、文件上传下载、拦截器、取消请求等功能；
+  * [***Dio***](https://github.com/cfug/dio)是一个强大、高效的 Dart.Flutter 网络请求框架，支持 [***RESTful API***](#RESTful API)、文件上传下载、拦截器、取消请求等功能；
   * 它基于 Dart 的 *Http Client* 实现（***对原生的封装***），并提供了丰富的 API 和配置选项，使得在 Dart.Flutter 应用程序中进行网络请求变得更加方便和灵活；
 ```dart
 import 'package:flutter/material.dart';
@@ -3771,7 +3788,7 @@ class MyApp extends StatelessWidget {
 }
 ```
 * [***Chopper***](https://github.com/lejard-h/chopper)
-  * [***Chopper***](https://github.com/lejard-h/chopper)是一个***基于[Retrofit](# Retrofit)***的 Dart.Flutter HTTP 客户端，它提供了强大的类型安全的 API 和自动化的网络请求处理，使得在 Dart. 应用程序中进行网络请求变得更加简单和优雅；
+  * [***Chopper***](https://github.com/lejard-h/chopper)是一个***基于[Retrofit](#Retrofit)***的 Dart.Flutter HTTP 客户端，它提供了强大的类型安全的 API 和自动化的网络请求处理，使得在 Dart. 应用程序中进行网络请求变得更加简单和优雅；
   * 跨平台。不仅用于 *Android*和*Dart.Flutter* 平台；
 ```dart
 import 'package:flutter/material.dart';
@@ -3916,7 +3933,8 @@ class MyApp extends StatelessWidget {
 }
 ```
 ## ***Dart.Flutter.数据解析***
-<span style="color:red; font-weight:bold;">**将从网络请求或本地存储中获取的原始数据转换为 Dart 对象或数据模型的过程**</span>
+<font color="red">**将从网络请求或本地存储中获取的原始数据转换为 Dart 对象或数据模型的过程**</font>
+
 ```
 在 Dart.Flutter 中，json 序列化是有些特殊的，不同与 JS ，比如使用上述 Dio 网络请求返回，如果配置了返回数据格式为 json ，实际上的到会是一个Map。
 而 Map 的 key-value 使用，在开发过程中并不是很方便，所以你需要对Map 再进行一次转化，转为实际的 Model 实体。
@@ -4005,9 +4023,11 @@ void main() {
     factory Template.fromJson(Map<String, dynamic> json) => _$TemplateFromJson(json);
   }
   ```
+  
+  * [**Quicktype**](https://app.quicktype.io/)，是一个在线工具，可以将 JSON 数据格式转换成各种编程语言的数据结构定义。可以将 JSON 数据粘贴到该网站上，选择你喜欢的编程语言，然后它会自动生成该语言下对应的类、结构体或者其他数据类型的定义，方便你在编程中使用 JSON 数据时进行解析和操作。
 ## ***Dart.事件循环（Event Loop）***
 * Microtask Queue（微服务队列）
-  * 优先级别高于Event Queue（事件队列）<span style="color:red; font-weight:bold;">***等于VIP***</span>；
+  * 优先级别高于Event Queue（事件队列）<font color="red">***等于VIP***</font>；
   * 只有当Microtask Queue（微服务队列）全部执行完成以后，系统才会有机会执行Event Queue（事件队列）里面的代码；
   * 一般是交给Dart自己来处理的，不建议强行往此队列添加事件，**尽量不要去干涉Dart的内部行为**；
   * 一般用*scheduleMicrotask*方法来对Microtask Queue（微服务队列）添加事件，但是一般实战中是不会使用的。
@@ -4019,11 +4039,13 @@ void main() {
 
 ## ***Dart.线程处理***
 
-<span style="color:red; font-weight:bold;">***值得注意的是：在Dart中，异步操作不是多线程（有别于Java）***</span>
-### ***Dart.Isolate***
-* 在Dart 2.6 版本中引入。Isolate 是 Dart 中的<u>并发执行单元</u>，<span style="color:red; font-weight:bold;">***类似于线程***</span>（即，***Dart的线程是被封装在Isolate里面的***）。但具有独立的堆内存；
-* Isolate 之间通过**消息传递**进行通信，这种模型<u>有助于避免共享内存的并发问题</u>。( JS里面也是模拟多线程，<span style="color:red; font-weight:bold;">**因为总共才一个线程**</span>)
-### ***❤️Dart.Future***
+<font color="red">***值得注意的是：在Dart中，异步操作不是多线程（有别于Java）***</font>
+
+### <font id="Isolate">***Dart.Isolate***</font>
+
+* 在Dart 2.6 版本中引入。Isolate 是 Dart 中的<u>并发执行单元</u>，<font color="red">***类似于线程***</font>（即，***Dart的线程是被封装在Isolate里面的***）。但具有独立的堆内存；
+* Isolate 之间通过**消息传递**进行通信，这种模型<u>有助于避免共享内存的并发问题</u>。( JS里面也是模拟多线程，<font color="red">**因为总共才一个线程**</font>)
+### <font id="Future">***❤️Dart.Future***</font>
 
 ***Future*** 是一个***用于表示异步操作结果的对象***。*通常用于处理需要等待一段时间才能完成的操作。它表示一个在某个未来时刻会产生值或错误的计算过程*；
 
@@ -4179,7 +4201,7 @@ void _incrementCounter() {
 #### `then()`方法
 
 * 你可以使用***Future对象的`then()`方法注册回调函数*** 
-* <span style="color:red; font-weight:bold;">**在正常情况下，等待中的*Future*在完成时的瞬间，`then()`方法会被立即执行，而不会产生Microtask事件**</span>。
+* <font color="red">**在正常情况下，等待中的*Future*在完成时的瞬间，`then()`方法会被立即执行，而不会产生Microtask事件**</font>。
 ```dart
 import 'dart:async';
 import 'package:flutter/material.dart';
@@ -4203,7 +4225,7 @@ flutter: then
 flutter: then 2
 flutter: micro 
 ```
-* <span style="color:red; font-weight:bold;">在已经完成的*Future*上使用`then()`，是会被添加到Microtask</span>；
+* <font color="red">在已经完成的*Future*上使用`then()`，是会被添加到Microtask</font>；
 * `then()`方法接受两个可选参数：一个用于处理成功情况的回调函数和一个用于处理错误情况的回调函数；
 ```dart
 import 'dart:async';
@@ -4263,9 +4285,9 @@ getFuture(){
   return Future.value(100);
 }
 ```
-#### ***Dart***.<span style="color:red; font-weight:bold;">*`await`*</span> 和 ***Dart***.<span style="color:red; font-weight:bold;">*`async`*</span>
-* 通过<span style="color:red; font-weight:bold;">*`async`*</span>关键字标记的函数可以使用<span style="color:red; font-weight:bold;">*`await`*</span>关键字来等待*Future*的完成，而不必使用`then()`方法注册回调函数
-*  <span style="color:red; font-weight:bold;">***`await`是`async`的反义词***</span>
+#### ***Dart***.<font color="red">*`await`*</font> 和 ***Dart***.<font color="red">*`async`*</font>
+* 通过<font color="red">*`async`*</font>关键字标记的函数可以使用<font color="red">*`await`*</font>关键字来等待*Future*的完成，而不必使用`then()`方法注册回调函数
+*  <font color="red">***`await`是`async`的反义词***</font>
 
 ```dart
 Future<int> getFuture()async{
@@ -4356,7 +4378,7 @@ flutter: complete
 ```
 #### ***❤️Dart.Flutter.FutureBuilder***
 
-*  *Future* 提供了一个名为 *FutureBuilder* 的*Widget*，<span style="color:red; font-weight:bold;">***用于在Future完成后构建UI***</span>。使用 *FutureBuilder*，你可以轻松地根据 *Future* 的状态（未完成、完成并成功返回结果、完成但返回错误）来构建不同的UI；
+*  *Future* 提供了一个名为 *FutureBuilder* 的*Widget*，<font color="red">***用于在Future完成后构建UI***</font>。使用 *FutureBuilder*，你可以轻松地根据 *Future* 的状态（未完成、完成并成功返回结果、完成但返回错误）来构建不同的UI；
   
   ```dart
   import 'package:flutter/material.dart';
@@ -4435,13 +4457,13 @@ flutter: complete
   // 运行效果：设备屏幕正中央，先出现72，等待2秒以后，出现错误图标
   ```
 
-#### ***Dart.Flutter.AsyncSnapshot***
+#### <font id="AsyncSnapshot">***Dart.Flutter.AsyncSnapshot***</font>
 
 * 只存在于Dart.Flutter中；
-* ***AsyncSnapshot*** 是 Flutter 中用于表示异步操作的快照的类。它通常与 [***FutureBuilder***](# Dart.Flutter.FutureBuilder) 或 [***StreamBuilder***](# Dart.Flutter.Widget.StreamBuilder) 一起使用，用于获取异步操作的结果或状态，并在 UI 中进行相应的处理。
+* ***AsyncSnapshot*** 是 Flutter 中用于表示异步操作的快照的类。它通常与 [***FutureBuilder***](#FutureBuilder) 或 [***StreamBuilder***](#StreamBuilder) 一起使用，用于获取异步操作的结果或状态，并在 UI 中进行相应的处理。
 * ***AsyncSnapshot*** 包含了有关异步操作当前状态的信息，例如数据、错误、连接状态等；
 
-### ***❤️Dart.Stream***
+### <font id="Stream">***❤️Dart.Stream***</font>
 
 ### 资料来源
 
@@ -4450,13 +4472,13 @@ flutter: complete
 
 #### 相关细节
 
-* 在使用[***GetX***](# Dart.Flutter.GetX)框架时，通常可以避免使用显式的***Stream***；
+* 在使用[***GetX***](#GetX)框架时，通常可以避免使用显式的***Stream***；
 * 在 Dart.Flutter 中有两种处理异步操作的方式 ***Future*** 和 ***Stream***； 
   * ***Future*** 用于处理单个异步操作（***以后给我们一个值***）， ***Stream***用来处理连续的异步操作（***给我们一连串的值***）。
 
 ![Flutter.Stream](./assets/Flutter.Stream.png)
 
-<span style="color:red; font-weight:bold;">*比如，往水杯倒水，将一个水杯倒满为一个 **Future**，连续的将多个水杯倒满就**Stream***</span>
+<font color="red">*比如，往水杯倒水，将一个水杯倒满为一个 **Future**，连续的将多个水杯倒满就**Stream***</font>
 ```dart
 final future = Future.delayed(Duration(seconds: 1), () => 42);
 final stream = Stream.periodic(Duration(seconds: 1), (_) => 42);
@@ -4486,9 +4508,9 @@ flutter: future complete:42
 ```
 #### ***Dart.Flutter.Widget.StreamBuilder***
 
-* *Dart.Flutter.Widget*.***StreamBuilder*** *.builder.[**snapshot**](# Dart.Flutter.AsyncSnapshot).ConectionState* 比 ***FutureBuilder*** *.builder.snapshot.ConectionState* 多一个 ***active***状态；
-* *Dart.Flutter.Widget*.***StreamBuilder*** *.builder.[**snapshot**](# Dart.Flutter.AsyncSnapshot).ConectionState === active* 可以出现无数新的数值（data）和错误（error）；
-* *Dart.Flutter.Widget*.***StreamBuilder*** *.builder.[**snapshot**](# Dart.Flutter.AsyncSnapshot).ConectionState === done* 以后，不可以出现新的数值（data）和错误（error）；
+* *Dart.Flutter.Widget*.***StreamBuilder*** *.builder.[**snapshot**](#AsyncSnapshot).ConectionState* 比 ***FutureBuilder*** *.builder.snapshot.ConectionState* 多一个 ***active***状态；
+* *Dart.Flutter.Widget*.***StreamBuilder*** *.builder.[**snapshot**](#AsyncSnapshot).ConectionState === active* 可以出现无数新的数值（data）和错误（error）；
+* *Dart.Flutter.Widget*.***StreamBuilder*** *.builder.[**snapshot**](#AsyncSnapshot).ConectionState === done* 以后，不可以出现新的数值（data）和错误（error）；
 * *Dart.Flutter.Widget*.***StreamBuilder***是在*active*阶段产生数值（data）和错误（error）；而***FutureBuilder*** 是在*done*阶段产生数值（data）和错误（error）；
 * *Dart.Flutter.Widget*.***StreamBuilder***监听的当前最新流进来的数据值；
 ```dart
@@ -4575,7 +4597,7 @@ class _RandomNumberScreenState extends State<RandomNumberScreen> {
   在这个示例中，我们创建了一个名为 RandomNumberScreen 的 StatefulWidget，其中包含一个 StreamController<int> 用于生成随机数，并使用 StreamBuilder 来监听这个 Stream。StreamBuilder 根据 Stream 的状态自动构建 Widget，并在 UI 中显示随机数的变化。当 Stream 中有新数据到达时，StreamBuilder 会自动重新构建 UI，显示最新的随机数。
 */
 ```
-#### *Dart.Flutter*.***StreamController***
+#### <font id="StreamController">*Dart.Flutter*.***StreamController***</font>
 
 * Dart.Flutter中用于创建和管理流（Dart.Stream）的类。充当了流的生产者，可以使用它来创建一个新的流，并在需要时向该流中添加数据；
 
@@ -4616,22 +4638,22 @@ Stream<DateTime> getTime() async* {
 // distinct 去重：同样的数据流输入，不会每次都builder一次
 controller.stream.map((event) => event * 2).where((event) => event is int).distinct();
 ```
-* <span style="color:red; font-weight:bold;">优点：当没有对象进行监听***stream***的时候，数据是有所缓存的</span>（案例：5秒以后发起监听，之前点按的数据可以进行输出）
+* <font color="red">优点：当没有对象进行监听***stream***的时候，数据是有所缓存的</font>（案例：5秒以后发起监听，之前点按的数据可以进行输出）
 * **默认情况下，一个数据流，只允许一个对象进行监听**；
 * 如果需要多对象监听数据流，那么需要把***stream***变成广播***broadcast***；
-  * <span style="color:red; font-weight:bold;">缺点：当没有对象进行监听***broadcast***的时候，数据是不会有所缓存的</span>案例：5秒以后发起监听，之前点按的数据不能进行输出）
+  * <font color="red">缺点：当没有对象进行监听***broadcast***的时候，数据是不会有所缓存的</font>案例：5秒以后发起监听，之前点按的数据不能进行输出）
 ```dart
 final controller = StreamController.broadcast();
 ```
-## ***Dart.Flutter.Widget.InheritedWidget***
+## <font id="InheritedWidget">***Dart.Flutter.Widget.InheritedWidget***</font>
 
 * 抽象类；
-* 是 Dart.Flutter 中的概念<span style="color:red; font-weight:bold;">*（Dart.Flutter 的特性控件）*</span>，而不是Dart语言本身的特性；
+* 是 Dart.Flutter 中的概念<font color="red">*（Dart.Flutter 的特性控件）*</font>，而不是Dart语言本身的特性；
 * 在需要访问共享数据的子 *Widget* 中使用 *InheritedWidget* 的 `of` 方法来获取数据；
-* 是 Dart.Flutter 中用于在 *Widget* 树中共享数据的一种机制，它允许数据在[***Widget* 树**](# Dart.Flutter.Widget 树)中向下传递，而不需要显式地在每个 *Widget* 中进行传递；
+* 是 Dart.Flutter 中用于在 *Widget* 树中共享数据的一种机制，它允许数据在[***Widget* 树**](#Widget 树)中向下传递，而不需要显式地在每个 *Widget* 中进行传递；
 * 当 *InheritedWidget* 中的数据发生变化时，依赖于该数据的子 *Widget* 会自动重新构建，以便更新显示；
-* 虽然 *InheritedWidget* 是一个非常强大且灵活的工具，但在某些情况下，它可能不够方便或者不够适用，特别是在需要大量共享数据或需要更复杂的数据传递逻辑的情况下。在这种情况下，您可能需要考虑使用其他状态管理工具，如 [***Provider***](# Dart.Flutter.Provider)、Riverpod 或 [***GetX***](# Dart.Flutter.GetX)；*InheritedWidgets*时才会有被初始化，而当父控件是*InheritedWidget*时，这个Map会被**一级一级往下传递与合并** ;
-* **所以当我们通过 [*context*](# Dart.Context（上下文）) 调用 `inheritFromWidgetOfExactType` 时，就可以往上查找到父控件的*Widget*，从在 `scoped_model` 获取到 `_InheritedModel` 中的`Model` **;
+* 虽然 *InheritedWidget* 是一个非常强大且灵活的工具，但在某些情况下，它可能不够方便或者不够适用，特别是在需要大量共享数据或需要更复杂的数据传递逻辑的情况下。在这种情况下，您可能需要考虑使用其他状态管理工具，如 [***Provider***](#Provider)、Riverpod 或 [***GetX***](#GetX)；*InheritedWidgets*时才会有被初始化，而当父控件是*InheritedWidget*时，这个Map会被**一级一级往下传递与合并** ;
+* **所以当我们通过 [*context*](#Context) 调用 `inheritFromWidgetOfExactType` 时，就可以往上查找到父控件的*Widget*，从在 `scoped_model` 获取到 `_InheritedModel` 中的`Model` **;
 * *InheritedWidget*共享的是*Widget*，只是这个*Widget*是一个*ProxyWidget*，它自己本身并不绘制什么。但共享这个*Widget*内保存有的值，却达到了共享状态的目的；
 * 状态共享是常见的需求，比如用户信息和登陆状态等；
 
@@ -4924,11 +4946,11 @@ class DetailsScreen extends StatelessWidget {
 ## ***Dart.Flutter.音视频***
 
 *  [***flutter_ffmpeg***](https://github.com/tanersener/flutter-ffmpeg)：
-  * ***开源项目*** <span style="color:red; font-weight:bold;">**（停止维护）**</span>；
+  * ***开源项目*** <font color="red">**（停止维护）**</font>；
   * 这是一个基于 *FFmpeg* 的 Dart.Flutter 插件，它提供了一种在 Dart.Flutter 应用程序中执行音视频处理和转码的方式。
   * 使用 [***flutter_ffmpeg***](https://github.com/tanersener/flutter-ffmpeg)，您可以执行各种音视频处理任务，如裁剪、合并、转码等。它是一个功能强大的音视频处理解决方案，但***需要对 FFmpeg 的使用和命令行参数有一定的了解***。
 * [***Agora SDK***](https://github.com/AgoraIO-Extensions/Agora-Flutter-SDK)：
-  * [***Agora SDK***](https://github.com/AgoraIO-Extensions/Agora-Flutter-SDK) <span style="color:red; font-weight:bold;">***是不开源的***</span>。[***Agora SDK***](https://github.com/AgoraIO-Extensions/Agora-Flutter-SDK)是由 *Agora* 公司开发和维护的，用于***实时音视频通信的 SDK***；
+  * [***Agora SDK***](https://github.com/AgoraIO-Extensions/Agora-Flutter-SDK) <font color="red">***是不开源的***</font>。[***Agora SDK***](https://github.com/AgoraIO-Extensions/Agora-Flutter-SDK)是由 *Agora* 公司开发和维护的，用于***实时音视频通信的 SDK***；
   * [***Agora SDK***](https://github.com/AgoraIO-Extensions/Agora-Flutter-SDK)是一个专门用于实时音视频通信的 SDK，它提供了丰富的功能和强大的性能，包括音视频通话、直播、互动白板等功能；
   * [***Agora SDK***](https://github.com/AgoraIO-Extensions/Agora-Flutter-SDK)提供了 Dart.Flutter 插件，可以方便地在 Dart.Flutter 应用程序中集成实时音视频通信功能；
 * [***Flutter_webrtc***](https://github.com/flutter-webrtc/flutter-webrtc)：
@@ -4937,7 +4959,7 @@ class DetailsScreen extends StatelessWidget {
   * 提供了一种在 Web 浏览器和移动应用程序中实现实时通信的标准化解决方案；
   * *Flutter_webrtc* 插件使得在 Dart.Flutter 应用程序中集成 *WebRTC* 功能变得易；
 * [***flutter_vlc_player***](https://github.com/solid-software/flutter_vlc_player)：
-  * ***开源项目***<span style="color:red; font-weight:bold;">**（停止维护）**</span>；
+  * ***开源项目***<font color="red">**（停止维护）**</font>；
   * 这是一个基于[***libVLC***](https://github.com/videolan/libvlcpp) 的 Flutter 插件，用于在 Dart.Flutter 应用程序中播放本地或网络上的视频文件；
   * 它提供了一种简单的方式来集成 VLC 播放器功能，并支持各种视频格式和网络流媒体协议；
 * [***flutter_exoplayer***](https://github.com/danielR2001/flutter_exoplayer)：
@@ -5035,7 +5057,7 @@ class _LoginPageState extends State<LoginPage> {
 
 ### ***Dart.Flutter.热更新***（未完）
 
-* 热更新插件：[**flutter_updater**](# https://pub.dev/packages?q=flutter_updater)、[**flutter_hot_update**](# https://pub.dev/packages?q=flutter_hot_update)
+* 热更新插件：[**flutter_updater**](https://pub.dev/packages?q=flutter_updater)、[**flutter_hot_update**](https://pub.dev/packages?q=flutter_hot_update)
 
 ## 其他
 
@@ -5046,12 +5068,13 @@ class _LoginPageState extends State<LoginPage> {
 ### ***Dart.Flutter.DevTools***
 
 Dart.Flutter提供了一些调试工具来帮助开发者调试应用程序的代码和性能，其中包括以下工具：
-* **Flutter DevTools**：是一个功能强大的调试工具，可以***在浏览器中***查看Dart.Flutter应用程序的各种信息，包括*Widget*树、布局、性能、日志等。它提供了诸如内存、CPU使用情况等信息，可以帮助开发者定位和解决性能问题；
+* **Flutter DevTools**：是一个功能强大的调试工具，可以***在浏览器中***查看Dart.Flutter应用程序的各种信息，包括[*Widget*树](#Widget树)、布局、性能、日志等。它提供了诸如内存、CPU使用情况等信息，可以帮助开发者定位和解决性能问题；
   * **Flutter Inspector**：是Flutter DevTools的一部分，它允许开发者在应用程序运行时查看*Widget*树、检查布局、查看UI层级结构等。通过Flutter Inspector，开发者可以在运行时查看应用程序的UI状态，并且可以在代码中设置断点来调试应用程序的逻辑；
 * **Flutter Debugger Extension**：是***Visual Studio Code（VS Code）的一个扩展***，提供了在[***VSCode***](https://code.visualstudio.com/) 中调试Dart.Flutter应用程序的功能。开发者可以在[***VSCode***](https://code.visualstudio.com/) 中设置断点、单步执行代码、查看变量值等，以实现对Dart.Flutter应用程序的调试；
-### ***RESTful API***
-* *REST*（**RE**presentational **S**tate **T**ransfer，表征状态转移）***是一种设计网络应用程序的软件架构风格或理念***，它<span style="color:red; font-weight:bold;">**强调利用 HTTP 协议中的各种方法（GET、POST、PUT、DELETE 等）对资源进行操作，并通过资源的表现形式（通常是 JSON 或 XML 格式）来传输数据**</span>；
-* <span style="color:red; font-weight:bold;">其实就是一个行业标准/规范。也就是对外传输的一种数据格式，需要至少要满足某几个点，以求达到最低的表述成本换取传输更多有效的信息</span>；
+### <font id="RESTful.Api">***RESTful API***</font>
+
+* *REST*（**RE**presentational **S**tate **T**ransfer，表征状态转移）***是一种设计网络应用程序的软件架构风格或理念***，它<font color="red">**强调利用 HTTP 协议中的各种方法（GET、POST、PUT、DELETE 等）对资源进行操作，并通过资源的表现形式（通常是 JSON 或 XML 格式）来传输数据**</font>；
+* <font color="red">其实就是一个行业标准/规范。也就是对外传输的一种数据格式，需要至少要满足某几个点，以求达到最低的表述成本换取传输更多有效的信息</font>；
 * *RESTful API* 是一种基于 *REST* 架构风格设计的 API 接口；
 * *RESTful API* 并不是特定编程语言或技术的名称，而是一种设计风格或理念。它可以用于任何支持 HTTP 协议的平台和语言，包括但不限于 *Java*、*Python*、*JavaScript*、*PHP*、*Dart* 等。因此，您可以在任何编程语言中实现符合 *RESTful* 设计风格的 API 接口。
 * *RESTful API* 的设计遵循 *REST* 的原则，包括：
@@ -5060,14 +5083,14 @@ Dart.Flutter提供了一些调试工具来帮助开发者调试应用程序的�
   * **无状态性**：每个请求都包含足够的信息，服务器不需要保留客户端的状态。这意味着每个请求都是独立的，服务器不需要保存客户端的会话状态；
   * **表示层的状态转移**：客户端通过资源的表现形式来与服务器进行交互，例如使用 *JSON* 或 *XML* 格式的数据表示资源的状态；
 ### ***Retrofit***
-* *Retrofit* 是一个针对 *Android* 平台的 [***RESTful API***](# RESTful API)客户端库，由 Square 公司开发和维护；
+* *Retrofit* 是一个针对 *Android* 平台的 [***RESTful API***](#RESTful.Api)客户端库，由 Square 公司开发和维护；
 * 它提供了一种简单、强大的方式来执行网络请求和处理 API 响应；
 * *Retrofit* 基于 *OkHttp* 库构建，可以与其无缝集成，提供了许多便捷的功能和特性；
 ### ***❤️Dart.Flutter.对象循环引用问题***
 
 * 表现形式：
   * ***Widget*之间的循环引用**：相互持有，无法释放；
-  * **异步操作中的循环引用**：在异步操作中，例如使用[***Stream***](# Dart.Stream)或[***Future***](# Dart.Future)进行数据流处理时，如果没有正确处理对资源的引用，可能会导致循环引用问题；
+  * **异步操作中的循环引用**：在异步操作中，例如使用[***Stream***](#Stream)或[***Future***](#Future)进行数据流处理时，如果没有正确处理对资源的引用，可能会导致循环引用问题；
   
 * 解决方案：
   
@@ -5075,8 +5098,8 @@ Dart.Flutter提供了一些调试工具来帮助开发者调试应用程序的�
   
   * 使用弱引用（Weak Reference）：Dart语言支持弱引用，可以使用`dart:ui`包中的*WeakReference*类来创建弱引用，以避免形成循环引用关系；
   * 使用适当的生命周期管理：确保在适当的时候取消订阅流（Unsubscribe），释放资源，并避免长时间持有对对象的引用；
-    * **`Main()`** => **MyApp** => **MyHomePage** => **_MyHomePageState** => **CounterBloc** ❌<span style="color:red; font-weight:bold;">***错误的示例***</span> ❌ ***这导致了循环引用问题***，因为***CounterBloc***对象被包含在***MyHomePage***的状态中，而 ***StreamBuilder***又在使用该对象。
-    * **`Main()`** => **MyApp** =**CounterBloc**（weak化） => **MyHomePage** => **_MyHomePageState** ✅<span style="color:green; font-weight:bold;">***正确的示例***</span> ✅
+    * **`Main()`** => **MyApp** => **MyHomePage** => **_MyHomePageState** => **CounterBloc** ❌<font color="red">***错误的示例***</font> ❌ ***这导致了循环引用问题***，因为***CounterBloc***对象被包含在***MyHomePage***的状态中，而 ***StreamBuilder***又在使用该对象。
+    * **`Main()`** => **MyApp** =**CounterBloc**（weak化） => **MyHomePage** => **_MyHomePageState** ✅<span style="color:green; font-weight:bold;">***正确的示例***</font> ✅
 
 ✅***CounterBloc***✅
 

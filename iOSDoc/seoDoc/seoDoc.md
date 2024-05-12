@@ -1,7 +1,15 @@
 # SEO
-
-[toc]
-
+- [SEO](#seo)
+  - [基本概念.名词解释](#基本概念名词解释)
+  - [一些工具](#一些工具)
+  - [SEO.原理](#seo原理)
+      - [域名和SEO的关系](#域名和seo的关系)
+      - [服务器和SEO的关系](#服务器和seo的关系)
+  - [SEO.内容](#seo内容)
+  - [养网站（蜘蛛池）：](#养网站蜘蛛池)
+  - [服务器vs搜索引擎vs访客](#服务器vs搜索引擎vs访客)
+    - [判断来源](#判断来源)
+  
 ## 基本概念.名词解释
 
 * IIS，全称是 **I**nternet **I**nformation **S**ervices,是微软公司推出的一种互联网基础服务器
@@ -119,7 +127,7 @@
     * [**阿里云**](# https://www.alibabacloud.com/)：全站
     * [**西部数码**](# https://www.west.cn/)：域名、主机、云服务器、企业邮箱、云建站、小程序
     * [**GName**](# https://www.gname.com/)：**域名**、网站防护、云服务器、企业邮箱
-    * [**Goodkvm**](# https://www.goodkvm.com/)：**主机、云服务器**（<span style="color:red; font-weight:bold;">可充值USDT</span>）
+    * [**Goodkvm**](# https://www.goodkvm.com/)：**主机、云服务器**（<font color="red">可充值USDT</font>）
   
   * 顶级域名（Top-Level Domain,TLD）：获取顶级域名的使用权需要向相应机构或注册商缴纳费用。顶级域名的数量和种类还在不断扩展中。
   
@@ -173,7 +181,7 @@
        * AS名称和描述
        * AS管理员联系信息
     
-    这些信息对于**域名所有权确认**、**联络注册人**、**IP规划和反垃圾邮件**等具有重要意义。大多数顶级域名注册管理机构都提供了公共Whois服务。<span style="color:red; font-weight:bold;">任何人都可以查询</span>。Whois查询协议和相关政策仍在持续完善，以满足新出现的需求。
+    这些信息对于**域名所有权确认**、**联络注册人**、**IP规划和反垃圾邮件**等具有重要意义。大多数顶级域名注册管理机构都提供了公共Whois服务。<font color="red">任何人都可以查询</font>。Whois查询协议和相关政策仍在持续完善，以满足新出现的需求。
     
     *Whois查询通常通过命令行或在线Whois网站进行。比如在命令行下输入:*
     
@@ -206,7 +214,7 @@
       * 一般情况下是做了防火墙白名单（加白）；
       * 或者选用跳板机访问（VPN）；
   
-  * 防火墙.端口（<span style="color:red; font-weight:bold;">对网络数据流量进行监控和控制时</span>）
+  * 防火墙.端口（<font color="red">对网络数据流量进行监控和控制时</font>）
   
     * **80端口 (HTTP)** 这是Web浏览器用于访问网站的标准端口。防火墙会检查和过滤80端口上的HTTP流量。
     * **443端口 (HTTPS)** 这是网站SSL/TLS加密连接使用的端口。防火墙需要监控并验证443端口上的HTTPS加密通信。
@@ -231,17 +239,17 @@
       * **互联网基础设施** 根服务器是构建全球互联网基础设施不可或缺的关键组成部分。
     * 目前全球仅有**13**组根服务器，分布在多个不同的地理位置，由不同的组织机构负责运营和维护，分布于3个不同的大陆，这种分散部署使得根服务器能够具有很高的冗余性和容错能力，保证了整个DNS系统的高可用性。**每组服务器都包含主服务器和全球分布的多台镜像服务器**。这些镜像服务器可快速响应本地区的DNS查询请求。
       * A根 - 美国**马里兰州**的维吉尼亚大学
-      * B根 - 美国<span style="color:red; font-weight:bold;">加利福尼亚州</span>的USC Information Sciences Institute
+      * B根 - 美国<font color="red">加利福尼亚州</font>的USC Information Sciences Institute
       * C根 - 美国**马里兰州**的Cogent Communications
       * D根 - 美国**马里兰州**的马里兰大学
-      * E根 - 美国<span style="color:red; font-weight:bold;">加利福尼亚州</span>的NASA Ames研究中心
-      * F根 - 美国<span style="color:red; font-weight:bold;">加利福尼亚州</span>的Internet Systems Consortium, Inc.
+      * E根 - 美国<font color="red">加利福尼亚州</font>的NASA Ames研究中心
+      * F根 - 美国<font color="red">加利福尼亚州</font>的Internet Systems Consortium, Inc.
       * G根 - 美国马萨诸塞州的美国国防部网络情报系统组织
       * H根 - 美国**马里兰州**的美军网络指挥部
       * I根 - 瑞典斯德哥尔摩的尼尔斯·奥尔网络信息中心
-      * J根 - 美国<span style="color:red; font-weight:bold;">加利福尼亚州</span>的RIPE NCC
+      * J根 - 美国<font color="red">加利福尼亚州</font>的RIPE NCC
       * K根 - 英国伦敦的RIPE NCC
-      * L根 - 美国<span style="color:red; font-weight:bold;">加利福尼亚州</span>洛杉矶的ICANN
+      * L根 - 美国<font color="red">加利福尼亚州</font>洛杉矶的ICANN
       * M根 - 日本东京的WIDE Project
     * 根服务器工作在7*24小时不间断运行，任何一台瘫痪也不会影响全球DNS系统的正常运作。它们以高可用性和稳定性维系着整个互联网的运转。保护好根服务器对互联网的健康运行至关重要。
     
@@ -612,7 +620,7 @@
     * 带指数的关键词 
     * 利用AI工具：比如，[**tensorflow**](# https://www.tensorflow.org/?hl=zh-cn)来写文章
   * 找屏蔽了搜索引擎的网站。信息孤岛，比如：小红书的内容不暴露在搜索引擎下
-  * <span style="color:red; font-weight:bold;">**做爬虫要非常小心，因为很敏感！！！**</span>
+  * <font color="red">**做爬虫要非常小心，因为很敏感！！！**</font>
 
 ## 服务器vs搜索引擎vs访客
 

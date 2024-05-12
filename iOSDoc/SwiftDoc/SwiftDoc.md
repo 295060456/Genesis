@@ -8,6 +8,7 @@
     - [参考模型和 TCP/IP 协议族](#参考模型和-tcpip-协议族)
   - [内存区域分类](#内存区域分类)
   - [数据结构](#数据结构)
+  - [锁](#锁)
   - [在Swift中，一个结构体（*struct*），占据多大的内存？](#在swift中一个结构体struct占据多大的内存)
   - [***Copy-On-Write***](#copy-on-write)
   - [【Swift vs Java vs C/C++】***static*** 和 ***final***的区别](#swift-vs-java-vs-ccstatic-和-final的区别)
@@ -178,7 +179,7 @@
   * 双向链表的实现会避免出现环的情况。在某些特殊情况下，**双向链表也可能出现环，这通常是由于程序错误导致的**；
 *  *堆(**Heap**)*
 
-  * <span style="color:red; font-weight:bold;">***堆内存的分配和释放是由程序员手动管理的***</span>，通常通过 `malloc`、`calloc`、`realloc` 等函数进行分配，通过 `free` 函数进行释放；
+  * <font color="red">***堆内存的分配和释放是由程序员手动管理的***</font>，通常通过 `malloc`、`calloc`、`realloc` 等函数进行分配，通过 `free` 函数进行释放；
   * 堆区相对于栈区更靠内存高字节；（内存后部署堆区）
   * 堆内存的分配不是连续的，它的分配由系统的内存管理器根据需要从堆中的空闲内存块中分配合适大小的内存；
   * 堆内存是用于**存储动态分配的内存**，通常用于存储动态创建的对象、数据结构等；
@@ -189,7 +190,7 @@
     * **堆操作牵涉到合并、移位、重新链接等**；
 *  *栈(**Stack**)*
 
-  * <span style="color:red; font-weight:bold;">***栈上的内存分配和释放由编译器（或操作系统）自动管理***</span>，通常以页为单位进行分配和管理；
+  * <font color="red">***栈上的内存分配和释放由编译器（或操作系统）自动管理***</font>，通常以页为单位进行分配和管理；
   * 数据先进后出（**L**ast-**I**n-**F**irst-**O**ut，**LIFO**）
   * 栈内存通常是一块**固定大小**的内存区域，用于存储函数调用的**局部变量**、**函数参数**、**函数调用的返回地址**等信息；
   * **栈内存是连续的**，即在栈中分配的内存地址是依次递增的；
@@ -328,7 +329,7 @@ print("MyStruct 对齐方式为 \(alignment) 字节")
 print("MyStruct 步幅为 \(stride) 字节")
 ```
 总之，要确定一个结构体占据多大的内存，最好使用 `MemoryLayout`。
-## <span style="color:red; font-weight:bold;">***Copy-On-Write***</span>
+## <font color="red">***Copy-On-Write***</font>
 
 * **C**opy-**O**n-**W**rite（COW）是一种内存管理技术，通常**用于优化复杂数据结构的拷贝操作**。
 * 它的基本思想是**延迟拷贝**，只有在**需要修改数据时才进行实际的拷贝操作**，这样可以节省内存和提高性能。
@@ -336,55 +337,55 @@ print("MyStruct 步幅为 \(stride) 字节")
   * 这样，在修改数据之前，所有的变量都指向同一块内存，称为*共享状态*；
   * 而在修改数据后，修改发生的变量会拷贝一份数据到新的内存空间，然后修改新的内存空间中的数据，这样其他变量不受影响，仍然指向原来的内存空间。
 * **C**opy-**O**n-**W**rite 的优点是在**大部分情况下避免了不必要的数据拷贝**，节省了内存和运行时间。它通常用于处理复杂数据结构，如字符串、数组、字典等，这些数据结构在进行赋值操作时可能需要进行大量的数据拷贝，使用 **C**opy-**O**n-**W**rite技术可以显著提高性能。
-* 在实际应用中，**C**opy-**O**n-**W**rite 技术常见于编程语言的标准库中，如 Swift 中的<span style="color:red; font-weight:bold;">***字符串和数组类型***</span>就采用了**C**opy-**O**n-**W**rite  
-## 【Swift vs Java vs C/C++】<span style="color:red; font-weight:bold;">***static***</span> 和 <span style="color:red; font-weight:bold;">***final***</span>的区别
+* 在实际应用中，**C**opy-**O**n-**W**rite 技术常见于编程语言的标准库中，如 Swift 中的<font color="red">***字符串和数组类型***</font>就采用了**C**opy-**O**n-**W**rite  
+## 【Swift vs Java vs C/C++】<font color="red">***static***</font> 和 <font color="red">***final***</font>的区别
 
-* ### <span style="color:red; font-weight:bold;">***static***</span>
+* ### <font color="red">***static***</font>
   
   * #### C/C++
     
-    * 在函数内部，<span style="color:red; font-weight:bold;">***static***</span> 关键字用于**声明静态局部变量**。这些变量**在整个程序的生命周期内保持其值，但只在声明它们的函数内可见**；
-    * 在全局作用域，<span style="color:red; font-weight:bold;">***static***</span>关键字用于限制变量和函数的可见性。使用<span style="color:red; font-weight:bold;">***static***</span>关键字声明的全局变量和函数**只在当前源文件中可见，对其他源文件不可见**；
+    * 在函数内部，<font color="red">***static***</font> 关键字用于**声明静态局部变量**。这些变量**在整个程序的生命周期内保持其值，但只在声明它们的函数内可见**；
+    * 在全局作用域，<font color="red">***static***</font>关键字用于限制变量和函数的可见性。使用<font color="red">***static***</font>关键字声明的全局变量和函数**只在当前源文件中可见，对其他源文件不可见**；
     * 存储在数据段中的**静态存储区**；
   * #### Java
     
-    - 在 Java 中，<span style="color:red; font-weight:bold;">***static***</span>关键字用于**声明静态成员**（静态变量和静态方法）。静态成员属于类而不是类的实例，可以通过类名直接访问，而不需要创建类的实例；
+    - 在 Java 中，<font color="red">***static***</font>关键字用于**声明静态成员**（静态变量和静态方法）。静态成员属于类而不是类的实例，可以通过类名直接访问，而不需要创建类的实例；
     - 静态成员**在整个程序的生命周期内保持其值**，并且可以被类的所有实例共享；
     - 存储在**方法区（Method Area）**中；
   * #### Swift
     
-    * 在 Swift 中，<span style="color:red; font-weight:bold;">***static***</span>关键字用于定义类型范围的属性和方法。这些属性和方法属于类型本身，而不是类的实例或结构体的实例；
+    * 在 Swift 中，<font color="red">***static***</font>关键字用于定义类型范围的属性和方法。这些属性和方法属于类型本身，而不是类的实例或结构体的实例；
     * 这些属性和方法**在整个程序的生命周期内保持其值**，并且可以通过类型名来访问，而不需要创建实例；
     * [***定义单例***](# Swift单例的写法和用法)
     * 在 Swift 中，静态成员的存储位置**取决于具体的上下文**；
       * 在类中，静态属性和方法通常存储在类的元类型中，而元类型本身**存储在[*堆*](# 堆(Heap))上**；
       * 而在结构体或枚举中，静态属性和方法**存储在静态数据区**中；
-* ### <span style="color:red; font-weight:bold;">***final***</span>
+* ### <font color="red">***final***</font>
   
   * #### C/C++
     
-    * **没有 <span style="color:red; font-weight:bold;">*final*</span> 关键字的概念**。如果要限制变量的值不可修改，可以使用 `const` 关键字来声明常量
+    * **没有 <font color="red">*final*</font> 关键字的概念**。如果要限制变量的值不可修改，可以使用 `const` 关键字来声明常量
     ```c
     const int constantValue = 10; // 声明一个常量
     ```
   * #### Java
     
-    * 当一个类被声明为<span style="color:red; font-weight:bold;">***final***</span>时，它**不能被其他类继承**；
-    * 当一个方法被声明为<span style="color:red; font-weight:bold;">***final***</span>时，它**不能被子类重写**；
-    * 当一个变量被声明为<span style="color:red; font-weight:bold;">***final***</span>时，它的**值不能被修改，相当于常量**（**内存分布：常量池**）；
-    * 在内存中，<span style="color:red; font-weight:bold;">***final***</span>类的对象和成员变量**存储在[***堆(Heap)***](# 堆(Heap))上**，和普通类的对象存储位置相同；
+    * 当一个类被声明为<font color="red">***final***</font>时，它**不能被其他类继承**；
+    * 当一个方法被声明为<font color="red">***final***</font>时，它**不能被子类重写**；
+    * 当一个变量被声明为<font color="red">***final***</font>时，它的**值不能被修改，相当于常量**（**内存分布：常量池**）；
+    * 在内存中，<font color="red">***final***</font>类的对象和成员变量**存储在[***堆(Heap)***](# 堆(Heap))上**，和普通类的对象存储位置相同；
   * #### Swift
     
-    - 在 Swift 中，<span style="color:red; font-weight:bold;">***final***</span>关键字用于限制类、方法或者属性**不可被继承或者重写**；
-    - 当一个类被声明为<span style="color:red; font-weight:bold;">***final***</span> 时，它**不能被其他类继承**；
-    - 当一个方法或者属性被声明为<span style="color:red; font-weight:bold;">***final***</span>时，它**不能被子类重写**；
-    - 在内存中，<span style="color:red; font-weight:bold;">***final***</span>方法或属性的存储位置和普通方法或属性相同，取决于具体的上下文环境；
+    - 在 Swift 中，<font color="red">***final***</font>关键字用于限制类、方法或者属性**不可被继承或者重写**；
+    - 当一个类被声明为<font color="red">***final***</font> 时，它**不能被其他类继承**；
+    - 当一个方法或者属性被声明为<font color="red">***final***</font>时，它**不能被子类重写**；
+    - 在内存中，<font color="red">***final***</font>方法或属性的存储位置和普通方法或属性相同，取决于具体的上下文环境；
       * **堆（*Heap*）**：如果方法或属性属于类的实例，则它们通常**存储在[*堆*](# 堆(Heap))上**（ARC）；
       * **栈（*Stack*）**：如果方法或属性属于结构体的实例或是局部变量，则它们通常存储在[***栈***](# 栈(Stack))上（编译器自动）；
       * **常量池（*Constant Pool*）**：对于某些特定的常量或静态变量，它们可能被存储在常量池中，这取决于编译器的优化和实现方式；
 ## Swift里面可否用*var*来接受一个*func*？
 
-**不能直接使用<span style="color:red; font-weight:bold;">*var*</span>关键字来声明一个变量来接受一个函数。但是可以变通处理（转变为类型）👇🏻**
+**不能直接使用<font color="red">*var*</font>关键字来声明一个变量来接受一个函数。但是可以变通处理（转变为类型）👇🏻**
 
 ````swift
 // 声明一个函数类型
@@ -438,7 +439,7 @@ print(result)  // 输出: 5
 
 ## ***Swift.Closure（闭包）***
 
-<span style="color:red; font-weight:bold;">即，C语言中的***Block***</span>
+<font color="red">即，C语言中的***Block***</font>
 
 * 匿名闭包（*Anonymous Closure*）
 
@@ -581,7 +582,7 @@ let result = apply(5) { $0 * 2 } // 输出: 10
   }
   ```
 
-  * 便捷初始化方法（*Convenience Initializers*）：用于简化类的初始化过程，必须调用同一类中的另一个初始化方法（可以是指定初始化方法或其他便捷初始化方法）作为最终的初始化点。<span style="color:red; font-weight:bold;">***convenience***</span>
+  * 便捷初始化方法（*Convenience Initializers*）：用于简化类的初始化过程，必须调用同一类中的另一个初始化方法（可以是指定初始化方法或其他便捷初始化方法）作为最终的初始化点。<font color="red">***convenience***</font>
 
   ```swift
   class MyClass {
@@ -597,7 +598,7 @@ let result = apply(5) { $0 * 2 } // 输出: 10
   }
   ```
 
-  * 必要初始化方法（*Required Initializers*）<span style="color:red; font-weight:bold;">***required***</span>
+  * 必要初始化方法（*Required Initializers*）<font color="red">***required***</font>
 
   ```swift
   class MyClass {
@@ -658,8 +659,8 @@ let flattenedArray = nestedArray.joined().map { $0 * 2 }
 ```
 ## ***Swift.where***
 
-* 在Swift中，<span style="color:red; font-weight:bold;">***where***</span> 关键字主要用于**对泛型提供额外的条件约束**，以确保在特定条件下的类型兼容性；
-* 它在泛型参数列表之后，可以用于指定一些条件，以限制泛型的类型。<span style="color:red; font-weight:bold;">***where***</span> 子句通常在函数、结构体、类、枚举的定义中出现；
+* 在Swift中，<font color="red">***where***</font> 关键字主要用于**对泛型提供额外的条件约束**，以确保在特定条件下的类型兼容性；
+* 它在泛型参数列表之后，可以用于指定一些条件，以限制泛型的类型。<font color="red">***where***</font> 子句通常在函数、结构体、类、枚举的定义中出现；
 例如，考虑以下泛型函数的声明：
 ```swift
 // 泛型类型 `T` 必须符合 `Equatable` 协议，这样函数就可以使用 `==` 运算符比较 `value` 的相等性。
@@ -667,7 +668,7 @@ func someFunction<T>(value: T) where T: Equatable {
     // 函数体
 }
 ```
-<span style="color:red; font-weight:bold;">***where***</span> 子句也可以在[***扩展（extension）***](# Swift.extension)中使用，例如：
+<font color="red">***where***</font> 子句也可以在[***扩展（extension）***](# Swift.extension)中使用，例如：
 
 ```swift
 extension Array where Element: Equatable {
@@ -680,10 +681,10 @@ extension Array where Element: Equatable {
 *【v】产生（收益、效益等），产生（结果）；出产（天然产品，农产品，工业产品）；屈服，让步；放弃，让出；给（大路上的车辆）让路；（受压）活动，弯曲，折断；<正式>被……替代；请（某人）讲话；停止争论*
 *【n】产量；收益，利润，红利（或股息）率*
 
-* 在Dart中，<span style="color:red; font-weight:bold;">***yield***</span> 关键字通常与`Iterable`相关的函数一起使用，例如`Iterable`或`Stream`；
-* <span style="color:red; font-weight:bold;">***yield***</span>用于**在迭代中产生值，而不是一次性返回所有值**。这使得函数可以在需要时生成值，而不必一次性生成所有值，这在**处理大量数据或无限数据流**时非常有用。
+* 在Dart中，<font color="red">***yield***</font> 关键字通常与`Iterable`相关的函数一起使用，例如`Iterable`或`Stream`；
+* <font color="red">***yield***</font>用于**在迭代中产生值，而不是一次性返回所有值**。这使得函数可以在需要时生成值，而不必一次性生成所有值，这在**处理大量数据或无限数据流**时非常有用。
 
-*以下是一个简单的示例，演示了如何使用  <span style="color:red; font-weight:bold;">yield</span> 在Dart中创建一个生成器函数：*
+*以下是一个简单的示例，演示了如何使用  <font color="red">yield</font> 在Dart中创建一个生成器函数：*
 
 ```dart
 // 默认情况下，Dart 中的生成器函数是同步的，即使不显式地使用 sync* 关键字声明。
@@ -706,12 +707,12 @@ void main() {
   }
 }
 ```
-* 在这个示例中，`generateEvenNumbers`函数是一个生成器函数，它使用<span style="color:red; font-weight:bold;">sync*</span>关键字（显式）声明；
-* 在循环中，如果`i`是偶数，则通过<span style="color:red; font-weight:bold;">*yield*</span>语句产生该值；
+* 在这个示例中，`generateEvenNumbers`函数是一个生成器函数，它使用<font color="red">sync*</font>关键字（显式）声明；
+* 在循环中，如果`i`是偶数，则通过<font color="red">*yield*</font>语句产生该值；
 * 在`main`函数中，我们使用`generateEvenNumbers`生成前10个偶数，并通过`for-in`循环逐个打印这些偶数；
-* **需要注意的是，生成器函数中的<span style="color:red; font-weight:bold;">*yield*</span> 语句并不会立即执行，而是在调用生成器函数的迭代器时才执行；**
+* **需要注意的是，生成器函数中的<font color="red">*yield*</font> 语句并不会立即执行，而是在调用生成器函数的迭代器时才执行；**
 
-## ***Swift***.<span style="color:red; font-weight:bold;">*mutating*</span>
+## ***Swift***.<font color="red">*mutating*</font>
 
 ***mutating***：
 
@@ -720,7 +721,7 @@ void main() {
 *【vt.】使突变（mutate 的现在分词）*
 
 * 用于结构体（*struct*）和枚举（*enum*）中的**方法声明**中，*表示该方法可以修改该结构体或枚举的属性值*，即使该方法在实例被声明为常量（`let`）时调用也可以；
-* 对于类（*class*）中的方法，不需要使用<span style="color:red; font-weight:bold;">*mutating*</span>关键字，因为类是引用类型，即使在常量类实例上调用方法，也可以修改其属性；
+* 对于类（*class*）中的方法，不需要使用<font color="red">*mutating*</font>关键字，因为类是引用类型，即使在常量类实例上调用方法，也可以修改其属性；
 ```swift
 struct Point {
     var x = 0.0
@@ -738,14 +739,14 @@ print("Before moving: \(point)")
 point.moveBy(x: 2.0, y: 3.0)
 print("After moving: \(point)")
 ```
-### 对比 ***Swift***.<span style="color:red; font-weight:bold;">*mutating*</span> 和 ***Swift***.<span style="color:red; font-weight:bold;">*inout*</span>
+### 对比 ***Swift***.<font color="red">*mutating*</font> 和 ***Swift***.<font color="red">*inout*</font>
 
-* <span style="color:red; font-weight:bold;">***inout***</span>
+* <font color="red">***inout***</font>
   
-  *  <span style="color:red; font-weight:bold;">*inout*</span>是Swift中**用于函数参数**的关键字。它**允许函数修改参数**的值，并且这种修改是在函数内部生效并影响到函数外部传入的实际参数；
-  * 使用<span style="color:red; font-weight:bold;">*inout*</span>时，传入函数的参数被当做可变的，因此函数可以对其进行修改。在函数内部对<span style="color:red; font-weight:bold;">*inout*</span>参数的任何更改都会反映到调用该函数时传入的原始参数上；
-  * <span style="color:red; font-weight:bold;">*inout*</span>参数本质上是**传递参数的引用**，因此对参数的任何更改都会影响调用者的原始数据；
-  * 定义函数的时候加<span style="color:red; font-weight:bold;">*inout*</span>;
+  *  <font color="red">*inout*</font>是Swift中**用于函数参数**的关键字。它**允许函数修改参数**的值，并且这种修改是在函数内部生效并影响到函数外部传入的实际参数；
+  * 使用<font color="red">*inout*</font>时，传入函数的参数被当做可变的，因此函数可以对其进行修改。在函数内部对<font color="red">*inout*</font>参数的任何更改都会反映到调用该函数时传入的原始参数上；
+  * <font color="red">*inout*</font>参数本质上是**传递参数的引用**，因此对参数的任何更改都会影响调用者的原始数据；
+  * 定义函数的时候加<font color="red">*inout*</font>;
   * <u>**使用的时候配合取地址符号`&`使用**</u>
   ```swift
   // 定义一个函数，接受一个 inout 参数
@@ -766,10 +767,10 @@ print("After moving: \(point)")
   Before increment: 5
   After increment: 6
   ```
-* <span style="color:red; font-weight:bold;">***mutating***</span>（***专修结构体和枚举***）
+* <font color="red">***mutating***</font>（***专修结构体和枚举***）
   
-  * <span style="color:red; font-weight:bold;">*mutating*</span>是Swift中**用于结构体和枚举中方法**的关键字。它**允许方法修改结构体或枚举的实例属性**。由于结构体和枚举是值类型，它们的属性默认是不可变的。因此，如果需要在方法中修改属性，则必须将方法标记为<span style="color:red; font-weight:bold;">*mutating*</span>；
-  * <span style="color:red; font-weight:bold;">*mutating*</span>关键字仅用于值类型（结构体和枚举）的方法声明。这样的方法可以修改调用该方法的实例的属性值；
+  * <font color="red">*mutating*</font>是Swift中**用于结构体和枚举中方法**的关键字。它**允许方法修改结构体或枚举的实例属性**。由于结构体和枚举是值类型，它们的属性默认是不可变的。因此，如果需要在方法中修改属性，则必须将方法标记为<font color="red">*mutating*</font>；
+  * <font color="red">*mutating*</font>关键字仅用于值类型（结构体和枚举）的方法声明。这样的方法可以修改调用该方法的实例的属性值；
 ## 内联函数。内联这两个字，我怎么去理解？
 
 ```
@@ -784,7 +785,7 @@ print("After moving: \(point)")
 * 内联优化
   * 内联是一种编译器优化策略，它试图减少函数调用的开销，将函数调用处直接替换为函数体的内容；
   * 这样可以避免调用开销，减少了跳转和上下文保存的开销；
-  <span style="color:red; font-weight:bold;">***内联的适用情况： 内联适用于一些小型的、频繁调用的函数，这样可以减少函数调用的开销，提高性能。***</span>
+  <font color="red">***内联的适用情况： 内联适用于一些小型的、频繁调用的函数，这样可以减少函数调用的开销，提高性能。***</font>
   ***但并不是所有函数都适合内联，因为内联会增加代码的体积，可能导致代码膨胀。***
   ***@inlineable*** 和 ***@usableFromInline***
 * 在 Swift 中，可以使用***@inlineable*** 和 ***@usableFromInline*** 属性来影响编译器对函数的内联决策；
@@ -792,8 +793,8 @@ print("After moving: \(point)")
 * ***@usableFromInline*** 则用于指示一个函数可以在同一模块的其他地方内联使用；
 * 在 Swift 中，编译器会根据具体情况决定是否内联函数，而使用 ***@inlineable*** 和 ***@usableFromInline*** 可以影响这个决策；
 * 开发者通常无需过多关注内联，因为 Swift 的编译器会自动进行相应的优化；
-## 当前函数的<span style="color:red; font-weight:bold;">***上下文***</span>。这个<span style="color:red; font-weight:bold;">***上下文***</span>是什么意思？
-在计算机科学中，函数的上下文（***Context***）通常指的是<span style="color:red; font-weight:bold;">***函数执行时的运行环境，包括函数调用时的一些信息和状态***</span>。
+## 当前函数的<font color="red">***上下文***</font>。这个<font color="red">***上下文***</font>是什么意思？
+在计算机科学中，函数的上下文（***Context***）通常指的是<font color="red">***函数执行时的运行环境，包括函数调用时的一些信息和状态***</font>。
 * 这个上下文包括但不限于以下内容：
   * 局部变量：
     * 函数内部声明的局部变量和参数是函数上下文的一部分；
@@ -848,7 +849,7 @@ userService.doSomething()
 
 ## *SwiftUI.UIHostingController* 和一般的控制器，有何特别之处？（向下兼容）
 
-* SwiftUI 视图的承载：*UIHostingController*的主要功能是将 SwiftUI 的视图嵌入到 UIKit 中。你可以通过在*UIHostingController*中设置一个 SwiftUI 视图，将 SwiftUI 和 UIKit 进行无缝集成。<span style="color:red; font-weight:bold;">**SwiftUI.view 👉🏻UIKit**</span>
+* SwiftUI 视图的承载：*UIHostingController*的主要功能是将 SwiftUI 的视图嵌入到 UIKit 中。你可以通过在*UIHostingController*中设置一个 SwiftUI 视图，将 SwiftUI 和 UIKit 进行无缝集成。<font color="red">**SwiftUI.view 👉🏻UIKit**</font>
  ```swift
  let swiftUIView = MySwiftUIView()
  let hostingController = UIHostingController(rootView: swiftUIView)
@@ -860,7 +861,7 @@ userService.doSomething()
 *UIHostingController*提供了一种方便的方式，将 SwiftUI 和 UIKit 结合使用，使得你可以逐步采用 SwiftUI，而无需立即完全迁移到 SwiftUI 构建整个应用程序。这种渐进性迁移对于那些已有的 UIKit 项目而言是非常有帮助的。
 ## *UIKit.UIViewRepresentable* 干嘛的？（向上兼容）
 
-`UIViewRepresentable` 是SwiftUI中的一个协议，用于将 UIKit 中的 `UIView` 集成到 SwiftUI 视图层次结构中。当您想要在SwiftUI中使用一个基于*UIView*的自定义视图或控件时，可以通过遵循 `UIViewRepresentable` 协议来实现这个集成。<span style="color:red; font-weight:bold;">**UIKit.UIView👉🏻SwiftUI**</span>
+`UIViewRepresentable` 是SwiftUI中的一个协议，用于将 UIKit 中的 `UIView` 集成到 SwiftUI 视图层次结构中。当您想要在SwiftUI中使用一个基于*UIView*的自定义视图或控件时，可以通过遵循 `UIViewRepresentable` 协议来实现这个集成。<font color="red">**UIKit.UIView👉🏻SwiftUI**</font>
 `UIViewRepresentable` 要求您实现两个必备的方法：
 
 1. `makeUIView(context:)`：该方法创建并返回一个*UIView*实例。您可以在这个方法中配置和初始化您的*UIView*。
@@ -920,9 +921,9 @@ struct ContentView: View {
   * 属性修饰符是一种用于在 Swift 中***附加额外信息或行为的语法元素***；
     属性修饰符是一种用于***改变属性行为或特性的关键字***；
   * 在 Swift 中，有一些属性修饰符可以用于声明属性。例如：
-    * <span style="color:red; font-weight:bold;">***lazy***</span>： 延迟加载属性，只有在第一次访问时才会进行初始化。
-    * <span style="color:red; font-weight:bold;">***weak***</span> 和 <span style="color:red; font-weight:bold;">***unowned***</span>： 用于管理引用关系，避免循环引用。
-    * <span style="color:red; font-weight:bold;">***public***</span>、<span style="color:red; font-weight:bold;">***internal***</span>、<span style="color:red; font-weight:bold;">***fileprivate***</span> 和 <span style="color:red; font-weight:bold;">***private***</span>： 控制属性的访问级别。
+    * <font color="red">***lazy***</font>： 延迟加载属性，只有在第一次访问时才会进行初始化。
+    * <font color="red">***weak***</font> 和 <font color="red">***unowned***</font>： 用于管理引用关系，避免循环引用。
+    * <font color="red">***public***</font>、<font color="red">***internal***</font>、<font color="red">***fileprivate***</font> 和 <font color="red">***private***</font>： 控制属性的访问级别。
 ```swift
 class MyClass {
     lazy var lazyProperty: Int = 42
@@ -962,7 +963,7 @@ struct MyStruct {
 ```
 ## ***Swift.@标记***
 
-### <span style="color:red; font-weight:bold;">***`@frozen`***</span>
+### <font color="red">***`@frozen`***</font>
 
 *用于标记枚举声明，表示该枚举是冻结的，即其**成员在编译时是不可改变的**。这有助于编译器进行一些优化。*
 
@@ -972,8 +973,8 @@ struct MyStruct {
     case failure(errorCode: Int)
 }
 ```
-在这个例子中，**Status**是一个枚举，通过 <span style="color:red; font-weight:bold;">***`@frozen`***</span> 标记表示它是冻结的。这意味着在***后续的代码中不能再添加新的枚举成员***，使得编译器可以进行一些优化。
-### <span style="color:red; font-weight:bold;">***`@usableFromInline`***</span>
+在这个例子中，**Status**是一个枚举，通过 <font color="red">***`@frozen`***</font> 标记表示它是冻结的。这意味着在***后续的代码中不能再添加新的枚举成员***，使得编译器可以进行一些优化。
+### <font color="red">***`@usableFromInline`***</font>
 
 *用于标记属性、方法、类型等，表示它们可以在模块内的其他地方内联使用，但对模块外不可见。*
 
@@ -1007,7 +1008,7 @@ public func publicFunction() {
 let myStruct = InternalStruct(value: 42) // 错误，InternalStruct 对模块外不可见
 let result = internalFunction() // 错误，internalFunction 对模块外不可见
 ```
-### <span style="color:red; font-weight:bold;">***`@discardableResult`***</span>
+### <font color="red">***`@discardableResult`***</font>
 
 *discard：*
 *【v.】扔掉，弃置；打出（无用的牌），垫（牌）*
@@ -1020,7 +1021,7 @@ func processResult() -> Int {
     // ...
 }
 ```
-### <span style="color:red; font-weight:bold;">***`@available`***</span>
+### <font color="red">***`@available`***</font>
 
  *用于标记函数、方法、属性等，指示它们的可用性和版本要求。*
 ```swift
@@ -1029,12 +1030,12 @@ func newAPI() {
     // ...
 }
 ```
-### <span style="color:red; font-weight:bold;">***`@MainActor`***</span>
+### <font color="red">***`@MainActor`***</font>
 
 * 是一个[***属性包装器***（*property wrapper*）](# 属性包装器（Property Wrappers）)，它用于标记特定的属性、方法或函数在主线程上执行；
 
 * 这是为了确保在 Swift 的并发编程中遵循特定的并发模型；
-* 具体来说，`@MainActor`是 Swift Concurrency 中的一部分，引入了 <span style="color:red; font-weight:bold;">***`async/await`***</span>  等新的并发编程特性；
+* 具体来说，`@MainActor`是 Swift Concurrency 中的一部分，引入了 <font color="red">***`async/await`***</font>  等新的并发编程特性；
 * 它的目的是将代码标记为在主线程上执行，以确保操作 UI 或其他需要在主线程上执行的任务时不会发生线程不安全的情况。
 
 ```swift
@@ -1051,12 +1052,12 @@ func fetchData() async {
     updateUI()
 }
 ```
-### <span style="color:red; font-weight:bold;">***`@objc`***</span>
+### <font color="red">***`@objc`***</font>
 
-* <span style="color:red; font-weight:bold;">***`@objc`***</span> 是一个 *Objective-C* 的修饰符；
+* <font color="red">***`@objc`***</font> 是一个 *Objective-C* 的修饰符；
 * 在 Swift 中用于标记特定的声明以便与 *Objective-C* 代码进行交互；
 * 它可以应用于类、协议、方法、属性等；
-* 兼容 *Objective-C* 代码： 当你需要在 *Swift* 中使用*Objective-C* 的框架、类、方法等时，你可能需要使用 <span style="color:red; font-weight:bold;">***`@objc`***</span> 修饰符。*Objective-C* 使用动态消息传递，而 *Swift* 使用静态派发，因此在 *Swift* 中调用 *Objective-C* 代码时，需要一些额外的信息来确保兼容性。
+* 兼容 *Objective-C* 代码： 当你需要在 *Swift* 中使用*Objective-C* 的框架、类、方法等时，你可能需要使用 <font color="red">***`@objc`***</font> 修饰符。*Objective-C* 使用动态消息传递，而 *Swift* 使用静态派发，因此在 *Swift* 中调用 *Objective-C* 代码时，需要一些额外的信息来确保兼容性。
 
 ```swift
 @objc class MySwiftClass: NSObject {
@@ -1073,18 +1074,18 @@ func fetchData() async {
 }
 let selector = #selector(myObjectiveCMethod)
 ```
-* 处理动态派发：<span style="color:red; font-weight:bold;">***`@objc`***</span> 也用于处理动态派发的情况，例如在 KVO（**K**ey-**V**alue **O**bserving）中。
+* 处理动态派发：<font color="red">***`@objc`***</font> 也用于处理动态派发的情况，例如在 KVO（**K**ey-**V**alue **O**bserving）中。
 ```swift
 @objc dynamic var myProperty: Int = 0
 ```
 * 需要注意的是：
-  * 使用 <span style="color:red; font-weight:bold;">***`@objc`***</span> 会使得相应的声明变得更加 *Objective-C* 友好，但也可能导致一些 *Swift* 特性无法使用；
-  * 在新的 *Swift* 代码中，尽量避免不必要的 <span style="color:red; font-weight:bold;">***`@objc`***</span> 标记，以便充分利用 *Swift* 的静态类型检查和性能优势；
+  * 使用 <font color="red">***`@objc`***</font> 会使得相应的声明变得更加 *Objective-C* 友好，但也可能导致一些 *Swift* 特性无法使用；
+  * 在新的 *Swift* 代码中，尽量避免不必要的 <font color="red">***`@objc`***</font> 标记，以便充分利用 *Swift* 的静态类型检查和性能优势；
 
-### <span style="color:red; font-weight:bold;">***`@Binding`***</span>
+### <font color="red">***`@Binding`***</font>
 
-* <span style="color:red; font-weight:bold;">***`@Binding`***</span> 是一个[***属性包装器***（*property wrapper*）](# 属性包装器（Property Wrappers）)，用于在 SwiftUI 中创建**双向绑定**（*two-way binding*）。它允许你在视图层次结构中传递数据，并确保这些数据的改变在整个视图层次结构中传播；
-  * 当你在一个视图中使用 <span style="color:red; font-weight:bold;">***`@Binding`***</span> 修饰符时，它表示该属性是一个引用到另一个视图层次结构中的数据的绑定；
+* <font color="red">***`@Binding`***</font> 是一个[***属性包装器***（*property wrapper*）](# 属性包装器（Property Wrappers）)，用于在 SwiftUI 中创建**双向绑定**（*two-way binding*）。它允许你在视图层次结构中传递数据，并确保这些数据的改变在整个视图层次结构中传播；
+  * 当你在一个视图中使用 <font color="red">***`@Binding`***</font> 修饰符时，它表示该属性是一个引用到另一个视图层次结构中的数据的绑定；
   * 当被绑定的数据发生变化时，相关的视图会自动更新，并且对绑定属性的修改也会反映到原始数据上；
 
 ```swift
@@ -1132,11 +1133,11 @@ struct Subview: View {
   <input type="text" v-model="message">
   这里message是模型中的数据，用户在输入框中输入的值会动态地更新到模型中，并且模型中的数据变化也会反映到输入框中。
   ```
-### <span style="color:red; font-weight:bold;">***`@escaping`***</span>
+### <font color="red">***`@escaping`***</font>
 
 * 用于标记函数或闭包参数，表示它们在函数返回后仍然可以被调用；
 * 通常，当闭包作为参数传递给函数时，它默认是非逃逸的，即被保证在函数返回之前被执行；
-* 然而，如果该闭包可能在函数返回后执行，就需要使用 <span style="color:red; font-weight:bold;">***`@escaping`***</span> 修饰符
+* 然而，如果该闭包可能在函数返回后执行，就需要使用 <font color="red">***`@escaping`***</font> 修饰符
 
 ```swift
 class MyViewController {
@@ -1170,17 +1171,17 @@ class MyViewController {
 	而 `registerCompletionHandler(completion:)` 函数的参数闭包默认是非逃逸的，因为它被保存在数组中，不会在函数返回后被`executeCompletionHandlers()` 函数用于执行保存的闭包数组中的所有闭包；
 */
 ```
-### <span style="color:red; font-weight:bold;">***`@inline`***</span>
+### <font color="red">***`@inline`***</font>
 
 * 用于标记函数，表示希望编译器尽可能地将函数内容内联到调用点，以提高性能；
 
-* 在大多数情况下，Swift 编译器会自动进行内联优化，但使用 <span style="color:red; font-weight:bold;">***`@inline`***</span> 可以对编译器的行为进行更明确的指导；
+* 在大多数情况下，Swift 编译器会自动进行内联优化，但使用 <font color="red">***`@inline`***</font> 可以对编译器的行为进行更明确的指导；
 
-* <span style="color:red; font-weight:bold;">***使用 `@inline` 需要慎重，因为过度的内联可能导致代码体积膨胀，反而影响性能***</span> ；
+* <font color="red">***使用 `@inline` 需要慎重，因为过度的内联可能导致代码体积膨胀，反而影响性能***</font> ；
 
-* 编译器通常能够很好地处理内联，因此在大多数情况下，开发者无需手动添加<span style="color:red; font-weight:bold;">***`@inline`***</span>；
+* 编译器通常能够很好地处理内联，因此在大多数情况下，开发者无需手动添加<font color="red">***`@inline`***</font>；
 
-* 只有在对性能有特殊需求，且经过测试确认内联带来的性能提升时，才建议使用<span style="color:red; font-weight:bold;">***`@inline`***</span>；
+* 只有在对性能有特殊需求，且经过测试确认内联带来的性能提升时，才建议使用<font color="red">***`@inline`***</font>；
 
 ```swift
 @inline(__always)
@@ -1196,10 +1197,10 @@ print(result)
 */
 ```
 
-### <span style="color:red; font-weight:bold;">***`@Main`***</span>
+### <font color="red">***`@Main`***</font>
 
-* 在Swift中，<span style="color:red; font-weight:bold;">***`@Main`***</span> 是一个属性，用于标识应用程序的入口点，指定应用程序的主入口（*main entry point*）；
-* 在Swift应用程序中，可以使用 <span style="color:red; font-weight:bold;">***`@Main`***</span> 属性来指定一个遵循 `App` 协议的类型，以表示应用程序的主要入口；
+* 在Swift中，<font color="red">***`@Main`***</font> 是一个属性，用于标识应用程序的入口点，指定应用程序的主入口（*main entry point*）；
+* 在Swift应用程序中，可以使用 <font color="red">***`@Main`***</font> 属性来指定一个遵循 `App` 协议的类型，以表示应用程序的主要入口；
 
 ```swift
 import SwiftUI
@@ -1218,17 +1219,17 @@ struct MyApp: App {
   MyApp 结构体中的 body 属性返回一个 Scene，表示应用程序的主窗口中要显示的内容，这里是一个包含 ContentView 的 WindowGroup。
 */
 ```
-<span style="color:red; font-weight:bold;">***总的来说，`@main` 属性简化了应用程序的入口点的定义，使得代码更加简洁和易读。***</span>
+<font color="red">***总的来说，`@main` 属性简化了应用程序的入口点的定义，使得代码更加简洁和易读。***</font>
 
-<span style="color:red; font-weight:bold;">***在应用程序启动时，系统将自动创建并运行标记为 `@main` 的结构体，从而启动应用程序。***</span>
+<font color="red">***在应用程序启动时，系统将自动创建并运行标记为 `@main` 的结构体，从而启动应用程序。***</font>
 
-### <span style="color:red; font-weight:bold;">***`@UIApplicationMain`***</span>
+### <font color="red">***`@UIApplicationMain`***</font>
 
 * 是 Swift 中的一个标记性的属性，通常用于标识应用程序的主要入口点；
 * 在 Swift 中，它通常用于标记 *AppDelegate* 类，以指定应用程序的主要运行类；
-* 一个应用程序只能有一个使用 <span style="color:red; font-weight:bold;">***`@UIApplicationMain`***</span> 标记的类；
+* 一个应用程序只能有一个使用 <font color="red">***`@UIApplicationMain`***</font> 标记的类；
 
-通过在 *AppDelegate* 类的声明前添加 <span style="color:red; font-weight:bold;">***`@UIApplicationMain`***</span> 属性，可以省略编写 `main.swift` 文件来启动应用程序
+通过在 *AppDelegate* 类的声明前添加 <font color="red">***`@UIApplicationMain`***</font> 属性，可以省略编写 `main.swift` 文件来启动应用程序
 
 ```swift
 import UIKit
@@ -1244,10 +1245,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 }
 // 这样，编译器会自动生成 main.swift 文件，并在其中创建 UIApplication 对象和 AppDelegate 对象，从而启动应用程序。
 ```
-### <span style="color:red; font-weight:bold;">***`@State`***</span>
+### <font color="red">***`@State`***</font>
 
 * 是 SwiftUI 中的一个[***属性包装器***（*Property Wrapper*）](# 属性包装器（Property Wrappers）)，用于声明和管理视图的状态；
-* <span style="color:red; font-weight:bold;">***`@State`***</span> 用于标识由视图持有和管理的可变状态，当状态发生改变时，视图会自动重新渲染以反映最新的状态；
+* <font color="red">***`@State`***</font> 用于标识由视图持有和管理的可变状态，当状态发生改变时，视图会自动重新渲染以反映最新的状态；
 
 ```swift
 import SwiftUI
@@ -1270,9 +1271,9 @@ struct MyView: View {
   不保留历史值： @State 修饰的变量不保留历史值。当视图重新创建时，@State 变量会被重置为其初始值。
 */
 ```
-<span style="color:red; font-weight:bold;">***总的来说，`@State` 是 SwiftUI 中用于处理视图状态的重要[属性包装器](# 属性包装器（Property Wrappers）)，它使得状态管理更加简单和直观。***</span> 
+<font color="red">***总的来说，`@State` 是 SwiftUI 中用于处理视图状态的重要[属性包装器](# 属性包装器（Property Wrappers）)，它使得状态管理更加简单和直观。***</font> 
 
-### <span style="color:red; font-weight:bold;">***`@EnvironmentObject`***</span>
+### <font color="red">***`@EnvironmentObject`***</font>
 
 *是 SwiftUI 中的一个[**属性包装器**（Property Wrapper）](# 属性包装器（Property Wrappers）)，用于在视图之间传递和共享数据。它允许你在整个 SwiftUI 视图层次结构中传递一个共享的对象，并在需要的地方访问该对象的属性。*
 
@@ -1314,14 +1315,14 @@ struct ContentView: View {
 */
 ```
 **主要用途和特点：**
-* 传递共享数据： 通过使用 <span style="color:red; font-weight:bold;">***`@EnvironmentObject`***</span>，你可以在整个 *SwiftUI* 视图层次结构中传递一个共享的数据模型，而不必在每个视图中手动传递该数据。
+* 传递共享数据： 通过使用 <font color="red">***`@EnvironmentObject`***</font>，你可以在整个 *SwiftUI* 视图层次结构中传递一个共享的数据模型，而不必在每个视图中手动传递该数据。
 * 全局访问： 通过在 *SwiftUI* 的 **Environment** 中存储对象，你可以在整个应用程序中提供对该对象的全局访问。
-* 数据更新时刷新视图： 当通过 <span style="color:red; font-weight:bold;">***`@EnvironmentObject`***</span>引用的对象发生更改时，相关视图会自动刷新以反映最新的数据。
-* 典型用法是在 <span style="color:red; font-weight:bold;">***`@main`***</span> 函数中设置环境对象，以便在整个应用程序中共享。
+* 数据更新时刷新视图： 当通过 <font color="red">***`@EnvironmentObject`***</font>引用的对象发生更改时，相关视图会自动刷新以反映最新的数据。
+* 典型用法是在 <font color="red">***`@main`***</font> 函数中设置环境对象，以便在整个应用程序中共享。
 
-### <span style="color:red; font-weight:bold;">***`@Environment`***</span>
+### <font color="red">***`@Environment`***</font>
 
-*在 Swift 中，<span style="color:red; font-weight:bold;">**`@Environment`**</span> 是一个[**属性包装器**（property wrapper）](# 属性包装器（Property Wrappers）)，用于访问环境值（Environment Values）。*
+*在 Swift 中，<font color="red">**`@Environment`**</font> 是一个[**属性包装器**（property wrapper）](# 属性包装器（Property Wrappers）)，用于访问环境值（Environment Values）。*
 *环境值是一种在应用程序中传递数据的方式，通常用于在视图层次结构中传递全局设置或共享的数据。*
 *`@Environment` 允许您在视图中声明需要从环境中获取的值，并使其在整个视图层次结构中自动传递。*
 
@@ -1364,11 +1365,11 @@ struct MyApp: App {
   然后，在 extension EnvironmentValues 中，我们为 userDefaults 创建了一个环境键，并为其提供了默认值（在这里是 UserDefaults.standard）。
 */
 ```
-在应用程序的其他地方，例如在 *AppDelegate* 中，您可以设置用户的偏好设置，然后这些设置将在整个应用程序中自动传递给使用 `@Environment(\.userDefaults)` 的视图。这是一种方便的方式，<span style="color:red; font-weight:bold;">***使得全局设置和共享数据能够轻松地在整个视图层次结构中传递。***</span> 
+在应用程序的其他地方，例如在 *AppDelegate* 中，您可以设置用户的偏好设置，然后这些设置将在整个应用程序中自动传递给使用 `@Environment(\.userDefaults)` 的视图。这是一种方便的方式，<font color="red">***使得全局设置和共享数据能够轻松地在整个视图层次结构中传递。***</font> 
 
-### <span style="color:red; font-weight:bold;">***`@ObservedObject`***</span>
+### <font color="red">***`@ObservedObject`***</font>
 
-*是 SwiftUI 中的一个[**属性包装器**（property wrapper）](# 属性包装器（Property Wrappers）)，用于将一个对象标记为可观察的。当被 <span style="color:red; font-weight:bold;">**`@ObservedObject`**</span> 标记的对象发生变化时，相关视图将会被刷新以反映这些变化。通常情况下，<span style="color:red; font-weight:bold;">**`@ObservedObject`**</span> 用于关联可观察对象和视图，使得 SwiftUI 能够自动响应对象的变化并更新 UI。*
+*是 SwiftUI 中的一个[**属性包装器**（property wrapper）](# 属性包装器（Property Wrappers）)，用于将一个对象标记为可观察的。当被 <font color="red">**`@ObservedObject`**</font> 标记的对象发生变化时，相关视图将会被刷新以反映这些变化。通常情况下，<font color="red">**`@ObservedObject`**</font> 用于关联可观察对象和视图，使得 SwiftUI 能够自动响应对象的变化并更新 UI。*
 
 ```swift
 import SwiftUI
@@ -1399,15 +1400,15 @@ struct MyView: View {
 */
 ```
 **主要用途和特点：**
-* 可观察对象： 通过 <span style="color:red; font-weight:bold;">***`@ObservedObject`***</span> 标记的对象必须符合 <span style="color:red; font-weight:bold;">***`@ObservedObject`***</span> 协议，这通常是一个具有可发布属性的类。
-* 刷新视图： 当 <span style="color:red; font-weight:bold;">***`@ObservedObject`***</span> 标记的对象的可发布属性发生变化时，相关视图将会自动刷新以反映最新的数据。
-* 局部订阅： <span style="color:red; font-weight:bold;">***`@ObservedObject`***</span> 用于局部的、在视图层次结构中的某个特定位置进行数据绑定，而 <span style="color:red; font-weight:bold;">***`@EnvironmentObject`***</span> 用于全局的、在整个应用程序范围内传递数据。
+* 可观察对象： 通过 <font color="red">***`@ObservedObject`***</font> 标记的对象必须符合 <font color="red">***`@ObservedObject`***</font> 协议，这通常是一个具有可发布属性的类。
+* 刷新视图： 当 <font color="red">***`@ObservedObject`***</font> 标记的对象的可发布属性发生变化时，相关视图将会自动刷新以反映最新的数据。
+* 局部订阅： <font color="red">***`@ObservedObject`***</font> 用于局部的、在视图层次结构中的某个特定位置进行数据绑定，而 <font color="red">***`@EnvironmentObject`***</font> 用于全局的、在整个应用程序范围内传递数据。
 
-<span style="color:red; font-weight:bold;">***总的来说，`@ObservedObject` 是 SwiftUI 中用于观察对象变化并刷新视图的关键属性包装器。它通常用于将可观察对象与特定视图关联，以便在对象变化时更新相关 UI。***</span> 
+<font color="red">***总的来说，`@ObservedObject` 是 SwiftUI 中用于观察对象变化并刷新视图的关键属性包装器。它通常用于将可观察对象与特定视图关联，以便在对象变化时更新相关 UI。***</font> 
 
-### <span style="color:red; font-weight:bold;">***`@Published`***</span>
+### <font color="red">***`@Published`***</font>
 
-*是 Swift 中的[**属性包装器**（property wrapper）](# 属性包装器（Property Wrappers）)，通常用于标记可观察对象的属性。在 SwiftUI 中，<span style="color:red; font-weight:bold;">**`@Published`**</span> 通常与 `ObservableObject` 协议一起使用，以提供一种简单的方式来发布属性的变化，从而让相关视图能够及时地更新。需要`import Combine`* 
+*是 Swift 中的[**属性包装器**（property wrapper）](# 属性包装器（Property Wrappers）)，通常用于标记可观察对象的属性。在 SwiftUI 中，<font color="red">**`@Published`**</font> 通常与 `ObservableObject` 协议一起使用，以提供一种简单的方式来发布属性的变化，从而让相关视图能够及时地更新。需要`import Combine`* 
 
 ```swift
 import SwiftUI
@@ -1436,29 +1437,29 @@ struct MyView: View {
   当按钮点击时，data 的值发生变化，@Published 将自动发布通知，@ObservedObject 的视图将会自动刷新。
 */
 ```
-<span style="color:red; font-weight:bold;">***总的来说，`@Published` 是 SwiftUI 中用于简化可观察对象的属性变化通知的属性包装器。***</span> 
+<font color="red">***总的来说，`@Published` 是 SwiftUI 中用于简化可观察对象的属性变化通知的属性包装器。***</font> 
 
-<span style="color:red; font-weight:bold;">***它与 `ObservableObject` 协议一起使用，使得 SwiftUI 能够在数据发生变化时自动刷新相关的视图。***</span> 
+<font color="red">***它与 `ObservableObject` 协议一起使用，使得 SwiftUI 能够在数据发生变化时自动刷新相关的视图。***</font> 
 
-## <span style="color:red; font-weight:bold;">***`@main`***</span>和<span style="color:red; font-weight:bold;">***`@UIApplicationMain`***</span>的区别
+## <font color="red">***`@main`***</font>和<font color="red">***`@UIApplicationMain`***</font>的区别
 
-<span style="color:red; font-weight:bold;">**`@main`**</span> 和 <span style="color:red; font-weight:bold;">**`@UIApplicationMain`**</span> 都是在 *Swift* 中用于标识应用程序入口的属性，但它们有一些不同之处：
+<font color="red">**`@main`**</font> 和 <font color="red">**`@UIApplicationMain`**</font> 都是在 *Swift* 中用于标识应用程序入口的属性，但它们有一些不同之处：
 
 1. **平台差异：**
    
-   * <span style="color:red; font-weight:bold;">***`@main`***</span>是 *Swift 5.3* 及更高版本引入的属性，用于iOS、macOS、tvOS等所有平台。它是一种通用的属性，用于标识应用程序的入口。
-   - <span style="color:red; font-weight:bold;">***`@UIApplicationMain`***</span> 是在较早的Swift版本中引入的，主要用于iOS开发。它是在*AppDelegate*中标识应用程序的主入口。
+   * <font color="red">***`@main`***</font>是 *Swift 5.3* 及更高版本引入的属性，用于iOS、macOS、tvOS等所有平台。它是一种通用的属性，用于标识应用程序的入口。
+   - <font color="red">***`@UIApplicationMain`***</font> 是在较早的Swift版本中引入的，主要用于iOS开发。它是在*AppDelegate*中标识应用程序的主入口。
    
 2. **使用方式：**
    
-   - <span style="color:red; font-weight:bold;">***`@main`***</span> 用于标识遵循 `App` 协议的类型，表示整个应用程序的入口。在该类型中，通过实现 `body` 属性来定义应用程序的场景（Scene）；
-   - <span style="color:red; font-weight:bold;">***`@UIApplicationMain`***</span> 用于标识一个包含 *UIApplication* 子类的文件，该子类充当应用程序的代理并定义应用程序的入口点。在这种情况下，`main.swift` 文件是不必要的，因为入口点由 <span style="color:red; font-weight:bold;">***`@UIApplicationMain`***</span> 属性标识的类的 `main` 方法提供。
+   - <font color="red">***`@main`***</font> 用于标识遵循 `App` 协议的类型，表示整个应用程序的入口。在该类型中，通过实现 `body` 属性来定义应用程序的场景（Scene）；
+   - <font color="red">***`@UIApplicationMain`***</font> 用于标识一个包含 *UIApplication* 子类的文件，该子类充当应用程序的代理并定义应用程序的入口点。在这种情况下，`main.swift` 文件是不必要的，因为入口点由 <font color="red">***`@UIApplicationMain`***</font> 属性标识的类的 `main` 方法提供。
    
 3. **灵活性：**
    
-   - <span style="color:red; font-weight:bold;">***`@main`***</span>更加灵活，允许您使用 `App` 协议自定义应用程序的入口，使其适用于不同的场景和平台；
-   - <span style="color:red; font-weight:bold;">***`@UIApplicationMain`***</span> 相对较死板，主要用于传统的iOS应用程序入口点的定义；
-   综上所述，如果您在Swift 5.3及更高版本上进行跨平台开发，推荐使用 <span style="color:red; font-weight:bold;">***`@main`***</span>。如果您在较早的Swift版本上仅进行iOS开发，可以使用 <span style="color:red; font-weight:bold;">***`@UIApplicationMain`***</span>。在实践中，大多数新的Swift项目会选择使用 <span style="color:red; font-weight:bold;">***`@main`***</span>，因为它提供更大的灵活性，并且在未来的Swift版本中可能会成为标准的应用程序入口点标识方式。
+   - <font color="red">***`@main`***</font>更加灵活，允许您使用 `App` 协议自定义应用程序的入口，使其适用于不同的场景和平台；
+   - <font color="red">***`@UIApplicationMain`***</font> 相对较死板，主要用于传统的iOS应用程序入口点的定义；
+   综上所述，如果您在Swift 5.3及更高版本上进行跨平台开发，推荐使用 <font color="red">***`@main`***</font>。如果您在较早的Swift版本上仅进行iOS开发，可以使用 <font color="red">***`@UIApplicationMain`***</font>。在实践中，大多数新的Swift项目会选择使用 <font color="red">***`@main`***</font>，因为它提供更大的灵活性，并且在未来的Swift版本中可能会成为标准的应用程序入口点标识方式。
 
 ## Swift中，***Any***和***Anyobject***的区别？
 
@@ -1512,9 +1513,9 @@ struct MyView: View {
     }
 }
 ```
-## `#available` 和 <span style="color:red; font-weight:bold;">***`@available`***</span>在Swift中有什么区别？
+## `#available` 和 <font color="red">***`@available`***</font>在Swift中有什么区别？
 
-*在Swift中，`#available`和 <span style="color:red; font-weight:bold;">**`@available`**</span>都用于处理平台和版本的可用性检查，但它们在语法上和用途上有一些不同。*
+*在Swift中，`#available`和 <font color="red">**`@available`**</font>都用于处理平台和版本的可用性检查，但它们在语法上和用途上有一些不同。*
 **`#available`：** 
 
 - `#available` 是一个条件编译指令，用于在编译时检查代码的可用性。
@@ -1526,10 +1527,10 @@ if #available(iOS 15, *) {
     // 使用 iOS 15 以下版本的备用代码
 }
 ```
-<span style="color:red; font-weight:bold;">***`@available`***</span>
+<font color="red">***`@available`***</font>
 
-- <span style="color:red; font-weight:bold;">***`@available`***</span> 是一个属性包装器，用于在运行时检查代码的可用性。
-- 可以使用 <span style="color:red; font-weight:bold;">***`@available`***</span>来标记特定的函数、类、结构体等，并指定它们在不同平台和版本上的可用性。这允许编译器在运行时检查代码的使用情况，并在不支持的平台或版本上引发警告或错误。
+- <font color="red">***`@available`***</font> 是一个属性包装器，用于在运行时检查代码的可用性。
+- 可以使用 <font color="red">***`@available`***</font>来标记特定的函数、类、结构体等，并指定它们在不同平台和版本上的可用性。这允许编译器在运行时检查代码的使用情况，并在不支持的平台或版本上引发警告或错误。
 ```swift
 @available(iOS 15, *)
 func myFunction() {
@@ -1537,15 +1538,15 @@ func myFunction() {
 }
 ```
 **总体来说**
-1、`#available` 用于条件编译，而 <span style="color:red; font-weight:bold;">***`@available`***</span> 用于标记在运行时检查的实体；
+1、`#available` 用于条件编译，而 <font color="red">***`@available`***</font> 用于标记在运行时检查的实体；
 
 2、在实际编码中，它们经常一起使用，以确保代码在编译和运行时都考虑到平台和版本的差异；
 
-##  ***Swift***.<span style="color:red; font-weight:bold;">***`extension`***</span>
+##  ***Swift***.<font color="red">***`extension`***</font>
 
-1、<span style="color:red; font-weight:bold;">***类似于OC中的分类***</span>；
+1、<font color="red">***类似于OC中的分类***</font>；
 2、***允许你在不修改原始类型定义的情况下，向已有的类（Class）、结构体（Struct）、枚举（enum）或协议（Protocol）添加新的功能。***；
-3、<span style="color:red; font-weight:bold;">***`extension`***</span> 可以用于添加新的计算属性、方法、初始化方法、下标等；
+3、<font color="red">***`extension`***</font> 可以用于添加新的计算属性、方法、初始化方法、下标等；
 
 ***扩展添加新方法***：
 
@@ -1596,9 +1597,9 @@ extension Double: Describable {
 let value: Double = 3.14
 print(value.description)  // 输出 "Value: 3.14"
 ```
-**请注意，<span style="color:red; font-weight:bold;">*`extension`*</span> 中不能添加存储属性，只能添加计算属性。**
+**请注意，<font color="red">*`extension`*</font> 中不能添加存储属性，只能添加计算属性。**
 
-## <span style="color:red; font-weight:bold;">***在Swift中，有两种类型不允许定义存储属性***</span>：
+## <font color="red">***在Swift中，有两种类型不允许定义存储属性***</font>：
 
 * **协议（*Protocol*）：** 协议本身不能包含存储属性。协议可以定义计算属性，以及方法、下标等，但它不支持直接定义存储属性。**和OC一致**
 ```
@@ -1859,7 +1860,7 @@ provider.request(.getPosts) { result in
 }
 ```
 ## ***Swift.`Json数据解析`***
-### 1、*Codable 协议*  <span style="color:red; font-weight:bold;">***（原生.简洁.官方推荐首选）***</span>
+### 1、*Codable 协议*  <font color="red">***（原生.简洁.官方推荐首选）***</font>
 
 定义你的数据模型➕遵循 `Codable` 协议➕使用***JSONDecoder*** = 解码***JSON***数据
 
@@ -1918,7 +1919,7 @@ class Post: Mappable {
 
 let post = Mapper<Post>().map(JSONString: jsonString)
 ```
-## <span style="color:red; font-weight:bold;">***SwiftUI***</span>
+## <font color="red">***SwiftUI***</font>
 
 * ***文本标签 Text**（类似于UIKit.UILabel）*
 ```swift
@@ -2078,7 +2079,7 @@ struct ContentView_Previews: PreviewProvider {
 
 ## 其他
 
-* <span style="color:red; font-weight:bold;">***可选项的本质是枚举类型***</span>；
+* <font color="red">***可选项的本质是枚举类型***</font>；
 * Swift的泛型应用字协议上的时候，需要使用***关联类型***；
 
 ```swift
@@ -2110,9 +2111,9 @@ struct IntStack: Container {
 }
 ```
 
-* 访问控制：<span style="color:red; font-weight:bold;">***open***</span> > <span style="color:red; font-weight:bold;">***public***</span> ><span style="color:red; font-weight:bold;">***internal***</span>（默认） > <span style="color:red; font-weight:bold;">***fileprivate***</span>（**在本文件内可见**） > <span style="color:red; font-weight:bold;">***private***</span>（**在最近的一个定义域区间内可见**）
-  * <span style="color:red; font-weight:bold;">***open***</span>只针对模块化的文件（被打成二进制的`.a`、`.o`、`.framework`）。所以<span style="color:red; font-weight:bold;">***对于源代码：open === public***</span>；
-  * <span style="color:red; font-weight:bold;">***open***</span> - <span style="color:red; font-weight:bold;">***public***</span> = 允许类及其成员在其他模块中被继承和被重写；
+* 访问控制：<font color="red">***open***</font> > <font color="red">***public***</font> ><font color="red">***internal***</font>（默认） > <font color="red">***fileprivate***</font>（**在本文件内可见**） > <font color="red">***private***</font>（**在最近的一个定义域区间内可见**）
+  * <font color="red">***open***</font>只针对模块化的文件（被打成二进制的`.a`、`.o`、`.framework`）。所以<font color="red">***对于源代码：open === public***</font>；
+  * <font color="red">***open***</font> - <font color="red">***public***</font> = 允许类及其成员在其他模块中被继承和被重写；
 * *protocol*
   * Swift中的*protocol*还可以对接口进行抽象；
   * Swift中的*protocol*还可以实现面向协议；
