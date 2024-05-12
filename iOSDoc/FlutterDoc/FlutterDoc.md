@@ -167,6 +167,52 @@
      myConstObject.printValues();
    }
    ```
+
+## ***Dart.factory***
+
+*根据传入的类型参数来创建不同的对象。*
+
+```dart
+abstract class Animal {
+  void makeSound();
+}
+
+class Dog implements Animal {
+  @override
+  void makeSound() {
+    print('汪汪汪');
+  }
+}
+
+class Cat implements Animal {
+  @override
+  void makeSound() {
+    print('喵喵喵');
+  }
+}
+
+class AnimalFactory {
+  factory AnimalFactory(String type) {
+    switch (type) {
+      case 'dog':
+        return Dog();
+      case 'cat':
+        return Cat();
+      default:
+        throw ArgumentError('Unknown animal type: $type');
+    }
+  }
+}
+
+void main() {
+  var dog = AnimalFactory('dog');
+  dog.makeSound(); // 输出：汪汪汪
+  
+  var cat = AnimalFactory('cat');
+  cat.makeSound(); // 输出：喵喵喵
+}
+```
+
 ## ***Dart.方法的定义（写法）***
 
 * ```dart
@@ -203,31 +249,22 @@
     dynamic receiveIds;
     dynamic gift;
     // 构造方法
-    Message({this.senderId, this.type, this.senderName, this.content, this.receiveIds, this.gift});
+    MyClass({this.senderId, this.type, this.senderName, this.content, this.receiveIds, this.gift});
     // 定义一个实例方法
     void instanceMethod() {
       debugPrint('This is an instance method');
     }
     // 定义一个类方法
-    MyClass.fromJson(Map<String, dynamic>? json) {
-      if (json != null) {
-        if(json["senderID"] is String) {
-        senderId = json["senderID"];
-      	}
-        if(json["type"] is String) {
-          type = json["type"];
-        }
-        if(json["senderName"] is String) {
-          senderName = json["senderName"];
-        }
-        if(json["content"] is String) {
-          content = json["content"];
-        }
-        receiveIds = json["receiveIds"];
-     	  gift = json["gift"];
-      }else{
-        debugPrint('MyClass的类方法');
-      }
+    Message.fromJson(Map<String, dynamic>? json) {
+      debugPrint('MyClass的类方法');
+      return Message(
+        senderId: json?['senderID'],
+        type: json?['type'],
+        senderName: json?['senderName'],
+        content: json?['content'],
+        receiveIds: json?['receiveIds'] ?? 0,
+      );
+    }
   }
   
   void main() {
@@ -5009,9 +5046,9 @@ class _LoginPageState extends State<LoginPage> {
 ### ***Dart.Flutter.DevTools***
 
 Dart.Flutter提供了一些调试工具来帮助开发者调试应用程序的代码和性能，其中包括以下工具：
-* **Flutter DevTools**: 是一个功能强大的调试工具，可以***在浏览器中***查看Dart.Flutter应用程序的各种信息，包括*Widget*树、布局、性能、日志等。它提供了诸如内存、CPU使用情况等信息，可以帮助开发者定位和解决性能问题；
-  * **Flutter Inspector**: 是Flutter DevTools的一部分，它允许开发者在应用程序运行时查看*Widget*树、检查布局、查看UI层级结构等。通过Flutter Inspector，开发者可以在运行时查看应用程序的UI状态，并且可以在代码中设置断点来调试应用程序的逻辑；
-* **Flutter Debugger Extension**: 是***Visual Studio Code（VS Code）的一个扩展***，提供了在[***VSCode***](https://code.visualstudio.com/) 中调试Dart.Flutter应用程序的功能。开发者可以在[***VSCode***](https://code.visualstudio.com/) 中设置断点、单步执行代码、查看变量值等，以实现对Dart.Flutter应用程序的调试；
+* **Flutter DevTools**：是一个功能强大的调试工具，可以***在浏览器中***查看Dart.Flutter应用程序的各种信息，包括*Widget*树、布局、性能、日志等。它提供了诸如内存、CPU使用情况等信息，可以帮助开发者定位和解决性能问题；
+  * **Flutter Inspector**：是Flutter DevTools的一部分，它允许开发者在应用程序运行时查看*Widget*树、检查布局、查看UI层级结构等。通过Flutter Inspector，开发者可以在运行时查看应用程序的UI状态，并且可以在代码中设置断点来调试应用程序的逻辑；
+* **Flutter Debugger Extension**：是***Visual Studio Code（VS Code）的一个扩展***，提供了在[***VSCode***](https://code.visualstudio.com/) 中调试Dart.Flutter应用程序的功能。开发者可以在[***VSCode***](https://code.visualstudio.com/) 中设置断点、单步执行代码、查看变量值等，以实现对Dart.Flutter应用程序的调试；
 ### ***RESTful API***
 * *REST*（**RE**presentational **S**tate **T**ransfer，表征状态转移）***是一种设计网络应用程序的软件架构风格或理念***，它<span style="color:red; font-weight:bold;">**强调利用 HTTP 协议中的各种方法（GET、POST、PUT、DELETE 等）对资源进行操作，并通过资源的表现形式（通常是 JSON 或 XML 格式）来传输数据**</span>；
 * <span style="color:red; font-weight:bold;">其实就是一个行业标准/规范。也就是对外传输的一种数据格式，需要至少要满足某几个点，以求达到最低的表述成本换取传输更多有效的信息</span>；
