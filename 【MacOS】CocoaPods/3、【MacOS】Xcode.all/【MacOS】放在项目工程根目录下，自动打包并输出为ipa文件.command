@@ -1,8 +1,11 @@
 #!/bin/bash
 
-# 如果没有执行权限，在这个sh文件的目录下，执行chmod u+x *.sh
+# 获取当前脚本文件的目录
+current_directory=$(dirname "$(readlink -f "$0")")
+echo $current_directory
+cd $current_directory
 
-# 查找Xcode.app的位置
+#查找Xcode.app的位置
 XCODE_DIR=/Applications/Xcode.app
 if [ ! -d $XCODE_DIR ]; then
     echo "在Applications中未发现Xcode.app"
@@ -10,7 +13,7 @@ if [ ! -d $XCODE_DIR ]; then
 fi
 echo "发现Xcode.app path: ${XCODE_DIR}..."
 
-# 查找并安装 PackageApplication
+#查找并安装 PackageApplication
 PACKAGE_DIR=${XCODE_DIR}/Contents/Developer/Platforms/iPhoneOS.platform/Developer/usr/bin
 packageName='PackageApplication'
 packageZip="${packageName}.zip"
@@ -41,17 +44,17 @@ if [ ! -f  $packagePath ]; then
 	echo "${packageName}安装完成！"
 fi
 
-# 清理app
+#清理app
 appDir=`pwd`/Build/Products/Release-iphoneos
 rm -rf ${appDir}/*.app
 
-# Build app
+#Build app
 buildCommand="xcodebuild"
 wrokspace=
 project=
 scheme=
 
-# 查看workspace文件
+#查看workspace文件
 echo '开始查找workspace'
 for file in `ls | grep *.xcworkspace`; do
 	echo "find xcworkspace => $file"
@@ -89,19 +92,24 @@ appPath=`find $appDir -name '*.app'`
 echo "appPath => $appPath"
 ipaDir=`pwd`/Build/ipa
 ipaPath="${ipaDir}/${scheme}_$(date "+%Y%m%d")_release_ios.ipa"
-# 没有ipa文件夹就建一个
+#没有ipa文件夹就建一个
 if [ ! -d $ipaDir ]; then
 	mkdir $ipaDir
 fi
 
-# 存在同名ipa文件先移除
+#存在同名ipa文件先移除
 if [ -f $ipaPath ]; then
 	rm -rf $ipaPath
 fi
 
-# 生成ipa文件
+#生成ipa文件
 xcrunCommand="xcrun -sdk iphoneos -v PackageApplication $appPath -o $ipaPath"
 echo "xcrunCommand => $xcrunCommand"
 $xcrunCommand
 echo "[OK]打包完成!ipa路径: $ipaPath"
 open $ipaDir
+
+
+
+
+
