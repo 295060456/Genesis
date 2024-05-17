@@ -2,6 +2,7 @@
 
 - [Flutter 经验](#flutter-经验)
   - [相关资料](#相关资料)
+  - [数据类型](#数据类型)
   - [***`var`***、***`dynamic`***、***`object`***](#vardynamicobject)
   - [***`const`***和***`final`***](#const和final)
   - [***Dart.factory***](#dartfactory)
@@ -100,6 +101,37 @@
 * <font color="red">***`dynamic`***</font>和<font color="red">***`object`***</font>类型是可以变的，而<font color="red">***`dynamic`***</font>与<font color="red">***`object`***</font>的区别是在静态类型检查上；
   * <font color="red">***`dynamic`***</font>：编译时**不**进行静态类型检查的类型（更灵活），而是在运行期间进行类型检查。（被编译后，实际是一个<font color="red">***`object`***</font>类型）
   * <font color="red">***`object`***</font>：编译时会进行类型检查（更安全）
+## 数据类型
+
+* dart当中的基本数据类型没有Float，只有double
+
+* Duration里面的数都是int
+
+  ```dart
+  const Duration(
+      {int days = 0,
+      int hours = 0,
+      int minutes = 0,
+      int seconds = 0,
+      int milliseconds = 0,
+      int microseconds = 0})
+  ```
+
+  那么表示0.5秒：
+
+  ```dart
+  Duration(milliseconds: 500);// 转换为500毫秒：
+  Duration(microseconds: 500000);// 转换为500000微秒：
+  ```
+
+* 如果需要让Duration里面接受小数，那么需要用double来定义变量
+
+  ```dart
+  final double timeStep; // 改为 double 类型
+  this.timeStep = 0.5,
+  Duration(milliseconds: (widget.timeStep.abs() * 1000).toInt()), // 毫秒为单位
+  ```
+
 ## <font color="red">***`const`***</font>和<font color="red">***`final`***</font>
 
 * ***相同点***  
