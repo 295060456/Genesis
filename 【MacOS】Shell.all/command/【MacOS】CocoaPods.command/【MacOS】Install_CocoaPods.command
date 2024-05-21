@@ -1,5 +1,38 @@
 #!/bin/bash
 
+# 检查并添加行到./bash_profile
+add_line_if_not_exists_bash_profile() {
+    local line=$1
+    if ! grep -qF "$line" ~/.bash_profile; then
+        echo '' >> ~/.bash_profile # 写入之前，先进行提行
+        echo "$line" >> ~/.bash_profile
+        print "添加到.bash_profile：" "$line"
+    else
+        print ".bash_profile中已存在" "$line"
+    fi
+}
+# 检查并添加行到./bashrc
+add_line_if_not_exists_bashrc() {
+    local line=$1
+    if ! grep -qF "$line" ~/.bashrc; then
+        echo '' >> ~/.bashrc # 写入之前，先进行提行
+        echo "$line" >> ~/.bashrc
+        print "添加到.bashrc：" "$line"
+    else
+        print ".bashrc中已存在" "$line"
+    fi
+}
+# 检查并添加行到./zshrc
+add_line_if_not_exists_zshrc() {
+    local line=$1
+    if ! grep -qF "$line" ~/.zshrc; then
+        echo '' >> ~/.zshrc # 写入之前，先进行提行
+        echo "$line" >> ~/.zshrc
+        print "添加到.zshrc：" "$line"
+    else
+        print ".zshrc中已存在" "$line"
+    fi
+}
 # 更新 Oh.My.Zsh
 update_OhMyZsh() {
     echo "检查是否有新版本..."
@@ -100,16 +133,42 @@ check_homebrew() {
         return 0
     fi
 }
+# 配置 Home.Ruby 环境变量
+_brewRuby(){
+    add_line_if_not_exists_bash_profile 'export PATH="/usr/local/opt/ruby/bin:$PATH"'
+    add_line_if_not_exists_bashrc 'export PATH="/usr/local/opt/ruby/bin:$PATH"'
+    add_line_if_not_exists_zshrc 'export PATH="/usr/local/opt/ruby/bin:$PATH"'
+    
+    # 初始化 rbenv
+    echo 'eval "$(rbenv init -)"' >> ~/.bashrc
+    echo 'eval "$(rbenv init -)"' >> ~/.zshrc
+    echo 'eval "$(rbenv init -)"' >> ~/.bash_profile
+    source ~/.bashrc
+    source ~/.zshrc
+    source ~/.bash_profile
+}
+# 配置 Rbenv.Ruby 环境变量
+_rbenRuby(){
+    add_line_if_not_exists_bash_profile 'export PATH="$HOME/.rbenv/bin:$PATH"'
+    add_line_if_not_exists_bashrc 'export PATH="$HOME/.rbenv/bin:$PATH"'
+    add_line_if_not_exists_zshrc 'export PATH="$HOME/.rbenv/bin:$PATH"'
+
+    # 初始化 rbenv
+    echo 'eval "$(rbenv init -)"' >> ~/.bashrc
+    echo 'eval "$(rbenv init -)"' >> ~/.zshrc
+    echo 'eval "$(rbenv init -)"' >> ~/.bash_profile
+    source ~/.bashrc
+    source ~/.zshrc
+    source ~/.bash_profile
+}
 # 检查并安装 Rbenv
 check_Rbenv() {
     if ! command -v rbenv &> /dev/null; then
         echo "正在安装 Rbenv..."
         # 下载 Rbenv
         git clone https://github.com/rbenv/rbenv.git ~/.rbenv
-        # 配置 Rbenv 环境变量
-        echo 'export PATH="$HOME/.rbenv/bin:$PATH"' >> ~/.bashrc
-        echo 'eval "$(rbenv init -)"' >> ~/.bashrc
-        source ~/.bashrc
+        # Rbenv的配置
+        _rbenRuby
         echo "rbenv 安装完成."
         return 1
     else
@@ -162,15 +221,8 @@ install_ruby_byRbenv(){
             exit 1
         fi
     fi
-    # 写环境变量
-    if ! grep -q 'rbenv init' ~/.zshrc; then
-        # 将 rbenv 的 bin 目录添加到 PATH 中
-        echo 'export PATH="$HOME/.rbenv/bin:$PATH"' >> ~/.zshrc
-        # 初始化 rbenv
-        echo 'eval "$(rbenv init -)"' >> ~/.zshrc
-        # 立即生效
-        source ~/.zshrc
-    fi
+    # Rbenv的配置
+    _rbenRuby
     # 是为了确保 Rbenv 能够找到新安装的 Ruby 版本所对应的可执行文件。通常，这个命令在安装新的 Ruby 版本后会自动执行，但是如果遇到问题，可以手动执行一次。
     rbenv rehash
     check_rbenv_version
