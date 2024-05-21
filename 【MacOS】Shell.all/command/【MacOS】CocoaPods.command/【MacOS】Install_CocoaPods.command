@@ -531,6 +531,7 @@ check_and_setup_cocoapods() {
 
     # 检查 CocoaPods 的安装是否成功
     echo "检查 CocoaPods 的安装是否成功..."
+    gem which cocoapods
     pod search Masonry
 }
 # 主流程
