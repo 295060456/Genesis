@@ -1,36 +1,72 @@
 #!/bin/bash
 
-# 检查并添加行到./bash_profile
+# 检查并添加行到 ~/.bash_profile
 add_line_if_not_exists_bash_profile() {
     local line=$1
     if ! grep -qF "$line" ~/.bash_profile; then
-        echo '' >> ~/.bash_profile # 写入之前，先进行提行
-        echo "$line" >> ~/.bash_profile
-        echo "添加到.bash_profile：" "$line"
+        # 如果行中包含目标字符串 "RRR"
+        if [[ "$line" =~ RRR ]]; then
+            # 如果 "RRR" 前面没有 # 或者 # 和 "RRR" 之间没有其他字符，则进行添加
+            if ! [[ "$line" =~ ^[[:space:]]*# ]]; then
+                echo '' >> ~/.bash_profile # 写入之前，先进行提行
+                echo "$line" >> ~/.bash_profile
+                print "添加到 ~/.bash_profile ：" "$line"
+            else
+                print "不添加到 ~/.bash_profile ：" "$line"
+            fi
+        else
+            echo '' >> ~/.bash_profile # 写入之前，先进行提行
+            echo "$line" >> ~/.bash_profile
+            print "添加到 ~/.bash_profile ：" "$line"
+        fi
     else
-        echo ".bash_profile中已存在" "$line"
+        print "~/.bash_profile 中已存在" "$line"
     fi
 }
-# 检查并添加行到./bashrc
+# 检查并添加行到 ~/.bashrc
 add_line_if_not_exists_bashrc() {
     local line=$1
     if ! grep -qF "$line" ~/.bashrc; then
-        echo '' >> ~/.bashrc # 写入之前，先进行提行
-        echo "$line" >> ~/.bashrc
-        echo "添加到.bashrc：" "$line"
+        # 如果行中包含目标字符串 "RRR"
+        if [[ "$line" =~ RRR ]]; then
+            # 如果 "RRR" 前面没有 # 或者 # 和 "RRR" 之间没有其他字符，则进行添加
+            if ! [[ "$line" =~ ^[[:space:]]*# ]]; then
+                echo '' >> ~/.bashrc # 写入之前，先进行提行
+                echo "$line" >> ~/.bashrc
+                echo "添加到 ~/.bashrc ：" "$line"
+            else
+                echo "不添加到 ~/.bashrc ：" "$line"
+            fi
+        else
+            echo '' >> ~/.bashrc # 写入之前，先进行提行
+            echo "$line" >> ~/.bashrc
+            echo "添加到 ~/.bashrc ：" "$line"
+        fi
     else
-        echo ".bashrc中已存在" "$line"
+        echo ".bashrc 中已存在" "$line"
     fi
 }
-# 检查并添加行到./zshrc
+# 检查并添加行到 ~/.zshrc
 add_line_if_not_exists_zshrc() {
     local line=$1
-    if ! grep -qF "$line" ~/.zshrc; then
-        echo '' >> ~/.zshrc # 写入之前，先进行提行
-        echo "$line" >> ~/.zshrc
-        echo "添加到.zshrc：" "$line"
+    if ! grep -qF "$line" source ~/.zshrc; then
+        # 如果行中包含目标字符串 "RRR"
+        if [[ "$line" =~ RRR ]]; then
+            # 如果 "RRR" 前面没有 # 或者 # 和 "RRR" 之间没有其他字符，则进行添加
+            if ! [[ "$line" =~ ^[[:space:]]*# ]]; then
+                echo '' >> ~/.zshrc # 写入之前，先进行提行
+                echo "$line" >> source ~/.zshrc
+                print "添加到 ~/.zshrc ：" "$line"
+            else
+                print "不添加到 ~/.zshrc ：" "$line"
+            fi
+        else
+            echo '' >> ~/.zshrc # 写入之前，先进行提行
+            echo "$line" >> source ~/.zshrc
+            print "添加到 ~/.zshrc ：" "$line"
+        fi
     else
-        echo ".zshrc中已存在" "$line"
+        print "~/.zshrc 中已存在" "$line"
     fi
 }
 # 获取当前脚本文件的目录
