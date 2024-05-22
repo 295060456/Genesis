@@ -1,72 +1,34 @@
 #!/bin/bash
 
-# 检查并添加行到 ~/.bash_profile
-add_line_if_not_exists_bash_profile() {
-    local line=$1
-    if ! grep -qF "$line" ~/.bash_profile; then
-        # 如果行中包含目标字符串 "RRR"
-        if [[ "$line" =~ RRR ]]; then
-            # 如果 "RRR" 前面没有 # 或者 # 和 "RRR" 之间没有其他字符，则进行添加
-            if ! [[ "$line" =~ ^[[:space:]]*# ]]; then
-                echo '' >> ~/.bash_profile # 写入之前，先进行提行
-                echo "$line" >> ~/.bash_profile
-                print "添加到 ~/.bash_profile ：" "$line"
-            else
-                print "不添加到 ~/.bash_profile ：" "$line"
-            fi
-        else
-            echo '' >> ~/.bash_profile # 写入之前，先进行提行
-            echo "$line" >> ~/.bash_profile
-            print "添加到 ~/.bash_profile ：" "$line"
-        fi
-    else
-        print "~/.bash_profile 中已存在" "$line"
+# 定义函数，参数为文件路径和要检查的字符串
+add_line_if_not_exists() {
+    local FILE_PATH="$1"
+    local STRING="$2"
+    local UNIQUE=true
+    
+    # 检查文件是否存在，如果不存在则创建它
+    if [ ! -f "$FILE_PATH" ]; then
+        touch "$FILE_PATH"
     fi
-}
-# 检查并添加行到 ~/.bashrc
-add_line_if_not_exists_bashrc() {
-    local line=$1
-    if ! grep -qF "$line" ~/.bashrc; then
-        # 如果行中包含目标字符串 "RRR"
-        if [[ "$line" =~ RRR ]]; then
-            # 如果 "RRR" 前面没有 # 或者 # 和 "RRR" 之间没有其他字符，则进行添加
+    
+    # 逐行读取文件内容
+    while IFS= read -r line; do
+        # 检查行中是否包含指定字符串
+        if [[ "$line" =~ "$STRING" ]]; then  # 修改此处，添加双引号
+            # 如果字符串前面没有 # 或者 # 和字符串之间没有其他字符
             if ! [[ "$line" =~ ^[[:space:]]*# ]]; then
-                echo '' >> ~/.bashrc # 写入之前，先进行提行
-                echo "$line" >> ~/.bashrc
-                echo "添加到 ~/.bashrc ：" "$line"
-            else
-                echo "不添加到 ~/.bashrc ：" "$line"
+                UNIQUE=false
+                break
             fi
-        else
-            echo '' >> ~/.bashrc # 写入之前，先进行提行
-            echo "$line" >> ~/.bashrc
-            echo "添加到 ~/.bashrc ：" "$line"
         fi
+    done < "$FILE_PATH"
+    
+    # 如果文件中没有符合条件的字符串，则写入字符串
+    if $UNIQUE; then
+        echo "$STRING" >> "$FILE_PATH"
+        echo "字符串 '$STRING' 已添加到文件 $FILE_PATH"
     else
-        echo ".bashrc 中已存在" "$line"
-    fi
-}
-# 检查并添加行到 ~/.zshrc
-add_line_if_not_exists_zshrc() {
-    local line=$1
-    if ! grep -qF "$line" source ~/.zshrc; then
-        # 如果行中包含目标字符串 "RRR"
-        if [[ "$line" =~ RRR ]]; then
-            # 如果 "RRR" 前面没有 # 或者 # 和 "RRR" 之间没有其他字符，则进行添加
-            if ! [[ "$line" =~ ^[[:space:]]*# ]]; then
-                echo '' >> ~/.zshrc # 写入之前，先进行提行
-                echo "$line" >> source ~/.zshrc
-                print "添加到 ~/.zshrc ：" "$line"
-            else
-                print "不添加到 ~/.zshrc ：" "$line"
-            fi
-        else
-            echo '' >> ~/.zshrc # 写入之前，先进行提行
-            echo "$line" >> source ~/.zshrc
-            print "添加到 ~/.zshrc ：" "$line"
-        fi
-    else
-        print "~/.zshrc 中已存在" "$line"
+        echo "文件 $FILE_PATH 已经包含字符串 '$STRING'"
     fi
 }
 # 获取当前脚本文件的目录
@@ -78,9 +40,9 @@ if ! command -v fvm &> /dev/null; then
     # 安装 FVM
     dart pub global activate fvm
     # 将 FVM 添加到 PATH
-    add_line_if_not_exists_bash_profile 'export PATH="$PATH":"$HOME/.pub-cache/bin"'
-    add_line_if_not_exists_bashrc 'export PATH="$PATH":"$HOME/.pub-cache/bin"'
-    add_line_if_not_exists_zshrc 'export PATH="$PATH":"$HOME/.pub-cache/bin"'
+    add_line_if_not_exists "$HOME/.bashrc" "export PATH="$PATH":"$HOME/.pub-cache/bin""
+    add_line_if_not_exists "$HOME/.zshrc" "export PATH="$PATH":"$HOME/.pub-cache/bin""
+    add_line_if_not_exists "$HOME/.bash_profile" "export PATH="$PATH":"$HOME/.pub-cache/bin""
     
     source ~/.bashrc
     source ~/.zshrc

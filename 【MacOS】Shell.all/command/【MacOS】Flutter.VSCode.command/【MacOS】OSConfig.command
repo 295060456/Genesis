@@ -20,78 +20,65 @@ if [ ! -f ~/.bash_profile ]; then
     touch ~/.bash_profile
     print "~/.bash_profile 文件" "已创建"
 fi
-# 检查并添加行到 ~/.bash_profile
-add_line_if_not_exists_bash_profile() {
-    local line=$1
-    if ! grep -qF "$line" ~/.bash_profile; then
-        # 如果行中包含目标字符串 "RRR"
-        if [[ "$line" =~ RRR ]]; then
-            # 如果 "RRR" 前面没有 # 或者 # 和 "RRR" 之间没有其他字符，则进行添加
+
+# 定义函数，参数为文件路径和要检查的字符串
+add_line_if_not_exists() {
+    local FILE_PATH="$1"
+    local STRING="$2"
+    local UNIQUE=true
+    
+    # 检查文件是否存在，如果不存在则创建它
+    if [ ! -f "$FILE_PATH" ]; then
+        touch "$FILE_PATH"
+    fi
+    
+    # 逐行读取文件内容
+    while IFS= read -r line; do
+        # 检查行中是否包含指定字符串
+        if [[ "$line" =~ "$STRING" ]]; then  # 修改此处，添加双引号
+            # 如果字符串前面没有 # 或者 # 和字符串之间没有其他字符
             if ! [[ "$line" =~ ^[[:space:]]*# ]]; then
-                echo '' >> ~/.bash_profile # 写入之前，先进行提行
-                echo "$line" >> ~/.bash_profile
-                print "添加到 ~/.bash_profile ：" "$line"
-            else
-                print "不添加到 ~/.bash_profile ：" "$line"
+                UNIQUE=false
+                break
             fi
-        else
-            echo '' >> ~/.bash_profile # 写入之前，先进行提行
-            echo "$line" >> ~/.bash_profile
-            print "添加到 ~/.bash_profile ：" "$line"
         fi
+    done < "$FILE_PATH"
+    
+    # 如果文件中没有符合条件的字符串，则写入字符串
+    if $UNIQUE; then
+        echo "$STRING" >> "$FILE_PATH"
+        echo "字符串 '$STRING' 已添加到文件 $FILE_PATH"
     else
-        print "~/.bash_profile 中已存在" "$line"
+        echo "文件 $FILE_PATH 已经包含字符串 '$STRING'"
     fi
 }
-# 检查并添加行到 ~/.zshrc
-add_line_if_not_exists_zshrc() {
-    local line=$1
-    if ! grep -qF "$line" source ~/.zshrc; then
-        # 如果行中包含目标字符串 "RRR"
-        if [[ "$line" =~ RRR ]]; then
-            # 如果 "RRR" 前面没有 # 或者 # 和 "RRR" 之间没有其他字符，则进行添加
-            if ! [[ "$line" =~ ^[[:space:]]*# ]]; then
-                echo '' >> ~/.zshrc # 写入之前，先进行提行
-                echo "$line" >> source ~/.zshrc
-                print "添加到 ~/.zshrc ：" "$line"
-            else
-                print "不添加到 ~/.zshrc ：" "$line"
-            fi
-        else
-            echo '' >> ~/.zshrc # 写入之前，先进行提行
-            echo "$line" >> source ~/.zshrc
-            print "添加到 ~/.zshrc ：" "$line"
-        fi
-    else
-        print "~/.zshrc 中已存在" "$line"
-    fi
-}
+
 # 添加各行配置到 ~/.bash_profile
 # 配置FVM环境
-add_line_if_not_exists_bash_profile 'export PATH="$PATH":"$HOME/.pub-cache/bin"'
+add_line_if_not_exists "$HOME/.bash_profile" "export PATH="$PATH":"$HOME/.pub-cache/bin""
 # 配置VSCode环境
-add_line_if_not_exists_bash_profile 'export PATH="$PATH":/usr/local/bin'
-add_line_if_not_exists_bash_profile 'export PATH="$PATH":/usr/local/bin/code'
+add_line_if_not_exists "$HOME/.bash_profile" "export PATH="$PATH":/usr/local/bin"
+add_line_if_not_exists "$HOME/.bash_profile" "export PATH="$PATH":/usr/local/bin/code"
 
 # 添加 Android 环境变量配置
-add_line_if_not_exists_bash_profile 'export ANDROID_HOME=/Users/$(whoami)/Library/Android/sdk'
-add_line_if_not_exists_bash_profile 'export PATH=${PATH}:${ANDROID_HOME}/platform-tools'
-add_line_if_not_exists_bash_profile 'export PATH=${PATH}:${ANDROID_HOME}/cmdline-tools/latest/bin'
+add_line_if_not_exists "$HOME/.bash_profile" "export ANDROID_HOME=/Users/$(whoami)/Library/Android/sdk"
+add_line_if_not_exists "$HOME/.bash_profile" "export PATH=${PATH}:${ANDROID_HOME}/platform-tools"
+add_line_if_not_exists "$HOME/.bash_profile" "export PATH=${PATH}:${ANDROID_HOME}/cmdline-tools/latest/bin"
 
 # 添加 Flutter 环境变量配置
-add_line_if_not_exists_bash_profile 'export PATH="$PATH:`pwd`/flutter/bin"'
-add_line_if_not_exists_bash_profile '# 这里的路径即为Dart.Flutter.SDK名下的为bin目录（主要取决于你下载的SDK的绝对路径）'
-add_line_if_not_exists_bash_profile 'export PATH=/Users/$(whoami)/Documents/Github/Flutter.sdk/Flutter.sdk_last/bin:$PATH'
-add_line_if_not_exists_bash_profile '#【相关阅读：Flutter切换源】https://juejin.cn/post/7204285137047257148'
-add_line_if_not_exists_bash_profile '# 防止域名在中国大陆互联网环境下的被屏蔽'
-add_line_if_not_exists_bash_profile '# export PUB_HOSTED_URL=https://pub.flutter-io.cn # 告诉了 Dart.Flutter 和 Dart 的包管理器 pub 在执行 pub get 或 pub upgrade 命令时使用备用仓库而不是默认的官方仓库。'
-add_line_if_not_exists_bash_profile '# Flutter官方正版源（温馨提示：海外IP访问大陆源，不开VPN会拉取失败）'
-add_line_if_not_exists_bash_profile 'export PUB_HOSTED_URL=https://pub.dartlang.org'
-add_line_if_not_exists_bash_profile '# FLUTTER_STORAGE_BASE_URL 告诉了 Dart.Flutter SDK 在需要下载二进制文件或工具时从备用存储库获取，而不是从默认的 Google 存储库获取。'
-add_line_if_not_exists_bash_profile '# export FLUTTER_STORAGE_BASE_URL=https://storage.flutter-io.cn # Flutter中国（七牛云）'
-add_line_if_not_exists_bash_profile 'export FLUTTER_STORAGE_BASE_URL=https://storage.googleapis.com # Flutter官方的 Google Cloud 存储库地址'
+add_line_if_not_exists "$HOME/.bash_profile" "export PATH="$PATH:`pwd`/flutter/bin""
+add_line_if_not_exists "$HOME/.bash_profile" "# 这里的路径即为Dart.Flutter.SDK名下的为bin目录（主要取决于你下载的SDK的绝对路径）"
+add_line_if_not_exists "$HOME/.bash_profile" "export PATH=/Users/$(whoami)/Documents/Github/Flutter.sdk/Flutter.sdk_last/bin:$PATH"
+add_line_if_not_exists "$HOME/.bash_profile" "#【相关阅读：Flutter切换源】https://juejin.cn/post/7204285137047257148"
+add_line_if_not_exists "$HOME/.bash_profile" "# 防止域名在中国大陆互联网环境下的被屏蔽"
+add_line_if_not_exists "$HOME/.bash_profile" "# export PUB_HOSTED_URL=https://pub.flutter-io.cn # 告诉了 Dart.Flutter 和 Dart 的包管理器 pub 在执行 pub get 或 pub upgrade 命令时使用备用仓库而不是默认的官方仓库。"
+add_line_if_not_exists "$HOME/.bash_profile" "# Flutter官方正版源（温馨提示：海外IP访问大陆源，不开VPN会拉取失败）"
+add_line_if_not_exists "$HOME/.bash_profile" "export PUB_HOSTED_URL=https://pub.dartlang.org"
+add_line_if_not_exists "$HOME/.bash_profile" "# FLUTTER_STORAGE_BASE_URL 告诉了 Dart.Flutter SDK 在需要下载二进制文件或工具时从备用存储库获取，而不是从默认的 Google 存储库获取。"
+add_line_if_not_exists "$HOME/.bash_profile" "# export FLUTTER_STORAGE_BASE_URL=https://storage.flutter-io.cn # Flutter中国（七牛云）"
+add_line_if_not_exists "$HOME/.bash_profile" "export FLUTTER_STORAGE_BASE_URL=https://storage.googleapis.com # Flutter官方的 Google Cloud 存储库地址"
 # 配置终端打开的路径
-add_line_if_not_exists_bash_profile 'cd ./Desktop'
+add_line_if_not_exists "$HOME/.bash_profile" "cd ./Desktop"
 
 # 检查并添加 # source ~/.bash_profile
 if ! grep -qF '#source ~/.bash_profile' ~/.bash_profile; then
