@@ -10,7 +10,9 @@ if [ -f Podfile.lock ]; then
     rm Podfile.lock
 fi
 
+# 清除本地缓存的所有 Pod
 pod cache clean --all
-pod install --repo-update
+# 只更新本地库
 pod repo update
+# 安装库到项目
 pod install
