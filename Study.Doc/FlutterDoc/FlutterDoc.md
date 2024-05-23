@@ -208,6 +208,42 @@
    }
    ```
 
+## ***Dart.Lambda表达式(箭头函数)***
+
+* ```dart
+  List<CurrencyBean> findCommonData(List<CurrencyBean> currencyList, List<CoinBean> availableList) {
+    return currencyList
+        .where((currency) =>
+            availableList.any((availableCurrency) => currency.cur == availableCurrency.currencyId))
+        .toList();
+  }
+  ```
+
+  * 方法名：`findCommonData`
+
+  * 方法入参列表：`(List<CurrencyBean> currencyList, List<CoinBean> availableList)`
+
+    * 入参1：`List<CurrencyBean> currencyList`，参数名是`currencyList`，参数类型是`List`，这个`List`里面装的元素类型是`CurrencyBean`
+    * 入参2：`List<CoinBean> availableList`，参数名是`availableList`，参数类型是`List`，这个`List`里面装的元素类型是`CoinBean`
+
+  * 方法返回值：`List<CurrencyBean>`。返回值类型是List，List里面的元素是CurrencyBean类型
+
+  * 条件函数：将满足 `currency.cur == availableCurrency.currencyId` 的元素进行返回
+
+  * `toList()`：返回的元素形成List（List里面的元素是CurrencyBean类型）对外输出
+
+  * **`currency`是一个迭代器中的元素，它代表了 `currencyList` 中的每个 `CurrencyBean` 对象**
+
+  * ❤️这段方法都是意思是：对入参1的引用<font color=red>**currencyList**</font>：`List<CurrencyBean> currencyList`作为目标进行轮询操作（挨个取出里面`CurrencyBean`类型的元素对象，命名为`currency`）；对于入参2：`List<CoinBean> availableList`里面的每一个（any）元素引用<font color=red>**availableCurrency**</font>，将满足条件<font color=red>**currencyList**</font>.**cur** == <font color=red>**availableCurrency**</font>.**currencyId**❤️
+
+  * `where`方法定义在`abstract class Iterable<E>`。`Iterable`是迭代器接口，**接口不定义具体实现（在外部具体调用的时候实现，因为不知道具体的条件过滤方法）**
+
+  * ```dart
+    abstract class List<E> implements EfficientLengthIterable<E> 
+    ```
+
+  * `currencyList`之所以能够调用`where`方法，是因为 `List<CurrencyBean> currencyList` ， `currencyList`的类型是`List`
+
 ## ***Dart.factory***
 
 *根据传入的类型参数来创建不同的对象。*
@@ -252,6 +288,42 @@ void main() {
   cat.makeSound(); // 输出：喵喵喵
 }
 ```
+
+## ***Dart.Function***
+
+* `Function`是一个类，而不是系统级别的关键字；
+
+* `Function`类是一个抽象类，用于表示Dart中的函数类型；
+
+* `Function`类是一个特殊的类，属于内置类，不像普通的 Dart 类那样可以被直接查看源代码
+
+* 但是，可以通过 Dart API 文档来查看关于`Function`类的信息
+
+* ```dart
+  import 'dart:developer';
+  
+  typedef MyBlock<T, R> = R Function(T);
+  
+  // 一个接受整数并返回整数的函数
+  int addOne(int x) {
+    return x + 1;
+  }
+  
+  // 一个接受字符串并返回其长度的函数
+  int stringLength(String s) {
+    return s.length;
+  }
+  
+  void main() {
+    // 使用 MyBlock<int, int> 类型的函数
+    MyBlock<int, int> increment = addOne;
+    log(increment(5).toString()); // 输出: 6
+    
+    // 使用 MyBlock<String, int> 类型的函数
+    MyBlock<String, int> lengthGetter = stringLength;
+    log(lengthGetter("Hello").toString()); // 输出: 5
+  }
+  ```
 
 ## ***Dart.方法的定义（写法）***
 
