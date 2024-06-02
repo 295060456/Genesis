@@ -25,5 +25,7 @@ fi
 pod cache clean --all
 # 只更新本地库
 pod repo update
+# 预先下载和缓存 iOS 构建所需的工具和依赖项
+flutter precache --ios
 # 安装库到项目
 pod install
