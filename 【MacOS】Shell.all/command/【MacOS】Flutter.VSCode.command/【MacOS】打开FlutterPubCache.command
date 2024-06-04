@@ -1,3 +1,3 @@
 #! /bin/sh
 
-open /Users/jobs/.pub-cache
+open $HOME/.pub-cache
