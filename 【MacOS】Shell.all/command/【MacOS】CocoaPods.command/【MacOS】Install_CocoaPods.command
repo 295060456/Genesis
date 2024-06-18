@@ -587,6 +587,15 @@ check_and_setup_cocoapods() {
     _JobsPrint "检查 CocoaPods 的安装是否成功..."
     gem which cocoapods
     pod search Masonry
+    
+    # 解决pod 命令只在特定的 Ruby 版本下可用
+    # 设置 Ruby 版本为当前正在使用的版本
+    rbenv global $(rbenv version-name)
+    # 重新编译 rbenv
+    rbenv rehash
+    # 检查 pod 命令是否可用
+    pod --version
+
 }
 # 主流程
 prepare_environment # 准备前置环境
