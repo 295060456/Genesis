@@ -90,31 +90,45 @@ check_xcode_and_tools() {
     fi
     _JobsPrint "🍺🍺🍺 Xcode 和 Xcode Command Line Tools 均已安装。"
 }
+# 检查并安装/更新 fzf
+check_and_update_fzf() {
+    if ! command -v fzf &> /dev/null
+    then
+        print_message "fzf没有安装，正在安装到最新版本"
+        brew install fzf
+    else
+        print_message "fzf 已被安装，正在检查更新..."
+        brew update fzf
+        # 有更新才更新
+        outdated_packages=$(brew outdated fzf)
+        if [ -n "$outdated_packages" ]; then
+            print_message "升级 fzf..."
+            brew upgrade fzf
+        else
+            print_message "fzf 已经是最新版本"
+        fi
+    fi
+}
 # 安装 Homebrew
 install_homebrew() {
     local choice
-    while true; do
-        read "choice?请选择安装方式：1. 自定义脚本安装（可能不受官方支持） 2. 官方脚本安装（推荐）: "
-        case $choice in
-        1)
-            _JobsPrint "正在使用自定义脚本安装 Homebrew..."
-            open https://gitee.com/ineo6/homebrew-install/
-            /bin/bash -c "$(curl -fsSL https://gitee.com/ineo6/homebrew-install/raw/master/install.sh)"
-            ;;
-        2)
-            _JobsPrint "正在使用官方脚本安装 Homebrew..."
-            open https://brew.sh/
-            /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-            ;;
-        *)
-            _JobsPrint "无效的选项，请输入 1 或 2。"
-            ;;
-        esac
-        # 如果用户提供了有效的选项，则退出循环
-        if [[ $choice == "1" || $choice == "2" ]]; then
-            break
-        fi
-    done
+    choice=$(printf "1. 自定义脚本安装（可能不受官方支持）\n2. 官方脚本安装（推荐）" | fzf --prompt "请选择安装方式：")
+    case $choice in
+    "1. 自定义脚本安装（可能不受官方支持）")
+        _JobsPrint "正在使用自定义脚本安装 Homebrew..."
+        open https://gitee.com/ineo6/homebrew-install/
+        /bin/bash -c "$(curl -fsSL https://gitee.com/ineo6/homebrew-install/raw/master/install.sh)"
+        ;;
+    "2. 官方脚本安装（推荐）")
+        _JobsPrint "正在使用官方脚本安装 Homebrew..."
+        open https://brew.sh/
+        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+        ;;
+    *)
+        _JobsPrint "无效的选项，请重新选择。"
+        install_homebrew
+        ;;
+    esac
 }
 # 检查并安装 Homebrew
 check_homebrew() {
@@ -149,7 +163,6 @@ check_and_install_zsh() {
         _JobsPrint "zsh 已经安装，不需要执行任何操作。"
     else
         _JobsPrint "zsh 未安装，正在通过 Homebrew 安装 zsh..."
-        # 检查并安装 Homebrew
         check_homebrew
         brew install zsh
     fi
@@ -159,7 +172,6 @@ _brewRuby(){
     add_line_if_not_exists_bash_profile 'export PATH="/usr/local/opt/ruby/bin:$PATH"'
     add_line_if_not_exists_bashrc 'export PATH="/usr/local/opt/ruby/bin:$PATH"'
     add_line_if_not_exists_zshrc 'export PATH="/usr/local/opt/ruby/bin:$PATH"'
-    # 初始化 rbenv
     echo 'eval "$(rbenv init -)"' >> ~/.bashrc
     echo 'eval "$(rbenv init -)"' >> ~/.zshrc
     echo 'eval "$(rbenv init -)"' >> ~/.bash_profile
@@ -179,7 +191,6 @@ _rbenRuby(){
     add_line_if_not_exists_bash_profile 'export PATH="$HOME/.rbenv/bin:$PATH"'
     add_line_if_not_exists_bashrc 'export PATH="$HOME/.rbenv/bin:$PATH"'
     add_line_if_not_exists_zshrc 'export PATH="$HOME/.rbenv/bin:$PATH"'
-    # 初始化 rbenv
     echo 'eval "$(rbenv init -)"' >> ~/.bashrc
     echo 'eval "$(rbenv init -)"' >> ~/.zshrc
     echo 'eval "$(rbenv init -)"' >> ~/.bash_profile
@@ -200,9 +211,7 @@ install_ruby_build() {
 check_Rbenv() {
     if ! command -v rbenv &> /dev/null; then
         _JobsPrint "正在安装 Rbenv..."
-        # 下载 Rbenv
         git clone https://github.com/rbenv/rbenv.git ~/.rbenv
-        # Rbenv的配置
         _rbenRuby
         _JobsPrint "rbenv 安装完成."
         install_ruby_build
@@ -233,21 +242,17 @@ check_rbenv_version(){
 check_homebrew_version(){
     brew info ruby
 }
-# ❤️ Rbenv 是一个 Ruby 版本管理工具，它允许你在同一台机器上安装和管理多个 Ruby 版本 ❤️
-# ❤️ 这在开发环境中非常有用，因为不同的项目可能需要不同版本的 Ruby 运行环境 ❤️
+
 install_ruby_byRbenv(){
     _JobsPrint "打印可用的 Ruby 版本列表："
     rbenv install --list | grep -v -e "^[[:space:]]*$"
-    # 提示用户输入所需的 Ruby 版本
     read "version?请输入要安装的 Ruby 版本号，或者按回车键安装当前最新版本（未输入版本号，则安装当前最新版本）: "
-    # 如果用户未输入版本号，则安装最新版本
     if [ -z "$version" ]; then
         _JobsPrint "正在安装最新版本的 Ruby..."
         latest_version=$(rbenv install --list | grep -v -e "^[[:space:]]*$" | grep -v -e "-" | tail -1)
         rbenv install $latest_version
         rbenv local $latest_version
     else
-        # 检查用户输入的版本号是否存在
         if rbenv install --list | grep -q "$version"; then
             _JobsPrint "正在安装 Ruby $version..."
             rbenv install $version
@@ -257,13 +262,11 @@ install_ruby_byRbenv(){
             exit 1
         fi
     fi
-    # Rbenv的配置
     _rbenRuby
-    # 是为了确保 Rbenv 能够找到新安装的 Ruby 版本所对应的可执行文件。通常，这个命令在安装新的 Ruby 版本后会自动执行，但是如果遇到问题，可以手动执行一次。
     rbenv rehash
     check_rbenv_version
 }
-# 官方推荐安装的 Ruby 方式
+
 install_ruby_byRVM(){
     open https://get.rvm.io
     \curl -sSL https://get.rvm.io | bash -s stable --ruby
@@ -294,7 +297,6 @@ check_ruby_install_ByRbenv(){
 }
 
 check_ruby_install_ByRVM(){
-    # 检查当前Ruby环境是否是通过RVM官方推荐的方式安装的
     if [[ -e "$HOME/.rvm/scripts/rvm" ]]; then
         _JobsPrint "当前 Ruby 环境是通过RVM官方推荐的方式安装的"
         return 1
@@ -305,7 +307,6 @@ check_ruby_install_ByRVM(){
 }
 
 check_ruby_environment() {
-    # 检查当前Ruby环境是否是MacOS自带的
     if [[ $(which ruby) == "/usr/bin/ruby" ]]; then
         _JobsPrint "当前Ruby环境为MacOS自带的Ruby环境（阉割版）"
     else
@@ -318,9 +319,7 @@ check_ruby_environment() {
             uninstall_Ruby
         fi
     fi
-    # 提示用户选择安装方式
     setup_ruby_environment
-    # 检查当前Ruby环境是否是通过RVM官方推荐的方式安装的
     if [[ -e "$HOME/.rvm/scripts/rvm" ]]; then
         _JobsPrint "当前Ruby环境是通过RVM官方推荐的方式安装的"
     fi
@@ -336,32 +335,24 @@ check_ruby_environment() {
     rvm cleanup all
     _JobsPrint "RVM 环境清理完成。"
 }
-# 提示用户选择安装 Ruby 的方式
+
 setup_ruby_environment(){
-    _JobsPrint "请选择 Ruby 的安装方式："
-    _JobsPrint "1. 使用 Homebrew 安装"
-    _JobsPrint "2. 使用 rbenv 安装"
-    _JobsPrint "3. 使用 RVM 官方推荐的方式进行安装"
-    read "choice?请输入选项的数字进行安装 Ruby 环境: "
-    # 根据用户选择执行相应的安装函数
+    choice=$(printf "1. 使用 Homebrew 安装\n2. 使用 rbenv 安装\n3. 使用 RVM 官方推荐的方式进行安装" | fzf --prompt "请选择 Ruby 的安装方式：")
     case $choice in
-    1)
+    "1. 使用 Homebrew 安装")
         install_ruby_byBrew
         _JobsPrint "🍺🍺🍺 Homebrew.Ruby安装成功"
-        # 检查当前Ruby环境是否是通过 HomeBrew 安装的
         check_ruby_install_ByHomeBrew
         ;;
-    2)
+    "2. 使用 rbenv 安装")
         install_ruby_byRbenv
         _JobsPrint "🍺🍺🍺 Rbenv.Ruby安装成功"
-        # 检查当前Ruby环境是否是通过 Rbenv 安装的
         check_ruby_install_ByRbenv
         ;;
-    3)
+    "3. 使用 RVM 官方推荐的方式进行安装")
         install_ruby_byRVM
         _JobsPrint "🍺🍺🍺 RVM.Ruby安装成功"
         check_ruby_install_ByRVM
-        # 使用 rvm get stable --auto-dotfiles 修复 PATH 设置
         if [[ -e "$HOME/.rvm/scripts/rvm" ]]; then
             _JobsPrint "正在使用 rvm get stable --auto-dotfiles 修复 PATH 设置..."
             rvm get stable --auto-dotfiles
@@ -378,33 +369,26 @@ remove_ruby_environment() {
     local version=$1
     _JobsPrint "开始删除 Ruby 环境：$version"
 
-    # 删除 Homebrew 相关的 Ruby 环境
     if check_ruby_install_ByHomeBrew; then
         brew uninstall --force ruby 2>/dev/null || true
-        # 清理 brew 相关配置文件中与 RVM 相关的行
         sudo sed -i '' '/rvm/d' ~/.bash_profile ~/.bashrc ~/.zshrc 2>/dev/null || true
     fi
 
-    # 删除 Rbenv 相关的 Ruby 环境
     if check_ruby_install_ByRbenv; then
         sudo rbenv uninstall -f $version 2>/dev/null || true
     fi
 
-    # 删除 RVM 官方推荐安装的 Ruby 环境
     if check_ruby_install_ByRVM; then
-        # Uninstall RVM
         _JobsPrint "Uninstalling RVM..."
         rvm implode 2>/dev/null || true
         _JobsPrint "Removing any remaining RVM-related directories..."
         rm -rf ~/.rvm 2>/dev/null || true
-        # If you want to remove specific Ruby versions installed by RVM, you can add those commands here
-        # Example: rvm remove ruby_version
         _JobsPrint "Uninstallation complete."
     fi
 
     _JobsPrint "Ruby 环境 $version 删除完成"
 }
-# 删除所有已安装的 Ruby 环境
+
 remove_all_ruby_environments() {
     _JobsPrint "开始删除所有已安装的 Ruby 环境"
     for version in $(rbenv versions --bare); do
@@ -414,7 +398,6 @@ remove_all_ruby_environments() {
 }
 
 uninstall_Ruby(){
-    # 询问用户是否删除所有已安装的 Ruby 环境
     read "choice?是否删除所有已安装的 Ruby 环境？(y/n): "
     case $choice in
         [Yy]* )
@@ -428,12 +411,12 @@ uninstall_Ruby(){
             ;;
     esac
 }
+
 # 检查当前 Ruby 环境是否是通过 Rbenv 安装的
 check_rbenv_installed_ruby() {
     local version
     local rbenv_version
 
-    # 使用命令替换操作符获取 Ruby 版本号
     version=$(ruby -v 2>/dev/null | awk '{print $2}' || true)
     rbenv_version=$(rbenv version 2>/dev/null | awk '{print $1}' || true)
 
@@ -501,19 +484,12 @@ check_and_setup_gem() {
     _JobsPrint "所有 Gem 扩展已重建。"
 
     _JobsPrint "使用全局 gemset..."
-    # RVM 允许你为不同的项目创建和使用独立的 gemset。
-    # 每个 gemset 都是一个独立的环境，包含一组 Gem 包。
-    # global gemset 是一个特殊的 gemset，它的 Gem 包可以在所有其他 gemset 中共享。
     rvm gemset use global
 
     _JobsPrint "安装 bundler..."
-    # Bundler 是一个用于管理 Ruby 项目依赖关系的工具。
-    # 它会根据项目中的 Gemfile 安装、更新和管理项目所需的 Gem 包。
     gem install bundler
 
     _JobsPrint "运行 bundle install..."
-    # Gemfile 文件列出了项目所需的所有 Gem 包及其版本。
-    # bundle install 命令会读取 Gemfile，然后下载并安装这些依赖。
     bundle install
 
     local_ip=$(curl -s https://api.ipify.org)
@@ -553,7 +529,6 @@ remove_cocoapods() {
 
     if [[ $sure == "y" ]]; then
         _JobsPrint "开始卸载 CocoaPods"
-        # 使用正则表达式提取 gem list --local | grep cocoapods 输出的模块名
         for element in $(gem list --local | grep cocoapods | cut -d" " -f1)
         do
             _JobsPrint "正在卸载 CocoaPods 子模块：$element ......"
@@ -571,24 +546,27 @@ update_cocoapods() {
 }
 # 安装 CocoaPods
 install_cocoapods() {
-    # 询问用户是安装稳定版还是安装预览版
-    read "install_stable?是否安装稳定版 CocoaPods? (输入回车键安装稳定版，输入任意字符安装预览版): "
-    if [[ -z "$install_stable" ]]; then
+    choice=$(printf "1. 安装稳定版 CocoaPods\n2. 安装预览版 CocoaPods" | fzf --prompt "请选择安装方式：")
+    case $choice in
+    "1. 安装稳定版 CocoaPods")
         _JobsPrint "正在安装稳定版 CocoaPods..."
         sudo gem install cocoapods
-    else
+        ;;
+    "2. 安装预览版 CocoaPods")
         _JobsPrint "正在安装预览版 CocoaPods..."
         sudo gem install cocoapods --pre
-    fi
-    # 安装 cocoapods-deintegrate 和其他必要的 gem：
+        ;;
+    *)
+        _JobsPrint "无效的选项，请重新选择。"
+        install_cocoapods
+        ;;
+    esac
     gem install cocoapods-deintegrate cocoapods-downloader cocoapods-trunk cocoapods-try
     update_cocoapods
-    # 清理 CocoaPods 缓存
     pod cache clean --all
 }
 # 检查并安装 CocoaPods
 check_and_setup_cocoapods() {
-    # 检查用户 IP 是否在中国大陆境内
     local_ip=$(curl -s https://api.ipify.org)
     china_ip=$(curl -s https://ip.ruby-china.com/ip)
     if [[ "$local_ip" == "$china_ip" ]]; then
@@ -599,7 +577,6 @@ check_and_setup_cocoapods() {
     else
         _JobsPrint "本地当前的 IP 不在中国大陆境内，不需要更换 CocoaPods 镜像."
     fi
-    # 检查是否已经安装 CocoaPods
     if command -v pod &> /dev/null; then
         remove_cocoapods
     else
@@ -607,18 +584,18 @@ check_and_setup_cocoapods() {
     fi
     _JobsPrint "开始安装 CocoaPods..."
     install_cocoapods
-    # 检查 CocoaPods 的安装是否成功
     _JobsPrint "检查 CocoaPods 的安装是否成功..."
     gem which cocoapods
     pod search Masonry
 }
 # 主流程
-prepare_environment
-check_xcode_and_tools
-check_homebrew
-check_and_install_zsh
-check_Rbenv
+prepare_environment # 准备前置环境
+check_xcode_and_tools # 检查 Xcode 和 Xcode Command Line Tools
+check_and_update_fzf # 检查并安装/更新 fzf
+check_homebrew # 检查并安装 Homebrew
+check_and_install_zsh # 检查并安装 zsh
+check_Rbenv # 检查并安装 Rbenv
 check_ruby_environment
-fix_rvm_path
-check_and_setup_gem
-check_and_setup_cocoapods
+fix_rvm_path # 检查并修复 RVM 路径
+check_and_setup_gem # 检查并安装 Gem
+check_and_setup_cocoapods # 检查并安装 CocoaPods

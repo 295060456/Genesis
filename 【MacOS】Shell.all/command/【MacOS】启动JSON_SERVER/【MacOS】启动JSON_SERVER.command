@@ -24,14 +24,12 @@ print_message() {
     message=$1
     echo "\033[31m$message\033[0m"  # 红色输出
 }
-
 # 获取当前脚本文件的目录
 get_current_directory() {
     current_directory=$(dirname "$(readlink -f "$0")")
     print_message "当前路径为: $current_directory"
     cd "$current_directory"
 }
-
 # 检查并安装/更新 Homebrew
 check_and_update_brew() {
     if ! command -v brew &> /dev/null
@@ -51,7 +49,6 @@ check_and_update_brew() {
         fi
     fi
 }
-
 # 检查并安装/更新 npm
 install_npm_homebrew() {
     print_message "正在通过 Homebrew 安装 npm..."
@@ -91,7 +88,6 @@ check_and_install_npm() {
         fi
     done
 }
-
 # 检查并安装/更新 json-server
 check_and_update_json_server() {
     if ! npm list -g json-server &> /dev/null
@@ -109,7 +105,6 @@ check_and_update_json_server() {
         fi
     fi
 }
-
 # 检查并安装/更新 fzf
 check_and_update_fzf() {
     if ! command -v fzf &> /dev/null
@@ -129,7 +124,6 @@ check_and_update_fzf() {
         fi
     fi
 }
-
 # 列出当前目录下的所有后缀名为 json 的文件，并让用户选择
 select_json_file() {
     json_files=($(ls *.json 2> /dev/null))
@@ -146,7 +140,6 @@ select_json_file() {
         print_message "未选择任何文件"
     fi
 }
-
 # 主函数，调用其他函数
 main() {
     get_current_directory
@@ -166,6 +159,5 @@ main() {
     print_message "关闭这个窗口，服务器结束"
     open http://localhost:3000/
 }
-
 # 调用主函数
 main
