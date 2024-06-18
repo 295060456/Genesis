@@ -1,9 +1,14 @@
-#! /bin/sh
+#! /bin/zsh
 open ~/.bash_profile
 open ~/.bashrc
 open ~/.zshrc
 
-# ~/.bash_profile、
+source ~/.bash_profile
+source ~/.bashrc
+source ~/.zshrc
+source $ZSH/oh-my-zsh.sh
+
+# ~/.bash_profile
 # ~/.bashrc
 # ~/.zshrc 是不同的 shell 配置文件，每个文件的优先级和作用取决于你使用的 shell 类型以及你在启动 shell 时的方式
 # 以下是对它们的优先级和作用的详细说明：
