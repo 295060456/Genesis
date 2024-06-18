@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/zsh
 
 # 定义函数，参数为文件路径和要检查的字符串
 add_line_if_not_exists() {
