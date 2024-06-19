@@ -73,6 +73,10 @@ prepare_environment() {
     sudo spctl --master-disable
     # 检查并安装 Oh.My.Zsh
     check_OhMyZsh
+    # 安装 Rosetta 2:在 Apple Silicon 上安装和运行某些工具时，可能需要使用 Rosetta 2 来确保兼容性
+    softwareupdate --install-rosetta
+    # 确认 Rosetta 2 安装成功
+    /usr/sbin/softwareupdate --install-rosetta --agree-to-license
 }
 # 检查 Xcode 和 Xcode Command Line Tools
 check_xcode_and_tools() {
@@ -94,18 +98,18 @@ check_xcode_and_tools() {
 check_and_update_fzf() {
     if ! command -v fzf &> /dev/null
     then
-        print_message "fzf没有安装，正在安装到最新版本"
+        _JobsPrint "fzf没有安装，正在安装到最新版本"
         brew install fzf
     else
-        print_message "fzf 已被安装，正在检查更新..."
-        brew update fzf
+        _JobsPrint "fzf 已被安装，正在检查更新..."
+        brew upgrade fzf
         # 有更新才更新
         outdated_packages=$(brew outdated fzf)
         if [ -n "$outdated_packages" ]; then
-            print_message "升级 fzf..."
+            _JobsPrint "升级 fzf..."
             brew upgrade fzf
         else
-            print_message "fzf 已经是最新版本"
+            _JobsPrint "fzf 已经是最新版本"
         fi
     fi
 }
@@ -586,8 +590,6 @@ check_and_setup_cocoapods() {
     install_cocoapods
     _JobsPrint "检查 CocoaPods 的安装是否成功..."
     gem which cocoapods
-    pod search Masonry
-    
     # 解决pod 命令只在特定的 Ruby 版本下可用
     # 设置 Ruby 版本为当前正在使用的版本
     rbenv global $(rbenv version-name)
@@ -595,7 +597,7 @@ check_and_setup_cocoapods() {
     rbenv rehash
     # 检查 pod 命令是否可用
     pod --version
-
+    pod search Masonry
 }
 # 主流程
 prepare_environment # 准备前置环境
