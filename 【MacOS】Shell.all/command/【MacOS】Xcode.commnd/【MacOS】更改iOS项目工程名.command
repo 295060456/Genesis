@@ -13,12 +13,14 @@ JJ    JJ    oo    oo   bb      bb  SS      SS
 "
     _JobsPrint_Green "$logo"
 }
-
-# 全局变量声明
-typeset -g script_dir
-typeset -g default_old_project_name
 # 定义新的工程名变量
 NEW_PROJECT_NAME="Monkey"
+# 全局变量声明
+CURRENT_DIRECTORY=$(dirname "$(readlink -f "$0")") # 获取当前脚本文件的目录
+DESKTOP_PATH="$HOME/Desktop/$NEW_PROJECT_NAME" # 定义目标桌面路径
+typeset -g script_dir # /Users/user/Desktop/Monkey
+typeset -g default_old_project_name # JobsOCBaseConfig
+typeset -g script_path # 执行的脚本路径
 # 通用打印方法
 _JobsPrint() {
     local COLOR="$1"
@@ -40,6 +42,65 @@ self_intro() {
     _JobsPrint_Red "按回车键继续..."
     read
 }
+# 切换到脚本运行的当前目录
+set_and_cd_to_script_dir() {
+    cd "$CURRENT_DIRECTORY" || { _JobsPrint_Red "切换目录失败"; exit 1; }
+}
+# 定义获取脚本目录的方法
+get_script_dir() {
+    script_path="${(%):-%x}"
+    script_dir=$DESKTOP_PATH  # 将 script_dir 设置为桌面路径
+    _JobsPrint_Red "执行的脚本路径 = $script_path"
+    _JobsPrint_Red "当前脚本的执行目录：$script_dir"
+}
+# 设置 Git 配置
+setup_git() {
+    # 增加 Git 的缓冲区大小
+    git config --global http.postBuffer 524288000  # 设置缓冲区为500MB
+    # 将 http.maxRequestBuffer 设置为较高的值
+    # 目的是允许 Git 在通过 HTTP 与远程仓库通信时处理更大的请求。
+    # 这可以帮助防止例如 "RPC failed" 和 "fatal: early EOF" 这样的错误，特别是在处理大型仓库或文件时。适用于当前用户执行的所有 Git 操作。
+    git config --global http.maxRequestBuffer 1048576000  # 允许 Git 在通过 HTTP 与远程仓库通信时处理更大的请求
+}
+# HomeBrew 安装或升级 jq
+# jq 是一个轻量级且灵活的命令行 JSON 处理器，它允许你对 JSON 数据进行各种操作，如解析、过滤、映射和转换结构化数据
+install_or_upgrade_jq() {
+    # 检查 jq 是否已安装
+    if brew list jq &>/dev/null; then
+        _JobsPrint_Green "jq 已安装，检查是否有可用的升级..."
+        # 检查是否存在可用的升级
+        if brew outdated | grep jq &>/dev/null; then
+            _JobsPrint_Green "存在可用的升级，正在升级 jq..."
+            brew upgrade jq
+        else
+            _JobsPrint_Green "当前 jq 已是最新版本。"
+        fi
+    else
+        _JobsPrint_Red "jq 未安装，正在安装..."
+        brew install jq
+    fi
+}
+# 检查和设置镜像
+check_and_set_mirror() {
+    # 获取当前公网 IP 和地理位置信息
+    local IP_INFO=$(curl -s https://ipinfo.io)
+    local COUNTRY=$(echo $IP_INFO | jq -r '.country')
+    _JobsPrint_Green "您的 IP 地址位于: $COUNTRY"
+    # 判断当前是否在中国大陆
+    if [ "$COUNTRY" = "CN" ]; then
+        _JobsPrint_Red "检测到您当前在中国大陆。"
+        _JobsPrint_Red "请输入 '1' 切换到清华大学镜像，或直接回车使用默认镜像："
+        read user_choice
+        if [ "$user_choice" = "1" ]; then
+            _JobsPrint_Green "将使用清华大学镜像..."
+            add_line_if_not_exists "Podfile" "source 'https://mirrors.tuna.tsinghua.edu.cn/git/CocoaPods/Specs.git'"
+        else
+            _JobsPrint_Green "将使用默认镜像..."
+        fi
+    else
+        _JobsPrint_Green "您不在中国大陆，将使用默认镜像。"
+    fi
+}
 # 定义一个函数用于搜索和替换内容
 search_and_replace() {
     local file_path="$1"
@@ -57,25 +118,15 @@ search_and_replace() {
         _JobsPrint_Red "文件中没有找到 '$search_term'。"
     fi
 }
-# 在指定路径下搜索并替换文件内容
-process_file() {
-    local directory="$1"
-    local filename_pattern="$2"
-    local search_term="$3"
-    local replace_term="$4"
-
-    _JobsPrint_Green "directory = $directory"
-    _JobsPrint_Green "filename_pattern = $filename_pattern"
-    _JobsPrint_Green "search_term = $search_term"
-    _JobsPrint_Green "replace_term = $replace_term"
-
-    file_path=$(find "$directory" -type f -path "$directory/$filename_pattern")
-    if [[ -n "$file_path" ]]; then
-        _JobsPrint_Green "正在处理文件：$file_path"
-        search_and_replace "$file_path" "$search_term" "$replace_term"
-    else
-        _JobsPrint_Red "未找到符合条件的文件: $filename_pattern"
-    fi
+# 复制文件夹，排除.git目录，到桌面，并重命名为 $NEW_PROJECT_NAME
+copy_to_desk(){
+    # rsync 是一个非常流行的文件传输和同步工具，通常用于有效地复制和同步文件到本地目录或者通过网络到其他服务器。
+    # 它是许多 UNIX 和类 UNIX 系统（包括 Linux 和 macOS）中的标准工具之一。
+    # 在 macOS 上，rsync 通常预装在系统中。
+    # 可以通过打开终端并输入 rsync --version 来检查它是否已经安装以及其版本信息
+    rsync -av --exclude '.git' "$CURRENT_DIRECTORY/" "$DESKTOP_PATH/" --progress
+    _JobsPrint_Green "文件夹已成功复制到桌面并重命名为 $NEW_PROJECT_NAME "
+    cd "$DESKTOP_PATH" || { _JobsPrint_Red "切换目录失败"; exit 1; }
 }
 # 更新 Oh My Zsh
 update_OhMyZsh() {
@@ -210,12 +261,6 @@ check_and_install_zsh() {
         brew install zsh
     fi
 }
-# 定义获取脚本目录的方法
-get_script_dir() {
-    script_path="${(%):-%x}"
-    script_dir=$(cd "$(dirname "$script_path")"; pwd)
-    _JobsPrint_Red "当前脚本的执行目录：$script_dir"
-}
 # 定义提取文件名的方法
 extract_filename() {
     local filepath=$1
@@ -280,9 +325,34 @@ delete_xcworkspace() {
         _JobsPrint_Red "${default_old_project_name}.xcworkspace 文件不存在"
     fi
 }
+# 在指定路径下搜索并替换文件内容
+process_file() {
+    local directory="$1"
+    local filename_pattern="$2"
+    local search_term="$3"
+    local replace_term="$4"
+
+    _JobsPrint_Green "directory = $directory"
+    _JobsPrint_Green "filename_pattern = $filename_pattern"
+    _JobsPrint_Green "search_term = $search_term"
+    _JobsPrint_Green "replace_term = $replace_term"
+
+    file_path=$(find "$directory" -type f -path "$directory/$filename_pattern")
+    _JobsPrint_Green "file_path = $file_path" #
+    if [[ -n "$file_path" ]]; then
+        _JobsPrint_Green "正在处理文件：$file_path"
+        search_and_replace "$file_path" "$search_term" "$replace_term"
+    else
+        _JobsPrint_Red "未找到符合条件的文件: $filename_pattern"
+    fi
+}
 # 替换项目目录和文件名中的旧工程名
 replace_project_content() {
     _JobsPrint_Red "替换项目目录和文件名中的旧工程名..."
+    
+    _JobsPrint_Red "script_dir = $script_dir" # /Users/user/Desktop/Monkey
+    _JobsPrint_Red "NEW_PROJECT_NAME = $NEW_PROJECT_NAME" # Monkey
+    _JobsPrint_Red "default_old_project_name = $default_old_project_name" # JobsOCBaseConfig
 
     process_file "$script_dir" \
         "${NEW_PROJECT_NAME}Tests/${NEW_PROJECT_NAME}Tests.m" \
@@ -317,25 +387,27 @@ replace_podfile() {
 rename_file() {
     local old_path="$1"
     local new_path="$2"
-    _JobsPrint_Green "重命名前检查文件是否存在：$old_path"
-    
-    # 将路径进行编码转换
-#    old_path_encoded=$(iconv -f utf-8 -t utf-8-mac <<< "$old_path")
-#    new_path_encoded=$(iconv -f utf-8 -t utf-8-mac <<< "$new_path")
-    
-#    if [[ -f "$old_path_encoded" ]]; then
-#        mv "$old_path_encoded" "$new_path_encoded"
-#        _JobsPrint_Green "文件已重命名：$old_path -> $new_path"
-#    else
-#        _JobsPrint_Red "文件未找到：$old_path"
-#    fi
-
+    _JobsPrint_Green "尝试重命名文件：从 $old_path 到 $new_path"
     if [[ -f "$old_path" ]]; then
-        mv "$old_path" "$new_path"
-        _JobsPrint_Green "文件已重命名：$old_path -> $new_path"
+        echo "找到文件，准备重命名..."
+        if mv "$old_path" "$new_path"; then
+            _JobsPrint_Green "文件已成功重命名：$old_path -> $new_path"
+        else
+            _JobsPrint_Red "文件重命名失败：$old_path"
+        fi
     else
         _JobsPrint_Red "文件未找到：$old_path"
     fi
+}
+# 其他的一些自定义的，需要手动配置的
+others() {
+    ## 数据库
+    mv "$DESKTOP_PATH/$NEW_PROJECT_NAME/Others/系统创建/${default_old_project_name}.xcdatamodeld" \
+       "$DESKTOP_PATH/$NEW_PROJECT_NAME/Others/系统创建/${NEW_PROJECT_NAME}.xcdatamodeld"
+
+    ## pch文件
+    rename_file "$DESKTOP_PATH/$NEW_PROJECT_NAME/${default_old_project_name}PrefixHeader.pch" \
+                "$DESKTOP_PATH/$NEW_PROJECT_NAME/${NEW_PROJECT_NAME}PrefixHeader.pch"
 }
 # 重命名文件夹
 rename_folder() {
@@ -343,15 +415,18 @@ rename_folder() {
     local new_path="$2"
     _JobsPrint_Green "重命名前检查文件夹是否存在：$old_path"
     if [[ -d "$old_path" ]]; then
-        mv "$old_path" "$new_path"
-        _JobsPrint_Green "文件夹已重命名：$old_path -> $new_path"
+        if mv "$old_path" "$new_path"; then
+            _JobsPrint_Green "文件夹已重命名：$old_path -> $new_path"
+        else
+            _JobsPrint_Red "文件夹重命名失败：$old_path"
+        fi
     else
         _JobsPrint_Red "文件夹未找到：$old_path"
     fi
 }
 # 替换项目目录和文件名中的旧工程名
 replace_project_names() {
-    _JobsPrint_Red "替换项目目录和文件名中的旧工程名..."
+    _JobsPrint_Red "替换项目目录和文件名中的旧工程名..." #DESKTOP_PATH/
     rename_folder "$script_dir/${default_old_project_name}Tests" \
                   "$script_dir/${NEW_PROJECT_NAME}Tests"
     rename_file "$script_dir/${NEW_PROJECT_NAME}Tests/${default_old_project_name}Tests.m" \
@@ -407,15 +482,6 @@ rename_xcodeproj() {
         _JobsPrint_Red ".xcodeproj 文件不存在"
     fi
 }
-# 其他的一些自定义的，需要手动配置的
-others() {
-    ## 数据库
-    rename_file "$script_dir/$NEW_PROJECT_NAME/Others/系统创建/${default_old_project_name}.xcdatamodeld" \
-                "$script_dir/$NEW_PROJECT_NAME/Others/系统创建/${NEW_PROJECT_NAME}.xcdatamodeld"
-    ## pch文件
-    rename_file "$script_dir/${NEW_PROJECT_NAME}/${default_old_project_name}PrefixHeader.pch" \
-                "$script_dir/${NEW_PROJECT_NAME}/${NEW_PROJECT_NAME}PrefixHeader.pch"
-}
 # 重新安装 CocoaPods 依赖
 reinstall_pods() {
     _JobsPrint_Red "重新安装 CocoaPods 依赖..."
@@ -424,29 +490,33 @@ reinstall_pods() {
 }
 # 主流程
 main() {
-    jobs_logo # 版权所有
-    self_intro # 显示自诉信息并等待用户回车
+    jobs_logo # 打印 logo
+    self_intro # 显示自述信息并等待用户回车
     prepare_environment # 检查并准备环境
     get_script_dir # 获取脚本所在目录
+
+    copy_to_desk # 复制文件夹，排除.git目录，到桌面，并重命名为 $NEW_PROJECT_NAME
+
     get_project_names # 获取用户选择或确认项目名称
-    
     delete_pods # 删除 Pods 目录及其内容
     delete_podfile_lock # 删除 Podfile.lock 文件
     delete_xcworkspace # 删除 .xcworkspace 文件
     
-    replace_project_names # 处理文件夹名：JobsOCBaseConfigTests、JobsOCBaseConfigUITests、JobsOCBaseConfig
-    replace_project_content # 处理文件内容：JobsOCBaseConfigTests、JobsOCBaseConfigUITests、JobsOCBaseConfig
+    replace_project_names # 处理文件夹名
+    replace_project_content # 处理文件内容
     
     replace_podfile # 替换 Podfile 文件中的旧工程名
-    
-    replace_pbxproj # 处理文件内容 *.xcodeproj.project.pbxproj
-    rename_xcodeproj # 处理 *.xcodeproj 文件
+    replace_pbxproj # 处理 project.pbxproj 文件中的旧工程名
+    rename_xcodeproj # 处理 .xcodeproj 文件
 
-    replace_infoplist # 处理文件内容 Info.plist
+    replace_infoplist # 处理 Info.plist 文件中的旧工程名
     replace_xcscheme # 替换 .xcscheme 文件中的旧工程名
     process_symlinks # 处理符号链接（如果有）
 
     others # 其他的一些自定义的，需要手动配置的
+    setup_git # 设置 Git 配置
+    install_or_upgrade_jq # HomeBrew 安装或升级 jq
+    check_and_set_mirror # 检查和设置镜像
     reinstall_pods # 重新安装 CocoaPods 依赖
 
     _JobsPrint_Green "项目名称已成功从 $default_old_project_name 修改为 $new_project_name，并重新安装了 CocoaPods 依赖"
