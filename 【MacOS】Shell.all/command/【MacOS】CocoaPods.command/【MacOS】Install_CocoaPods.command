@@ -716,6 +716,27 @@ install_cocoapods() {
     update_cocoapods
     pod cache clean --all
 }
+# 检查和设置镜像
+check_and_set_mirror() {
+    # 获取当前公网 IP 和地理位置信息
+    local IP_INFO=$(curl -s https://ipinfo.io)
+    local COUNTRY=$(echo $IP_INFO | jq -r '.country')
+    _JobsPrint_Green "您的 IP 地址位于: $COUNTRY"
+    # 判断当前是否在中国大陆
+    if [ "$COUNTRY" = "CN" ]; then
+        _JobsPrint_Red "检测到您当前在中国大陆。"
+        _JobsPrint_Red "请输入 '1' 切换到清华大学镜像，或直接回车使用默认镜像："
+        read user_choice
+        if [ "$user_choice" = "1" ]; then
+            _JobsPrint_Green "将使用清华大学镜像..."
+            add_line_if_not_exists "Podfile" "source 'https://mirrors.tuna.tsinghua.edu.cn/git/CocoaPods/Specs.git'"
+        else
+            _JobsPrint_Green "将使用默认镜像..."
+        fi
+    else
+        _JobsPrint_Green "您不在中国大陆，将使用默认镜像。"
+    fi
+}
 # 检查并安装 CocoaPods
 check_and_setup_cocoapods() {
     local_ip=$(curl -s https://api.ipify.org)
@@ -763,4 +784,5 @@ check_and_update_libyaml # 检查并安装/更新 libyaml
 setup_ruby_environment # 安装Ruby环境
 fix_rvm_path # 检查并修复 RVM 路径
 check_and_setup_gem # 检查并安装 Gem
+check_and_set_mirror # 检查和设置镜像
 check_and_setup_cocoapods # 检查并安装 CocoaPods
