@@ -151,9 +151,9 @@ check_and_update_fzf() {
     # 检查fzf命令是否存在。输出被重定向到 /dev/null，因此不会在终端显示任何内容
     if ! command -v fzf &> /dev/null; then
         _JobsPrint_Red "fzf没有安装，正在安装到最新版本"
-        echo "选择安装方式："
-        echo "1) 通过 Homebrew 安装"
-        echo "2) 通过 Git 克隆安装"
+        _JobsPrint_Green "选择安装方式："
+        _JobsPrint_Green "1) 通过 Homebrew 安装"
+        _JobsPrint_Green "2) 通过 Git 克隆安装"
         read -p "请输入选项 (1 或 2): " choice
 
         case $choice in
@@ -213,10 +213,10 @@ install_homebrew_byFzf() {
 }
 # 键盘输入的方式安装 Homebrew
 install_homebrew_normal() {
-    echo "请选择安装方式："
-    echo "1. 自定义脚本安装（可能不受官方支持）"
-    echo "2. 官方脚本安装（推荐）"
-    echo -n "请输入选项（1或2，按回车默认选择2）: "
+    _JobsPrint_Green "请选择安装方式："
+    _JobsPrint_Green "1. 自定义脚本安装（可能不受官方支持）"
+    _JobsPrint_Green "2. 官方脚本安装（推荐）"
+    _JobsPrint_Green -n "请输入选项（1或2，按回车默认选择2）: "
     read choice
 
     # 如果没有输入任何内容，则默认设置为2
@@ -749,6 +749,7 @@ check_and_setup_cocoapods() {
     else
         _JobsPrint_Green "本地当前的 IP 不在中国大陆境内，不需要更换 CocoaPods 镜像."
     fi
+    # 输出被重定向到 /dev/null，因此不会在终端显示任何内容
     if command -v pod &> /dev/null; then
         remove_cocoapods
     else
