@@ -1,7 +1,3 @@
-# 如果 $HOME/.bash_profile 文件存在并且非空，那么就执行 source "$HOME/.bash_profile"，即加载该配置文件。
-# -s 选项用于检查文件是否存在且大小大于0。
-[[ -s "$HOME/.bash_profile" ]] && source "$HOME/.bash_profile"
-
 # 配置Homebrew环境
 export PATH="/opt/homebrew/bin:$PATH"
 
