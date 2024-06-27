@@ -30,11 +30,6 @@ _JobsPrint_Green() {
 _JobsPrint_Yellow() {
     _JobsPrint "\033[1;33m" "$1"
 }
-# 打印方法名称
-print_function_name() {
-    local FUNC_NAME="$1"
-    _JobsPrint_Yellow "正在执行: ${funcstack[1]}()"
-}
 # 打印 "Jobs" logo
 jobs_logo() {
     local border="=="
@@ -172,7 +167,7 @@ check_env(){
 }
 # 准备前置环境
 prepare_environment() {
-    print_function_name
+    _JobsPrint_Yellow "正在执行: ${funcstack[1]}()"
     check_env # 本机环境自检
     _JobsPrint_Green "\n先做一些准备工作..."
     # 显示Mac OS X上的隐藏文件和文件夹
@@ -209,7 +204,6 @@ prepare_environment() {
         add_line_if_not_exists ".zprofile" "$HOMEBREW_SHELLENV_ARM64" # 检查并添加行到 ./bash_profile
         eval "$HOMEBREW_SHELLENV_ARM64"
     }
-    _JobsPrint_Red "123"
     if command -v brew &> /dev/null; then
         _JobsPrint_Green "Homebrew 已经安装"
     else
@@ -219,7 +213,7 @@ prepare_environment() {
 }
 # 检查 Xcode 和 Xcode Command Line Tools
 check_xcode_and_tools() {
-    print_function_name
+    _JobsPrint_Yellow "正在执行: ${funcstack[1]}()"
     # 输出被重定向到 /dev/null，因此不会在终端显示任何内容
     if ! command -v xcodebuild &> /dev/null; then
         _JobsPrint_Red "Xcode 未安装，请安装后再运行此脚本。"
@@ -237,13 +231,13 @@ check_xcode_and_tools() {
 }
 # 非用Homebrew管理的方式安装fzf
 install_fzf(){
-    print_function_name
+    _JobsPrint_Yellow "正在执行: ${funcstack[1]}()"
     git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
     ~/.fzf/install
 }
 # 通过 Homebrew 检查并安装/更新 libyaml
 check_and_update_libyaml() {
-    print_function_name
+    _JobsPrint_Yellow "正在执行: ${funcstack[1]}()"
     # 命令检查 libyaml 是否已安装。输出被重定向到 /dev/null，因此不会在终端显示任何内容
     if brew list libyaml &> /dev/null; then
         _JobsPrint_Green "libyaml 已经安装"
@@ -261,7 +255,7 @@ check_and_update_libyaml() {
 }
 # 检查并安装/更新 fzf
 check_and_update_fzf() {
-    print_function_name
+    _JobsPrint_Yellow "正在执行: ${funcstack[1]}()"
     # 检查fzf命令是否存在。输出被重定向到 /dev/null，因此不会在终端显示任何内容
     if ! command -v fzf &> /dev/null; then
         _JobsPrint_Red "fzf没有安装，正在安装到最新版本"
@@ -306,7 +300,7 @@ check_and_update_fzf() {
 }
 # 卸载 Homebrew
 uninstall_homebrew() {
-    print_function_name
+    _JobsPrint_Yellow "正在执行: ${funcstack[1]}()"
     _JobsPrint_Green "检测 Homebrew 安装方式..."
     
     # 检查 Homebrew 是否安装
@@ -348,7 +342,7 @@ uninstall_homebrew() {
 }
 # 用fzf的方式安装 Homebrew。
 install_homebrew_byFzf() {
-    print_function_name
+    _JobsPrint_Yellow "正在执行: ${funcstack[1]}()"
     local choice
     choice=$(printf "1. 自定义脚本安装 Homebrew （可能不受官方支持）\n2. 官方脚本安装 Homebrew（推荐）" | fzf --prompt "请选择安装方式：")
     case $choice in
@@ -370,7 +364,7 @@ install_homebrew_byFzf() {
 }
 # 键盘输入的方式安装 Homebrew
 install_homebrew_normal() {
-    print_function_name
+    _JobsPrint_Yellow "正在执行: ${funcstack[1]}()"
     _JobsPrint_Green "请选择 Homebrew 安装方式："
     _JobsPrint_Green "1. 自定义脚本安装 Homebrew（可能不受官方支持）"
     _JobsPrint_Green "2. 官方脚本安装 Homebrew（推荐）"
@@ -409,7 +403,7 @@ install_homebrew_normal() {
 }
 # 检查并安装 Homebrew
 check_homebrew() {
-    print_function_name
+    _JobsPrint_Yellow "正在执行: ${funcstack[1]}()"
     # 输出被重定向到 /dev/null，因此不会在终端显示任何内容
     if ! command -v brew &> /dev/null; then
         _JobsPrint_Red "brew 未安装，开始安装..."
@@ -434,7 +428,7 @@ check_homebrew() {
 }
 # 检查并安装 zsh
 check_and_install_zsh() {
-    print_function_name
+    _JobsPrint_Yellow "正在执行: ${funcstack[1]}()"
     # 输出被重定向到 /dev/null，因此不会在终端显示任何内容
     if command -v zsh >/dev/null 2>&1; then
         _JobsPrint_Green "zsh 已经安装，不需要执行任何操作。"
@@ -446,7 +440,7 @@ check_and_install_zsh() {
 }
 # 配置 Home.Ruby 环境变量
 _brewRuby(){
-    print_function_name
+    _JobsPrint_Yellow "正在执行: ${funcstack[1]}()"
     # 使用全局变量更新 HomeBrew
     add_line_if_not_exists ".bash_profile" "$HOMEBREW_PATH" # 检查并添加行到 ./bash_profile
 #    add_line_if_not_exists ".bashrc" "$HOMEBREW_PATH" # 检查并添加行到 ./bashrc
@@ -458,7 +452,7 @@ _brewRuby(){
 }
 # 配置 Rbenv.Ruby 环境变量
 _rbenRuby(){
-    print_function_name
+    _JobsPrint_Yellow "正在执行: ${funcstack[1]}()"
     # 使用全局变量更新 RBenv：$RBENV_PATH
     add_line_if_not_exists ".bash_profile" "$RBENV_PATH" # 检查并添加行到 ./bash_profile
 #    add_line_if_not_exists ".bashrc" "$RBENV_PATH" # 检查并添加行到 ./bashrc
@@ -474,7 +468,7 @@ _rbenRuby(){
 }
 # 配置 Ruby.Gems 环境变量
 _rubyGems(){
-    print_function_name
+    _JobsPrint_Yellow "正在执行: ${funcstack[1]}()"
     # 使用全局变量更新 Gems
     add_line_if_not_exists ".bash_profile" "$RUBY_GEMS_PATH" # 检查并添加行到 ./bash_profile
 #    add_line_if_not_exists ".bashrc" "$RUBY_GEMS_PATH" # 检查并添加行到 ./bashrc
@@ -487,7 +481,7 @@ _rubyGems(){
 # 卸载安装 RVM
 # 安装/升级 ruby-build 插件
 install_ruby_build() {
-    print_function_name
+    _JobsPrint_Yellow "正在执行: ${funcstack[1]}()"
     local ruby_build_dir="$(rbenv root)"/plugins/ruby-build
     if [ ! -d "$ruby_build_dir" ]; then
         _JobsPrint_Green "正在安装 ruby-build 插件..."
@@ -500,7 +494,7 @@ install_ruby_build() {
 }
 # 定义一个通用的函数来处理操作结果
 handle_operation_result() {
-    print_function_name
+    _JobsPrint_Yellow "正在执行: ${funcstack[1]}()"
     if [ $1 -eq 0 ]; then
         _JobsPrint_Green "$2 完成."
         install_ruby_build # 安装/升级 ruby-build 插件
@@ -511,7 +505,7 @@ handle_operation_result() {
 }
 # 检查并安装 git.Rbenv.Ruby
 check_Rbenv() {
-    print_function_name
+    _JobsPrint_Yellow "正在执行: ${funcstack[1]}()"
     # 输出被重定向到 /dev/null，因此不会在终端显示任何内容
     if command -v rbenv &> /dev/null; then
         _JobsPrint_Green "检测到已安装 Rbenv，准备升级到最新版本..."
@@ -529,14 +523,14 @@ check_Rbenv() {
 }
 # 利用 Homebrew 安装 Ruby 环境
 install_ruby_byBrew(){
-    print_function_name
+    _JobsPrint_Yellow "正在执行: ${funcstack[1]}()"
     _JobsPrint_Green "利用 Homebrew 安装 Ruby环境（RVM）..."
     _framework_do "arch -arm64 brew install ruby" "brew install ruby"
     brew cleanup ruby
 }
 # 检测当前通过 Rbenv 安装的 Ruby 环境
 check_rbenv_version(){
-    print_function_name
+    _JobsPrint_Yellow "正在执行: ${funcstack[1]}()"
     _JobsPrint_Green '列出当前系统上安装的所有 Ruby 版本'
     rbenv versions
     _JobsPrint_Green '显示当前全局生效的 Ruby 版本'
@@ -544,7 +538,7 @@ check_rbenv_version(){
 }
 # 通过 Rbenv 的形式，安装 ruby 环境
 install_ruby_byRbenv(){
-    print_function_name
+    _JobsPrint_Yellow "正在执行: ${funcstack[1]}()"
     _JobsPrint_Green "打印可用的 Ruby 版本列表："
     # 用于列出所有可用的 Ruby 版本，同时过滤掉所有空白行
     rbenv install --list | grep -v -e "^[[:space:]]*$"
@@ -577,7 +571,7 @@ install_ruby_byRbenv(){
 }
 # 一键安装 Ruby 版本管理器 RVM（Ruby Version Manager）和最新稳定版的 Ruby
 install_ruby_byRVM(){
-    print_function_name
+    _JobsPrint_Yellow "正在执行: ${funcstack[1]}()"
     open https://get.rvm.io
     # 下载安装
     \curl -sSL https://get.rvm.io | bash -s stable --ruby
@@ -595,7 +589,7 @@ install_ruby_byRVM(){
 }
 # 如果当前 Ruby 环境是通过 HomeBrew 安装的，那么升级 HomeBrew.Ruby 到最新版，并清除下载
 check_ruby_install_ByHomeBrew(){
-    print_function_name
+    _JobsPrint_Yellow "正在执行: ${funcstack[1]}()"
     if brew list --formula | grep -q ruby; then
         _JobsPrint_Green "当前 Ruby 环境是通过 HomeBrew 安装的"
         _JobsPrint_Green "升级 HomeBrew.Ruby 到最新版..."
@@ -608,7 +602,7 @@ check_ruby_install_ByHomeBrew(){
 }
 # 检查当前 Ruby 环境是否是通过 Rbenv 安装的
 check_rbenv_installed_ruby() {
-    print_function_name
+    _JobsPrint_Yellow "正在执行: ${funcstack[1]}()"
     local version
     local rbenv_version
     # 输出被重定向到 /dev/null，因此不会在终端显示任何内容
@@ -629,19 +623,19 @@ check_rbenv_installed_ruby() {
 }
 # 检测当前 Ruby 环境是否是 MacOS 自带的
 check_ruby_install_ByMacOS(){
-    print_function_name "${FUNC_NAME}"
+    _JobsPrint_Yellow "正在执行: ${funcstack[1]}()" "${FUNC_NAME}"
     if echo "$ruby_paths" | grep -q "/usr/bin/ruby"; then
         _JobsPrint_Red "当前Ruby环境为MacOS自带的Ruby环境（阉割版）"
     fi
 }
 # 检测当前通过 HomeBrew 安装的 Ruby 环境
 check_homebrew_version(){
-    print_function_name
+    _JobsPrint_Yellow "正在执行: ${funcstack[1]}()"
     brew info ruby
 }
 # 检测当前 Ruby 环境是否通过 RVM 官方推荐的方式安装的
 check_ruby_install_ByRVM(){
-    print_function_name
+    _JobsPrint_Yellow "正在执行: ${funcstack[1]}()"
     # 在 Unix/Linux 系统中，命令的返回码（exit status）遵循这样的惯例：
     # 0 表示成功（true）
     #  0 表示失败（false）
@@ -654,7 +648,7 @@ check_ruby_install_ByRVM(){
 }
 # 检查并删除非系统 Ruby 环境
 check_and_remove_non_system_ruby() {
-    print_function_name
+    _JobsPrint_Yellow "正在执行: ${funcstack[1]}()"
     if ! echo "$ruby_paths" | grep -q "/usr/bin/ruby"; then
         read "confirm_delete?是否删除这些非系统 Ruby 环境？(按 Enter 键继续，输入任意字符删除并重新安装): "
         if [[ -n "$confirm_delete" ]]; then
@@ -665,7 +659,7 @@ check_and_remove_non_system_ruby() {
 }
 # 检查当前的Ruby环境
 check_ruby_environment() {
-    print_function_name
+    _JobsPrint_Yellow "正在执行: ${funcstack[1]}()"
     _JobsPrint_Green "查看本机的 Ruby 环境安装目录："
     which -a ruby
 
@@ -685,7 +679,7 @@ check_ruby_environment() {
 }
 # 安装 Ruby 环境（3种方式安装：Homebrew/Rbenv/RVM官方）
 setup_ruby_environment(){
-    print_function_name
+    _JobsPrint_Yellow "正在执行: ${funcstack[1]}()"
     # 在配置文件中同时配置 rbenv 和 rvm 的路径确实会产生冲突。
     # rbenv 和 rvm 都是用于管理 Ruby 版本的工具，但它们的工作方式不同，并且在系统路径和环境变量的配置上会互相干扰。
     choice=$(printf "1. 使用 Homebrew 安装\n2. 使用 rbenv 安装\n3. 使用 RVM 官方推荐的方式进行安装" | fzf --prompt "请选择 Ruby 的安装方式：")
@@ -714,7 +708,7 @@ setup_ruby_environment(){
 }
 # 删除指定版本的 Ruby 环境
 remove_ruby_environment() {
-    print_function_name
+    _JobsPrint_Yellow "正在执行: ${funcstack[1]}()"
     local version=$1
     _JobsPrint_Red "开始删除 Ruby 环境：$version"
     # 如果当前 Ruby 环境是通过 HomeBrew 安装的，那么升级 HomeBrew.Ruby 到最新版，并清除下载
@@ -742,7 +736,7 @@ remove_ruby_environment() {
 }
 # 遍历所有版本的 Ruby 环境，并进行卸载删除
 remove_all_ruby_environments() {
-    print_function_name
+    _JobsPrint_Yellow "正在执行: ${funcstack[1]}()"
     _JobsPrint_Red "开始删除所有已安装的 Ruby 环境"
     for version in $(rbenv versions --bare); do
         remove_ruby_environment $version # 删除指定版本的 Ruby 环境
@@ -751,7 +745,7 @@ remove_all_ruby_environments() {
 }
 # 卸载所有已安装的 Ruby 环境
 uninstall_Ruby(){
-    print_function_name
+    _JobsPrint_Yellow "正在执行: ${funcstack[1]}()"
     read "choice?是否卸载删除所有已安装的 Ruby 环境？(y/n): "
     case $choice in
         [Yy]* )
@@ -767,7 +761,7 @@ uninstall_Ruby(){
 }
 # 升级当前 Rbenv.Ruby 环境
 upgrade_current_rbenv_ruby() {
-    print_function_name
+    _JobsPrint_Yellow "正在执行: ${funcstack[1]}()"
     _JobsPrint_Green "开始升级当前 Ruby 环境"
     rbenv install --list \
   | grep -v -e "^[[:space:]]*$" \
@@ -778,7 +772,7 @@ upgrade_current_rbenv_ruby() {
 }
 # 检查并安装 Gem
 check_and_setup_gem() {
-    print_function_name
+    _JobsPrint_Yellow "正在执行: ${funcstack[1]}()"
     # 升级 Gem 以及 Gem 管理的相关软件包
     update_gem_and_packages() {
         _JobsPrint_Green "升级 Gem 到最新版本..."
@@ -835,7 +829,7 @@ check_and_setup_gem() {
 }
 # 卸载 CocoaPods
 remove_cocoapods() {
-    print_function_name
+    _JobsPrint_Yellow "正在执行: ${funcstack[1]}()"
     _JobsPrint_Green "查看本地安装过的 CocoaPods 相关内容："
     gem list --local | grep cocoapods
 
@@ -854,14 +848,14 @@ remove_cocoapods() {
 }
 # 更新 CocoaPods 本地库
 update_cocoapods() {
-    print_function_name
+    _JobsPrint_Yellow "正在执行: ${funcstack[1]}()"
     _JobsPrint_Green "更新 CocoaPods 本地库..."
     pod repo update
     _JobsPrint_Green "CocoaPods 本地库已更新."
 }
 # 安装 CocoaPods
 install_cocoapods() {
-    print_function_name
+    _JobsPrint_Yellow "正在执行: ${funcstack[1]}()"
     choice=$(printf "1. 安装稳定版 CocoaPods\n2. 安装预览版 CocoaPods" | fzf --prompt "请选择安装方式：")
     case $choice in
     "1. 安装稳定版 CocoaPods")
@@ -893,7 +887,7 @@ install_cocoapods() {
 }
 # 检查和设置 Gem/CocoaPods 镜像
 check_and_set_gem_cocoaPods_mirror() {
-    print_function_name
+    _JobsPrint_Yellow "正在执行: ${funcstack[1]}()"
     # 获取当前公网 IP 和地理位置信息
     local IP_INFO=$(curl -s https://ipinfo.io)
     local COUNTRY=$(echo $IP_INFO | jq -r '.country')
@@ -915,7 +909,7 @@ check_and_set_gem_cocoaPods_mirror() {
 }
 # 检查并安装 CocoaPods
 check_and_setup_cocoapods() {
-    print_function_name
+    _JobsPrint_Yellow "正在执行: ${funcstack[1]}()"
     local_ip=$(curl -s https://api.ipify.org)
     china_ip=$(curl -s https://ip.ruby-china.com/ip)
     if [[ "$local_ip" == "$china_ip" ]]; then
