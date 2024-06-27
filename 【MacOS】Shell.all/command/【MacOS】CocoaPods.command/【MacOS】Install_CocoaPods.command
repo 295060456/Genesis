@@ -98,13 +98,32 @@ prepare_environment() {
     # 检查并安装 Oh.My.Zsh
     check_OhMyZsh
     # 安装 Rosetta 2:在 Apple Silicon 上安装和运行某些工具时，可能需要使用 Rosetta 2 来确保兼容性
-    softwareupdate --install-rosetta
-    # 确认 Rosetta 2 安装成功
-    /usr/sbin/softwareupdate --install-rosetta --agree-to-license
-    # 增加 Git 的缓冲区大小：可以尝试增加 Git 的 HTTP 缓冲区大小，以防止在传输大对象时出现问题。
+    if [ "$(uname -m)" = "arm64" ]; then
+        softwareupdate --install-rosetta --agree-to-license
+    fi
+    # 增加 Git 的缓冲区大小：可以尝试增加 Git 的 HTTP 缓冲区大小，以防止在传输大对象时出现问题
     git config --global http.postBuffer 524288000  # 设置缓冲区为500MB
-    # 将 http.maxRequestBuffer 设置为较高的值的目的是允许 Git 在通过 HTTP 与远程仓库通信时处理更大的请求。这可以帮助防止例如 "RPC failed" 和 "fatal: early EOF" 这样的错误，特别是在处理大型仓库或文件时。适用于当前用户执行的所有 Git 操作。
-    git config --global http.maxRequestBuffer 1048576000
+    git config --global http.maxRequestBuffer 1048576000  # 设置缓冲区为1GB
+    # 检查并安装 Homebrew
+    if [ "$(uname -m)" = "arm64" ]; then
+        if ! command -v brew &> /dev/null; then
+            _JobsPrint_Red "Apple Silicon detected, installing Homebrew for ARM64"
+            /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+            echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> ~/.zprofile
+            eval "$(/opt/homebrew/bin/brew shellenv)"
+        else
+            _JobsPrint_Green "Homebrew is already installed"
+        fi
+    else
+        if ! command -v brew &> /dev/null; then
+            _JobsPrint_Red "Intel Mac detected, installing Homebrew for x86_64"
+            /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+            echo 'eval "$(/usr/local/bin/brew shellenv)"' >> ~/.zprofile
+            eval "$(/usr/local/bin/brew shellenv)"
+        else
+            _JobsPrint_Green "Homebrew is already installed"
+        fi
+    fi
 }
 # 检查 Xcode 和 Xcode Command Line Tools
 check_xcode_and_tools() {
@@ -132,19 +151,18 @@ install_fzf(){
 check_and_update_libyaml() {
     # 命令检查 libyaml 是否已安装。输出被重定向到 /dev/null，因此不会在终端显示任何内容
     if brew list libyaml &> /dev/null; then
-        echo "libyaml 已经安装"
+        _JobsPrint_Green "libyaml 已经安装"
     else
-        echo "libyaml 还没有安装。现在安装..."
-        # 尝试安装 libyaml
-        brew install libyaml
+        _JobsPrint_Green "libyaml 还没有安装。现在安装..."
+        check_homebrew # 检查并安装 Homebrew
+        brew install libyaml # 尝试安装 libyaml
         if [ $? -eq 0 ]; then
-            echo "libyaml 已经被成功安装"
+            _JobsPrint_Green "libyaml 已经被成功安装"
         else
-            echo "libyaml 安装失败"
+            _JobsPrint_Red "libyaml 安装失败"
         fi
     fi
     pkg-config --cflags --libs yaml-0.1
-
 }
 # 检查并安装/更新 fzf
 check_and_update_fzf() {
@@ -193,7 +211,7 @@ check_and_update_fzf() {
 # 用fzf的方式安装 Homebrew。
 install_homebrew_byFzf() {
     local choice
-    choice=$(printf "1. 自定义脚本安装（可能不受官方支持）\n2. 官方脚本安装（推荐）" | fzf --prompt "请选择安装方式：")
+    choice=$(printf "1. 自定义脚本安装 Homebrew （可能不受官方支持）\n2. 官方脚本安装 Homebrew（推荐）" | fzf --prompt "请选择安装方式：")
     case $choice in
     "1. 自定义脚本安装（可能不受官方支持）")
         _JobsPrint_Green "正在使用自定义脚本安装 Homebrew..."
@@ -213,10 +231,10 @@ install_homebrew_byFzf() {
 }
 # 键盘输入的方式安装 Homebrew
 install_homebrew_normal() {
-    _JobsPrint_Green "请选择安装方式："
-    _JobsPrint_Green "1. 自定义脚本安装（可能不受官方支持）"
-    _JobsPrint_Green "2. 官方脚本安装（推荐）"
-    _JobsPrint_Green -n "请输入选项（1或2，按回车默认选择2）: "
+    _JobsPrint_Green "请选择 Homebrew 安装方式："
+    _JobsPrint_Green "1. 自定义脚本安装 Homebrew（可能不受官方支持）"
+    _JobsPrint_Green "2. 官方脚本安装 Homebrew（推荐）"
+    _JobsPrint_Green "请输入选项（1或2，按回车默认选择2）: "
     read choice
 
     # 如果没有输入任何内容，则默认设置为2
@@ -288,39 +306,38 @@ check_and_install_zsh() {
 _brewRuby(){
     # 使用全局变量更新 HomeBrew
     add_line_if_not_exists ".bash_profile" "$HOMEBREW_PATH" # 检查并添加行到 ./bash_profile
-    add_line_if_not_exists ".bashrc" "$HOMEBREW_PATH" # 检查并添加行到 ./bashrc
-    add_line_if_not_exists ".zshrc" "$HOMEBREW_PATH" # 检查并添加行到 ./zshrc
+#    add_line_if_not_exists ".bashrc" "$HOMEBREW_PATH" # 检查并添加行到 ./bashrc
+#    add_line_if_not_exists ".zshrc" "$HOMEBREW_PATH" # 检查并添加行到 ./zshrc
     # 重新加载配置文件
-    source ~/.bashrc
-    source ~/.zshrc
     source ~/.bash_profile
+#    source ~/.bashrc
+#    source ~/.zshrc
 }
 # 配置 Rbenv.Ruby 环境变量
 _rbenRuby(){
-    # 使用全局变量更新 RBenv
+    # 使用全局变量更新 RBenv：$RBENV_PATH
     add_line_if_not_exists ".bash_profile" "$RBENV_PATH" # 检查并添加行到 ./bash_profile
-    add_line_if_not_exists ".bashrc" "$RBENV_PATH" # 检查并添加行到 ./bashrc
-    add_line_if_not_exists ".zshrc" "$RBENV_PATH" # 检查并添加行到 ./zshrc
-    
+#    add_line_if_not_exists ".bashrc" "$RBENV_PATH" # 检查并添加行到 ./bashrc
+#    add_line_if_not_exists ".zshrc" "$RBENV_PATH" # 检查并添加行到 ./zshrc
+    # 使用全局变量更新 RBenv：$RBENV_INIT
     add_line_if_not_exists ".bash_profile" "$RBENV_INIT" # 检查并添加行到 ./bash_profile
-    add_line_if_not_exists ".bashrc" "$RBENV_INIT" # 检查并添加行到 ./bashrc
-    add_line_if_not_exists ".zshrc" "$RBENV_INIT" # 检查并添加行到 ./zshrc
-    
+#    add_line_if_not_exists ".bashrc" "$RBENV_INIT" # 检查并添加行到 ./bashrc
+#    add_line_if_not_exists ".zshrc" "$RBENV_INIT" # 检查并添加行到 ./zshrc
     # 重新加载配置文件
-    source ~/.bashrc
-    source ~/.zshrc
     source ~/.bash_profile
+#    source ~/.bashrc
+#    source ~/.zshrc
 }
 # 配置 Ruby.Gems 环境变量
 _rubyGems(){
     # 使用全局变量更新 Gems
     add_line_if_not_exists ".bash_profile" "$RUBY_GEMS_PATH" # 检查并添加行到 ./bash_profile
-    add_line_if_not_exists ".bashrc" "$RUBY_GEMS_PATH" # 检查并添加行到 ./bashrc
-    add_line_if_not_exists ".zshrc" "$RUBY_GEMS_PATH" # 检查并添加行到 ./zshrc
+#    add_line_if_not_exists ".bashrc" "$RUBY_GEMS_PATH" # 检查并添加行到 ./bashrc
+#    add_line_if_not_exists ".zshrc" "$RUBY_GEMS_PATH" # 检查并添加行到 ./zshrc
     # 重新加载配置文件
-    source ~/.bashrc
-    source ~/.zshrc
     source ~/.bash_profile
+#    source ~/.bashrc
+#    source ~/.zshrc
 }
 # 检查并修复 RVM 路径
 fix_rvm_path() {
@@ -621,11 +638,12 @@ check_and_setup_gem() {
     gem pristine --all
     _JobsPrint_Green "所有 Gem 扩展已重建。"
 
-    _JobsPrint_Green "使用全局 gemset..."
+    _JobsPrint_Green "创建和使用全局 gemset..."
     rvm gemset use global
 
     _JobsPrint_Green "安装 bundler..."
-    gem install bundler
+    sudo chown -R $(whoami) ~/.rbenv # 检查并修复 ~/.rbenv 目录及其子目录的权限
+    sudo gem install bundler
     bundler -v   # 检查 bundler 版本
 
     _JobsPrint_Green "运行 bundle install..."
@@ -707,12 +725,18 @@ install_cocoapods() {
         ;;
     esac
     
-    gem install \
-      cocoapods-deintegrate \ # 这是一个 CocoaPods 插件，用于从一个项目中移除所有 CocoaPods 的痕迹。它可以清理所有由 CocoaPods 添加的配置和文件，使项目回到未使用 CocoaPods 管理依赖之前的状态。
-      cocoapods-downloader \ # 这个 Gem 为 CocoaPods 提供下载功能，支持多种类型的源（如 git, http, svn 等）。它是 CocoaPods 内部使用的组件，也可以单独用于下载特定的库或框架。
-      cocoapods-trunk \ # 这是一个用于与 CocoaPods 的 Trunk 服务交互的命令行工具。CocoaPods Trunk 是一个允许开发者提交他们的库到一个中央索引的服务，使得这些库可以被全球的开发者搜索和使用。
-      cocoapods-try # 这个插件允许开发者直接尝试使用一个 CocoaPod，而无需手动在项目中集成。它可以快速地克隆一个库的示例项目，安装依赖，并打开这个项目，使得评估和试用第三方库变得更加简单。
-
+    # 安装其他相关的 CocoaPods 插件
+#    sudo gem install cocoapods-deintegrate cocoapods-downloader cocoapods-trunk cocoapods-try
+    sudo gem install \
+        # 这是一个 CocoaPods 插件，用于从一个项目中移除所有 CocoaPods 的痕迹。它可以清理所有由 CocoaPods 添加的配置和文件，使项目回到未使用 CocoaPods 管理依赖之前的状态。
+        cocoapods-deintegrate \
+        # 这个 Gem 为 CocoaPods 提供下载功能，支持多种类型的源（如 git, http, svn 等）。它是 CocoaPods 内部使用的组件，也可以单独用于下载特定的库或框架。
+        cocoapods-downloader \
+        # 这是一个用于与 CocoaPods 的 Trunk 服务交互的命令行工具。CocoaPods Trunk 是一个允许开发者提交他们的库到一个中央索引的服务，使得这些库可以被全球的开发者搜索和使用。
+        cocoapods-trunk \
+        # 这个插件允许开发者直接尝试使用一个 CocoaPod，而无需手动在项目中集成。它可以快速地克隆一个库的示例项目，安装依赖，并打开这个项目，使得评估和试用第三方库变得更加简单。
+        cocoapods-try
+      
     update_cocoapods
     pod cache clean --all
 }
@@ -729,7 +753,7 @@ check_and_set_mirror() {
         read user_choice
         if [ "$user_choice" = "1" ]; then
             _JobsPrint_Green "将使用清华大学镜像..."
-            add_line_if_not_exists "Podfile" "source 'https://mirrors.tuna.tsinghua.edu.cn/git/CocoaPods/Specs.git'"
+            add_line_if_not_exists ".bash_profile" "source 'https://mirrors.tuna.tsinghua.edu.cn/git/CocoaPods/Specs.git'"
         else
             _JobsPrint_Green "将使用默认镜像..."
         fi
@@ -778,10 +802,12 @@ prepare_environment # 准备前置环境
 check_xcode_and_tools # 检查 Xcode 和 Xcode Command Line Tools
 install_homebrew_normal # 检查并安装 Homebrew
 check_and_update_fzf # 检查并安装/更新 fzf
+check_and_update_libyaml # 检查并安装/更新 libyaml
 check_and_install_zsh # 检查并安装 zsh
+
 check_Rbenv # 检查并安装 Rbenv
 check_ruby_environment # 检查当前的Ruby环境
-check_and_update_libyaml # 检查并安装/更新 libyaml
+
 setup_ruby_environment # 安装Ruby环境
 fix_rvm_path # 检查并修复 RVM 路径
 check_and_setup_gem # 检查并安装 Gem

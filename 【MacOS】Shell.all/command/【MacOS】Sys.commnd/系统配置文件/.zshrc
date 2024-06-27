@@ -106,7 +106,6 @@ plugins=(git)
 export SDKMAN_DIR="$HOME/.sdkman"
 [[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
 
-
 source $ZSH/oh-my-zsh.sh
 # 加载 .bash_profile 里面的配置
 source ~/.bash_profile

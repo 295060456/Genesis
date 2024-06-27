@@ -2,11 +2,11 @@
 open ~/.bash_profile
 open ~/.bashrc
 open ~/.zshrc
-
-source ~/.bash_profile
-source ~/.bashrc
-source ~/.zshrc
-source $ZSH/oh-my-zsh.sh
+# 如果文件存在且非空，则执行source
+[[ -s "$HOME/.bash_profile" ]] && source "$HOME/.bash_profile"
+[[ -s "$HOME/.bashrc" ]] && source "$HOME/.bashrc"
+[[ -s "$HOME/.zshrc" ]] && source "$HOME/.zshrc"
+[[ -s "$ZSH/oh-my-zsh.sh" ]] && source "$ZSH/oh-my-zsh.sh"
 
 # ~/.bash_profile
 # ~/.bashrc
