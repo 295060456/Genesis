@@ -4,6 +4,7 @@
 RBENV_PATH='export PATH="$HOME/.rbenv/bin:$PATH"' # Rbenv 的环境变量
 RBENV_INIT='eval "$(rbenv init -)"' # eval 是一个 shell 命令，用于将字符串作为 shell 命令执行。它实际上是在执行 rbenv init - 生成的命令。
 HOMEBREW_PATH='export PATH="/opt/homebrew/bin:$PATH"' # HomeBrew 的环境变量
+RUBY_PATH='export PATH="/opt/homebrew/opt/ruby/bin:$PATH"' # Ruby 的环境变量
 RUBY_GEMS_PATH='export PATH="/opt/homebrew/lib/ruby/gems/3.3.0/bin"' # Gems 的环境变量
 # 获取所有 ruby 的安装路径
 ruby_paths=$(which -a ruby)
@@ -45,6 +46,18 @@ self_intro() {
     _JobsPrint_Green "安装Cocoapods"
     _JobsPrint_Red "按回车键继续..."
     read
+}
+# 打开系统配置文件
+open_files_if_enter() {
+    _JobsPrint_Green "按回车键打开所有配置文件，输入任意字符并回车跳过..."
+    read user_input
+    if [[ -z "$user_input" ]]; then
+        open "$HOME/.bash_profile"
+        open "$HOME/.bashrc"
+        open "$HOME/.zshrc"
+    else
+        _JobsPrint_Red "跳过打开配置文件。"
+    fi
 }
 # 检查并添加行到指定的配置文件
 add_line_if_not_exists() {
@@ -440,12 +453,15 @@ install_ruby_byRVM(){
     open https://get.rvm.io
     \curl -sSL https://get.rvm.io | bash -s stable --ruby
 }
-# 如果当前 Ruby 环境是通过 HomeBrew 安装的，那么升级 HomeBrew.Ruby 到最新版
+# 如果当前 Ruby 环境是通过 HomeBrew 安装的，那么升级 HomeBrew.Ruby 到最新版，并清除下载
 check_ruby_install_ByHomeBrew(){
     if brew list --formula | grep -q ruby; then
         _JobsPrint_Green "当前 Ruby 环境是通过 HomeBrew 安装的"
         _JobsPrint_Green "升级 HomeBrew.Ruby 到最新版..."
         brew upgrade ruby
+        add_line_if_not_exists ".bash_profile" "$RUBY_PATH" # 检查并添加行到 ./bash_profile
+#        add_line_if_not_exists ".bashrc" "$RUBY_PATH" # 检查并添加行到 ./bashrc
+#        add_line_if_not_exists ".zshrc" "$RUBY_PATH" # 检查并添加行到 ./zshrc
         brew cleanup ruby
     fi
 }
@@ -515,7 +531,7 @@ setup_ruby_environment(){
     "1. 使用 Homebrew 安装")
         install_ruby_byBrew # 利用 Homebrew 安装 Ruby 环境
         _JobsPrint_Green "🍺🍺🍺 Homebrew.Ruby安装成功"
-        check_ruby_install_ByHomeBrew
+        check_ruby_install_ByHomeBrew # 如果当前 Ruby 环境是通过 HomeBrew 安装的，那么升级 HomeBrew.Ruby 到最新版，并清除下载
         ;;
     "2. 使用 rbenv 安装")
         install_ruby_byRbenv # 通过 Rbenv 的形式，安装 ruby 环境
@@ -541,7 +557,7 @@ setup_ruby_environment(){
 remove_ruby_environment() {
     local version=$1
     _JobsPrint_Red "开始删除 Ruby 环境：$version"
-
+    # 如果当前 Ruby 环境是通过 HomeBrew 安装的，那么升级 HomeBrew.Ruby 到最新版，并清除下载
     if check_ruby_install_ByHomeBrew; then
         # 输出被重定向到 /dev/null，因此不会在终端显示任何内容
         brew uninstall --force ruby 2>/dev/null || true
@@ -813,3 +829,4 @@ fix_rvm_path # 检查并修复 RVM 路径
 check_and_setup_gem # 检查并安装 Gem
 check_and_set_mirror # 检查和设置镜像
 check_and_setup_cocoapods # 检查并安装 CocoaPods
+open_files_if_enter # 打开系统配置文件
