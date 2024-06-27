@@ -1,7 +1,12 @@
 #!/bin/zsh
 
 # 定义全局变量
-HOMEBREW_PATH='export PATH="/opt/homebrew/bin:$PATH"' # HomeBrew 的环境变量
+# Apple Silicon (M1/M2) 的默认 Homebrew 安装路径是 /opt/homebrew，
+# Intel 芯片的默认路径是 /usr/local。
+HOMEBREW_PATH_1='export PATH="/opt/homebrew/bin:$PATH"' # HomeBrew 的环境变量（M系列芯片）
+HOMEBREW_PATH_2='export PATH="/opt/homebrew/sbin:$PATH"' # HomeBrew 的环境变量（M系列芯片）
+HOMEBREW_PATH_3='export PATH="/usr/local/bin:/usr/local/sbin:$PATH"' # HomeBrew 的环境变量（x86架构芯片）
+HOMEBREW_PATH_4='export PATH="/usr/local/bin:/usr/local/bin:$PATH"' # HomeBrew 的环境变量（x86架构芯片）
 HOMEBREW_SHELLENV_x86="eval \"\$($(brew --prefix)/bin/brew shellenv)\""# 确保 Homebrew 的环境变量（如 PATH）在当前 shell 会话中正确设置，使 Homebrew 工具和安装的软件包可用。
 HOMEBREW_SHELLENV_ARM64="eval \"\$($(brew --prefix)/bin/brew shellenv)\""# 确保 Homebrew 的环境变量（如 PATH）在当前 shell 会话中正确设置，使 Homebrew 工具和安装的软件包可用。
 RVM_RUBY_PATH='export PATH="$HOME/.rvm/bin:$PATH"' # RVM.Ruby 的环境变量
@@ -193,7 +198,7 @@ prepare_environment() {
         _JobsPrint_Red "AAA"
         _JobsPrint_Red "Intel Mac detected, installing Homebrew for x86_64"
         arch -x86_64 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-        add_line_if_not_exists ".zprofile" "$HOMEBREW_SHELLENV_x86" # 检查并添加行到 ./bash_profile
+        add_line_if_not_exists ".bash_profile" "$HOMEBREW_SHELLENV_x86" # 检查并添加行到 ./bash_profile
         eval "$HOMEBREW_SHELLENV_x86"
     }
     
@@ -201,7 +206,7 @@ prepare_environment() {
         _JobsPrint_Red "SSS"
         _JobsPrint_Red "Apple Silicon detected, installing Homebrew for ARM64"
         /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)" /opt/homebrew
-        add_line_if_not_exists ".zprofile" "$HOMEBREW_SHELLENV_ARM64" # 检查并添加行到 ./bash_profile
+        add_line_if_not_exists ".bash_profile" "$HOMEBREW_SHELLENV_ARM64" # 检查并添加行到 ./bash_profile
         eval "$HOMEBREW_SHELLENV_ARM64"
     }
     if command -v brew &> /dev/null; then
@@ -209,7 +214,7 @@ prepare_environment() {
     else
         _framework_do "_x64_homebrew_install" "_x86_homebrew_install"
     fi
-    open ~/.zprofile
+    open ~/.bash_profile
 }
 # 检查 Xcode 和 Xcode Command Line Tools
 check_xcode_and_tools() {
@@ -326,7 +331,8 @@ uninstall_homebrew() {
     fi
     
     _JobsPrint_Green "正在删除残留的目录..."
-    sudo rm -rf /usr/local/Caskroom /usr/local/Cellar
+    sudo rm -rf /usr/local/Caskroom
+    sudo rm -rf /usr/local/Cellar
     sudo rm -rf /usr/local/Homebrew/
     sudo rm -rf /usr/local/bin/
     sudo rm -rf /usr/local/etc/
@@ -335,8 +341,9 @@ uninstall_homebrew() {
     sudo rm -rf /usr/local/share/
     sudo rm -rf /usr/local/texlive/
     sudo rm -rf /usr/local/var/
-    _JobsPrint_Green "残留目录删除完成。"
+    sudo rm -rf /opt/homebrew
     
+    _JobsPrint_Green "残留目录删除完成。"
     _JobsPrint_Green "Homebrew 卸载完成。验证卸载..."
     check_homebrew # 检查 Homebrew 是否已卸载
 }
@@ -388,7 +395,21 @@ install_homebrew_normal() {
     2)
         _JobsPrint_Green "正在使用官方脚本安装 Homebrew..."
         open https://brew.sh/
-        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+        
+        install_homebrew_x86(){
+            /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+        }
+        
+        install_homebrew_x64(){
+            # 下载 Homebrew 安装脚本
+            curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh -o install.sh
+            # 修改安装脚本，将安装路径改为 /usr/local
+            sed -i '' 's|/opt/homebrew|/usr/local|g' install.sh
+            # 运行修改后的安装脚本
+            /bin/bash install.sh
+        }
+        
+        _framework_do "install_homebrew_x64" "install_homebrew_x86"
         _brewRuby # 写环境变量
         _JobsPrint_Green "官方脚本安装 Homebrew 完毕。验证安装..."
         check_homebrew # 检查并安装 Homebrew
@@ -441,10 +462,32 @@ check_and_install_zsh() {
 # 配置 Home.Ruby 环境变量
 _brewRuby(){
     _JobsPrint_Yellow "正在执行: ${funcstack[1]}()"
-    # 使用全局变量更新 HomeBrew
-    add_line_if_not_exists ".bash_profile" "$HOMEBREW_PATH" # 检查并添加行到 ./bash_profile
-#    add_line_if_not_exists ".bashrc" "$HOMEBREW_PATH" # 检查并添加行到 ./bashrc
-#    add_line_if_not_exists ".zshrc" "$HOMEBREW_PATH" # 检查并添加行到 ./zshrc
+
+    _home_ruby_env_x86(){
+        add_line_if_not_exists ".bash_profile" "$HOMEBREW_PATH_1" # 检查并添加行到 ./bash_profile
+#        add_line_if_not_exists ".bashrc" "$HOMEBREW_PATH_1" # 检查并添加行到 ./bashrc
+#        add_line_if_not_exists ".zshrc" "$HOMEBREW_PATH_1" # 检查并添加行到 ./zshrc
+
+        add_line_if_not_exists ".bash_profile" "$HOMEBREW_PATH_2" # 检查并添加行到 ./bash_profile
+#        add_line_if_not_exists ".bashrc" "$HOMEBREW_PATH_2" # 检查并添加行到 ./bashrc
+#        add_line_if_not_exists ".zshrc" "$HOMEBREW_PATH_2" # 检查并添加行到 ./zshrc
+
+        add_line_if_not_exists ".bash_profile" "$HOMEBREW_SHELLENV_x86" # 检查并添加行到 ./bash_profile
+    }
+    
+    _home_ruby_env_x64(){
+        add_line_if_not_exists ".bash_profile" "$HOMEBREW_PATH_3" # 检查并添加行到 ./bash_profile
+#        add_line_if_not_exists ".bashrc" "$HOMEBREW_PATH_3" # 检查并添加行到 ./bashrc
+#        add_line_if_not_exists ".zshrc" "$HOMEBREW_PATH_3" # 检查并添加行到 ./zshrc
+        
+        add_line_if_not_exists ".bash_profile" "$HOMEBREW_PATH_4" # 检查并添加行到 ./bash_profile
+#        add_line_if_not_exists ".bashrc" "$HOMEBREW_PATH_4" # 检查并添加行到 ./bashrc
+#        add_line_if_not_exists ".zshrc" "$HOMEBREW_PATH_4" # 检查并添加行到 ./zshrc
+
+        add_line_if_not_exists ".bash_profile" "$HOMEBREW_SHELLENV_ARM64" # 检查并添加行到 ./bash_profile
+    }
+    
+    _framework_do "_home_ruby_env_x64" "_home_ruby_env_x86"
     # 重新加载配置文件
     source ~/.bash_profile
 #    source ~/.bashrc
@@ -682,7 +725,7 @@ setup_ruby_environment(){
     _JobsPrint_Yellow "正在执行: ${funcstack[1]}()"
     # 在配置文件中同时配置 rbenv 和 rvm 的路径确实会产生冲突。
     # rbenv 和 rvm 都是用于管理 Ruby 版本的工具，但它们的工作方式不同，并且在系统路径和环境变量的配置上会互相干扰。
-    choice=$(printf "1. 使用 Homebrew 安装\n2. 使用 rbenv 安装\n3. 使用 RVM 官方推荐的方式进行安装" | fzf --prompt "请选择 Ruby 的安装方式：")
+    choice=$(printf "1. 使用 Homebrew 安装 Ruby 环境\n2. 使用 Rbenv 安装 Ruby 环境\n3. 使用 RVM 官方推荐的方式进行安装 Ruby 环境" | fzf --prompt "请选择 Ruby 的安装方式：")
     case $choice in
     "1. 使用 Homebrew 安装 Ruby 环境")
         install_ruby_byBrew # 利用 Homebrew 安装 Ruby 环境

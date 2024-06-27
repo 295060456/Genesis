@@ -1,14 +1,26 @@
 # 配置Homebrew环境
 export PATH="/opt/homebrew/bin:$PATH"
+export PATH="/opt/homebrew/bin:$PATH"
 
-# 配置rbenv环境
+# 在配置文件中同时配置 rbenv 和 rvm 的路径会产生冲突。
+#rbenv 和 rvm 都是用于管理 Ruby 版本的工具，但它们的工作方式不同，并且在系统路径和环境变量的配置上会互相干扰。
+
+# 设置 Ruby 环境变量
+
+## 配置rbenv.Ruby环境
 export PATH="$HOME/.rbenv/bin:$PATH"
 eval "$(rbenv init -)" # 初始化 rbenv
 
-# 设置 Ruby 环境变量
+## RVM.Ruby(不能与其他 Ruby 共存)
+# export PATH="$HOME/.rvm/bin:$PATH"
+
+## Homebrew.Ruby
 export PATH="/usr/local/opt/ruby/bin:$PATH"
-export LDFLAGS="-L/opt/homebrew/opt/ruby/lib"
-export CPPFLAGS="-I/opt/homebrew/opt/ruby/include"
+## 确保在编译和链接依赖于 Ruby 库的程序时，链接器能够找到并使用 Homebrew.Ruby 库文件。
+export CPPFLAGS="-I/opt/homebrew/opt/ruby/include" # 设置 CPPFLAGS 环境变量，以指定编译器在预处理和编译 C 或 C++ 源代码时搜索头文件的目录
+export CFLAGS="-I/opt/homebrew/opt/ruby/include" # 设置 CFLAGS 环境变量，以指定编译器在编译 C 或 C++ 源代码时搜索头文件的目录
+export LDFLAGS="-L/opt/homebrew/opt/ruby/lib" # 设置 LDFLAGS 环境变量，以指定链接器在编译和链接 C 或 C++ 程序时搜索库文件的目录
+## 确保 pkg-config 工具在需要 Ruby 库的编译和链接信息时，能够找到 Homebrew.Ruby 的配置文件
 export PKG_CONFIG_PATH="/opt/homebrew/opt/ruby/lib/pkgconfig"
 
 # 配置 JDK 环境变量
@@ -19,7 +31,7 @@ export PATH=$JAVA_HOME/bin:$PATH
 export SDKMAN_DIR="$HOME/.sdkman"
 [[ -s "$SDKMAN_DIR/bin/sdkman-init.sh" ]] && source "$SDKMAN_DIR/bin/sdkman-init.sh"
 
-# 配置Android环境
+# 配置 Android 环境
 export ANDROID_HOME=/Users/$(whoami)/Library/Android/sdk
 export PATH=${PATH}:${ANDROID_HOME}/platform-tools
 export PATH=${PATH}:${ANDROID_HOME}/cmdline-tools/latest/bin
@@ -27,7 +39,7 @@ export PATH=$ANDROID_HOME/emulator:$ANDROID_HOME/tools:$ANDROID_HOME/tools/bin:$
 # 配置 Gradle 环境变量
 export PATH="/Users/$(whoami)/Documents/Gradle/gradle-8.7/bin:$PATH"
 
-# 配置Flutter环境
+# 配置 Flutter 环境
 # 这里的路径即为Dart.Flutter.SDK名下的为bin目录（主要取决于你下载的SDK的绝对路径）
 export PATH=/Users/$(whoami)/Documents/GitHub/Flutter.SDK/flutter/bin:$PATH
 #【相关阅读：Flutter切换源】https://juejin.cn/post/7204285137047257148
@@ -42,13 +54,13 @@ export FLUTTER_STORAGE_BASE_URL=https://storage.googleapis.com # Flutter官方�
 # 配置 FVM 环境
 export PATH="$PATH":"$HOME/.pub-cache/bin"
 
-# 配置TeX环境
+# 配置 TeX 环境
 export PATH="/Library/TeX/texbin:$PATH"
 
-# 配置mongodb环境
+# 配置 mongodb 环境
 export PATH=/usr/local/mongodb/bin:$PATH
 
-# 配置Go环境
+# 配置 Go 环境
 export GOPATH=/usr/local/go
 export GOBIN=$GOPATH/bin
 export PATH=$PATH:$GOBIN
