@@ -7,8 +7,6 @@ HOMEBREW_PATH_1='export PATH="/opt/homebrew/bin:$PATH"' # HomeBrew 的环境变�
 HOMEBREW_PATH_2='export PATH="/opt/homebrew/sbin:$PATH"' # HomeBrew 的环境变量（M系列芯片）
 HOMEBREW_PATH_3='export PATH="/usr/local/bin:/usr/local/sbin:$PATH"' # HomeBrew 的环境变量（x86架构芯片）
 HOMEBREW_PATH_4='export PATH="/usr/local/bin:/usr/local/bin:$PATH"' # HomeBrew 的环境变量（x86架构芯片）
-HOMEBREW_SHELLENV_x86="eval \"\$($(brew --prefix)/bin/brew shellenv)\""# 确保 Homebrew 的环境变量（如 PATH）在当前 shell 会话中正确设置，使 Homebrew 工具和安装的软件包可用。
-HOMEBREW_SHELLENV_ARM64="eval \"\$($(brew --prefix)/bin/brew shellenv)\""# 确保 Homebrew 的环境变量（如 PATH）在当前 shell 会话中正确设置，使 Homebrew 工具和安装的软件包可用。
 RVM_RUBY_PATH='export PATH="$HOME/.rvm/bin:$PATH"' # RVM.Ruby 的环境变量
 RUBY_PATH='export PATH="/opt/homebrew/opt/ruby/bin:$PATH"' # Homebrew.Ruby 的环境变量
 RBENV_PATH='export PATH="$HOME/.rbenv/bin:$PATH"' # Rbenv 的环境变量
@@ -75,17 +73,34 @@ _framework_do() {
         fi
     fi
 }
+#【指定用 xcode 打开】回车确认打开文件，任意字符跳过
+open_file_by_xcode_if_enter_base() {
+    local file="$1"
+    _JobsPrint_Green "按回车键用 Xcode 打开 $file，输入任意字符并回车跳过..."
+    read user_input
+    if [[ -z "$user_input" ]]; then
+        open -a "Xcode" "$file"
+    else
+        _JobsPrint_Red "跳过打开 $file。"
+    fi
+}
+#【系统默认方式打开】回车确认打开文件，任意字符跳过
+open_file_if_enter_base() {
+    local file="$1"
+    _JobsPrint_Green "按回车键打开 $file，输入任意字符并回车跳过..."
+    read user_input
+    if [[ -z "$user_input" ]]; then
+        open "$file"
+    else
+        _JobsPrint_Red "跳过打开 $file。"
+    fi
+}
 # 打开系统配置文件
 open_files_if_enter() {
     _JobsPrint_Green "按回车键打开所有配置文件，输入任意字符并回车跳过..."
-    read user_input
-    if [[ -z "$user_input" ]]; then
-        open "$HOME/.bash_profile"
-        open "$HOME/.bashrc"
-        open "$HOME/.zshrc"
-    else
-        _JobsPrint_Red "跳过打开配置文件。"
-    fi
+    open_file_by_xcode_if_enter_base "$HOME/.bash_profile"
+    open_file_if_enter_base "$HOME/.bashrc"
+    open_file_if_enter_base "$HOME/.zshrc"
 }
 # 检查并添加行到指定的配置文件
 add_line_if_not_exists() {
@@ -192,9 +207,7 @@ prepare_environment() {
     git config --global http.postBuffer 524288000  # 设置缓冲区为500MB
     git config --global http.maxRequestBuffer 1048576000  # 设置缓冲区为1GB
     
-    _JobsPrint_Green "按下回车键以打开 ~/.bash_profile"
-    read -s  # 等待用户按下回车键，不显示输入
-    open ~/.bash_profile
+    open_file_by_xcode_if_enter_base "$HOME/.bash_profile" # 打开系统配置文件
 }
 # 检查 Xcode 和 Xcode Command Line Tools
 check_xcode_and_tools() {
@@ -311,10 +324,13 @@ uninstall_homebrew() {
     fi
     
     _JobsPrint_Green "正在删除残留的目录..."
+    _JobsPrint_Red "SIP（系统完整性保护）可能会导致某些目录删除失败"
+    _JobsPrint_Red "运行 csrutil disable 并重启 Mac，关闭 SIP（系统完整性保护）"
     sudo rm -rf /usr/local/Caskroom
     sudo rm -rf /usr/local/Cellar
     sudo rm -rf /usr/local/Homebrew/
     sudo rm -rf /usr/local/bin/
+    sudo chmod -R 777 /usr/local/etc/
     sudo rm -rf /usr/local/etc/
     sudo rm -rf /usr/local/lib/
     sudo rm -rf /usr/local/microsoft/
@@ -322,8 +338,8 @@ uninstall_homebrew() {
     sudo rm -rf /usr/local/texlive/
     sudo rm -rf /usr/local/var/
     sudo rm -rf /opt/homebrew
-    
     _JobsPrint_Green "残留目录删除完成。"
+    
     _JobsPrint_Green "Homebrew 卸载完成。验证卸载..."
     check_homebrew # 检查 Homebrew 是否已卸载
 }
@@ -360,6 +376,7 @@ install_Homebrew_githubusercontent(){
         _JobsPrint_Green "检测到 Apple 芯片，正在安装 Homebrew 的 ARM64 版本"
         /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)" /opt/homebrew
     }
+    _framework_do "_x64_homebrew_install" "_x86_homebrew_install"
 }
 # 只是通过第三方脚本方式安装 Homebrew（没有配置相关的环境变量）
 install_Homebrew_gitee(){
@@ -374,6 +391,7 @@ install_Homebrew_gitee(){
 #        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)" /opt/homebrew
         /bin/bash -c "$(curl -fsSL https://gitee.com/ineo6/homebrew-install/raw/master/install.sh)" /opt/homebrew
     }
+    _framework_do "_x64_homebrew_install" "_x86_homebrew_install"
 }
 # 配置 Home.Ruby 环境变量
 _brewRuby(){
@@ -382,21 +400,6 @@ _brewRuby(){
 #HOMEBREW_PATH_2='export PATH="/opt/homebrew/sbin:$PATH"' # HomeBrew 的环境变量（M系列芯片）
 #HOMEBREW_PATH_3='export PATH="/usr/local/bin:/usr/local/sbin:$PATH"' # HomeBrew 的环境变量（x86架构芯片）
 #HOMEBREW_PATH_4='export PATH="/usr/local/bin:/usr/local/bin:$PATH"' # HomeBrew 的环境变量（x86架构芯片）
-    _home_ruby_env_x86(){
-        add_line_if_not_exists ".bash_profile" "$HOMEBREW_PATH_3" # 检查并添加行到 ./bash_profile
-#        add_line_if_not_exists ".bashrc" "$HOMEBREW_PATH_1" # 检查并添加行到 ./bashrc
-#        add_line_if_not_exists ".zshrc" "$HOMEBREW_PATH_1" # 检查并添加行到 ./zshrc
-
-        add_line_if_not_exists ".bash_profile" "$HOMEBREW_PATH_4" # 检查并添加行到 ./bash_profile
-#        add_line_if_not_exists ".bashrc" "$HOMEBREW_PATH_2" # 检查并添加行到 ./bashrc
-#        add_line_if_not_exists ".zshrc" "$HOMEBREW_PATH_2" # 检查并添加行到 ./zshrc
-
-        add_line_if_not_exists ".bash_profile" "$HOMEBREW_SHELLENV_x86" # 检查并添加行到 ./bash_profile
-#        add_line_if_not_exists ".bashrc" "$HOMEBREW_SHELLENV_x86" # 检查并添加行到 ./bashrc
-#        add_line_if_not_exists ".zshrc" "$HOMEBREW_SHELLENV_x86" # 检查并添加行到 ./zshrc
-        eval "$HOMEBREW_SHELLENV_x86"
-    }
-    
     _home_ruby_env_x64(){
         add_line_if_not_exists ".bash_profile" "$HOMEBREW_PATH_1" # 检查并添加行到 ./bash_profile
 #        add_line_if_not_exists ".bashrc" "$HOMEBREW_PATH_3" # 检查并添加行到 ./bashrc
@@ -405,18 +408,28 @@ _brewRuby(){
         add_line_if_not_exists ".bash_profile" "$HOMEBREW_PATH_2" # 检查并添加行到 ./bash_profile
 #        add_line_if_not_exists ".bashrc" "$HOMEBREW_PATH_4" # 检查并添加行到 ./bashrc
 #        add_line_if_not_exists ".zshrc" "$HOMEBREW_PATH_4" # 检查并添加行到 ./zshrc
+    }
+    
+    _home_ruby_env_x86(){
+        add_line_if_not_exists ".bash_profile" "$HOMEBREW_PATH_3" # 检查并添加行到 ./bash_profile
+#        add_line_if_not_exists ".bashrc" "$HOMEBREW_PATH_1" # 检查并添加行到 ./bashrc
+#        add_line_if_not_exists ".zshrc" "$HOMEBREW_PATH_1" # 检查并添加行到 ./zshrc
 
-        add_line_if_not_exists ".bash_profile" "$HOMEBREW_SHELLENV_ARM64" # 检查并添加行到 ./bash_profile
-#        add_line_if_not_exists ".bashrc" "$HOMEBREW_SHELLENV_ARM64" # 检查并添加行到 ./bashrc
-#        add_line_if_not_exists ".zshrc" "$HOMEBREW_SHELLENV_ARM64" # 检查并添加行到 ./zshrc
-        eval "$HOMEBREW_SHELLENV_ARM64"
+        add_line_if_not_exists ".bash_profile" "$HOMEBREW_PATH_4" # 检查并添加行到 ./bash_profile
+#        add_line_if_not_exists ".bashrc" "$HOMEBREW_PATH_2" # 检查并添加行到 ./bashrc
+#        add_line_if_not_exists ".zshrc" "$HOMEBREW_PATH_2" # 检查并添加行到 ./zshrc
     }
     
     _framework_do "_home_ruby_env_x64" "_home_ruby_env_x86"
-    # 重新加载配置文件
-    source ~/.bash_profile
-#    source ~/.bashrc
-#    source ~/.zshrc
+    add_line_if_not_exists ".bash_profile" "eval "$(/opt/homebrew/bin/brew shellenv)"" # 检查并添加行到 ./bash_profile
+#    add_line_if_not_exists ".bashrc" "eval "$(/opt/homebrew/bin/brew shellenv)"" # 检查并添加行到 ./bashrc
+#    add_line_if_not_exists ".zshrc" "eval "$(/opt/homebrew/bin/brew shellenv)"" # 检查并添加行到 ./zshrc
+    if ! command -v brew >/dev/null 2>&1; then
+        # 重新加载配置文件
+        source ~/.bash_profile
+#        source ~/.bashrc
+#        source ~/.zshrc
+    fi
 }
 # 配置 Rbenv.Ruby 环境变量
 _rbenRuby(){
@@ -452,7 +465,7 @@ install_homebrew_normal() {
     
     # 检查并安装 Homebrew
     _JobsPrint_Green "Apple Silicon (M1/M2) 的默认 Homebrew 安装路径是 /opt/homebrew"
-    _JobsPrint_Green "Intel 芯片的默认路径是 /usr/local。"
+    _JobsPrint_Green "Intel 芯片的默认安装路径是 /usr/local。"
     
     _JobsPrint_Green "请选择 Homebrew 安装方式："
     _JobsPrint_Green "1. 自定义脚本安装 Homebrew（可能不受官方支持）"

@@ -1,6 +1,11 @@
 # 配置Homebrew环境
+# ARM64
 export PATH="/opt/homebrew/bin:$PATH"
-export PATH="/opt/homebrew/bin:$PATH"
+export PATH="/opt/homebrew/sbin:$PATH"
+# x86_64
+export PATH="/usr/local/bin:$PATH""
+export PATH="/usr/local/sbin:$PATH""
+eval "$(/bin/brew shellenv)"
 
 # 在配置文件中同时配置 rbenv 和 rvm 的路径会产生冲突。
 #rbenv 和 rvm 都是用于管理 Ruby 版本的工具，但它们的工作方式不同，并且在系统路径和环境变量的配置上会互相干扰。
