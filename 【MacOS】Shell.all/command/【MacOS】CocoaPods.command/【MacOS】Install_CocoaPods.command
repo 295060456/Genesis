@@ -239,7 +239,7 @@ check_and_update_libyaml() {
         _JobsPrint_Green "libyaml 已经安装"
     else
         _JobsPrint_Green "libyaml 还没有安装。现在安装..."
-        check_homebrew # 检查并安装 Homebrew
+        check_homebrew # 检查安装 Homebrew
         _framework_do "arch -arm64 brew install libyaml" "brew install libyaml" # 尝试安装 libyaml
         if [ $? -eq 0 ]; then
             _JobsPrint_Green "libyaml 已经被成功安装"
@@ -265,7 +265,7 @@ check_and_update_fzf() {
 
         case $choice in
             1)
-                check_homebrew # 检查并安装 Homebrew
+                check_homebrew # 检查安装 Homebrew
                 _framework_do "arch -arm64 brew install fzf" "brew install fzf"
                 ;;
             2)
@@ -317,6 +317,11 @@ folder_authorization(){
 }
 # 删除 Homebrew 的残留目录
 homebrew_residual_directory_deletion(){
+
+    _JobsPrint_Green "正在删除残留的目录..."
+    _JobsPrint_Red "SIP（系统完整性保护）可能会导致某些目录删除失败"
+    _JobsPrint_Red "运行 csrutil disable 并重启 Mac，关闭 SIP（系统完整性保护）"
+
     sudo rm -rf /usr/local/Caskroom
     sudo rm -rf /usr/local/Cellar
     sudo rm -rf /usr/local/Homebrew/
@@ -356,17 +361,13 @@ uninstall_homebrew() {
         return
     fi
     
-    _JobsPrint_Green "正在删除残留的目录..."
-    _JobsPrint_Red "SIP（系统完整性保护）可能会导致某些目录删除失败"
-    _JobsPrint_Red "运行 csrutil disable 并重启 Mac，关闭 SIP（系统完整性保护）"
-    
     folder_authorization # 更新每个目录的权限和所有权
     homebrew_residual_directory_deletion # 删除 Homebrew 的残留目录
 
     _JobsPrint_Green "残留目录删除完成。"
     _JobsPrint_Green "Homebrew 卸载完成。验证卸载..."
     
-    check_homebrew # 检查 Homebrew 是否已卸载
+    check_homebrew # 检查安装 Homebrew
 }
 # 用fzf的方式安装 Homebrew。
 install_homebrew_byFzf() {
@@ -485,7 +486,7 @@ _rubyGems(){
 #    source ~/.bashrc
 #    source ~/.zshrc
 }
-# 键盘输入的方式安装 Homebrew
+# 键盘输入的方式安装 Homebrew if ! command -v brew &> /dev/null; then
 install_homebrew_normal() {
     _JobsPrint_Yellow "正在执行: ${funcstack[1]}()"
     
@@ -511,7 +512,7 @@ install_homebrew_normal() {
         install_Homebrew_gitee
         _brewRuby # 写环境变量
         _JobsPrint_Green "自定义脚本安装 Homebrew 完毕。验证安装..."
-        check_homebrew # 检查并安装 Homebrew
+        check_homebrew # 检查安装 Homebrew
         ;;
     2)
         _JobsPrint_Green "正在使用官方脚本安装 Homebrew..."
@@ -519,7 +520,7 @@ install_homebrew_normal() {
         install_Homebrew_githubusercontent
         _brewRuby # 写环境变量
         _JobsPrint_Green "官方脚本安装 Homebrew 完毕。验证安装..."
-        check_homebrew # 检查并安装 Homebrew
+        check_homebrew # 检查安装 Homebrew
         ;;
     *)
         _JobsPrint_Red "无效的选项，请重新选择。"
@@ -579,7 +580,7 @@ install_and_update_homebrew_dependencies() {
     }
     _framework_do "_homebrew_update_arm64" "_homebrew_update_x86"
 }
-# 检查并安装 Homebrew
+# 检查安装 Homebrew
 check_homebrew() {
     _JobsPrint_Yellow "正在执行: ${funcstack[1]}()"
     install_and_update_homebrew_dependencies # 安装/更新 Homebrew 必要的依赖项
@@ -608,7 +609,7 @@ check_and_install_zsh() {
         _JobsPrint_Green "zsh 已经安装，不需要执行任何操作。"
     else
         _JobsPrint_Red "zsh 未安装，正在通过 Homebrew 安装 zsh..."
-        check_homebrew # 检查并安装 Homebrew
+        check_homebrew # 检查安装 Homebrew
         _framework_do "arch -arm64 brew install zsh" "brew install zsh"
     fi
 }
@@ -1143,7 +1144,7 @@ self_intro # 自述信息
 prepare_environment # 准备前置环境
 check_xcode_and_tools # 检查 Xcode 和 Xcode Command Line Tools
 uninstall_homebrew # 先卸载安装 Homebrew，保持环境OK
-install_homebrew_normal # 检查并安装 Homebrew
+check_homebrew # 检查安装 Homebrew
 check_and_update_fzf # 检查并安装/更新 fzf（2种方式安装:Homebrew/Git）
 check_and_update_libyaml # 检查并安装/更新 Homebrew.libyaml
 check_and_install_zsh # 检查并安装 Homebrew.zsh
