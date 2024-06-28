@@ -118,6 +118,8 @@ run_pod_install() {
         osascript -e "tell application \"Terminal\" to do script \"\
             cd '$CURRENT_DIRECTORY/ios' && \
             pod install\
+            echo '\033[1;32m显示依赖关系\033[0m';\
+            cat Podfile.lock; \
             \""
     else
         _JobsPrint_Red "没找到 Podfile 文件，pod install 操作自动终止"
