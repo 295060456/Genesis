@@ -226,10 +226,16 @@ check_xcode_and_tools() {
     _JobsPrint_Green "🍺🍺🍺 Xcode 和 Xcode Command Line Tools 均已安装。"
 }
 # 非用Homebrew管理的方式安装fzf
-install_fzf(){
+install_fzf() {
     _JobsPrint_Yellow "正在执行: ${funcstack[1]}()"
-    git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
-    ~/.fzf/install
+    if [ -d "$HOME/.fzf" ]; then
+        echo "fzf 已经安装，正在升级..."
+        cd ~/.fzf && git pull && ./install --all
+    else
+        echo "fzf 未安装，正在安装..."
+        git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
+        ~/.fzf/install --all
+    fi
 }
 # 通过 Homebrew 检查并安装/更新 libyaml
 check_and_update_libyaml() {
