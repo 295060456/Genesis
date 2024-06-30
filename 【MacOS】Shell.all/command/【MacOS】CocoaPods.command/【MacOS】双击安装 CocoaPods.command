@@ -53,7 +53,7 @@ jobs_logo() {
 }
 # 自述信息
 self_intro() {
-    _JobsPrint_Green "安装Cocoapods"
+    _JobsPrint_Green "【MacOS】双击安装 CocoaPods"
     _JobsPrint_Red "按回车键继续..."
     read
 }

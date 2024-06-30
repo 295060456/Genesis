@@ -1,7 +1,7 @@
 #!/bin/zsh
 
 # 定义全局变量
-CURRENT_DIRECTORY=$(dirname "$(readlink -f "$0")") # 获取当前脚本文件的目录
+typeset -g CURRENT_DIRECTORY=$(dirname "$(readlink -f "$0")")/ios # 获取当前脚本文件的目录
 # 通用打印方法
 _JobsPrint() {
     local COLOR="$1"
@@ -110,12 +110,12 @@ check_and_set_mirror() {
 }
 # 运行 pod install
 run_pod_install() {
-    _JobsPrint_Green "Current directory: $CURRENT_DIRECTORY/ios"
+    _JobsPrint_Green "Current directory: $CURRENT_DIRECTORY"
     # 检查是否存在Podfile文件
     if [ -f "$CURRENT_DIRECTORY/Podfile" ]; then
         _JobsPrint_Green "已找到 Podfile 文件，pod install 操作开始"
         # 在新的终端中运行pod install命令
-        cd "$CURRENT_DIRECTORY/ios"
+        cd "$CURRENT_DIRECTORY"
         pod install
         _JobsPrint_Green "显示依赖关系"
         cat Podfile.lock
