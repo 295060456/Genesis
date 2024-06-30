@@ -1,13 +1,13 @@
-#!/bin/bash
+#!/bin/zsh
 
 # 全局变量声明
-CURRENT_DIRECTORY=$(dirname "$(readlink -f "$0")") # 获取当前脚本文件的目录
-default_personal_email="295060456@qq.com"
-personal_ssh_dir="$HOME/.ssh"
-personal_ssh_key="$personal_ssh_dir/id_rsa_personal"
-work_email="olive@vgtech.org"
-work_ssh_dir="$HOME/.ssh"
-work_ssh_key="$work_ssh_dir/id_rsa_work"
+typeset -g CURRENT_DIRECTORY=$(dirname "$(readlink -f "$0")") # 获取当前脚本文件的目录
+typeset -g default_personal_email="295060456@qq.com"
+typeset -g default_work_email="olive@vgtech.org"
+typeset -g personal_ssh_dir="$HOME/.ssh"
+typeset -g personal_ssh_key="$personal_ssh_dir/id_rsa_personal"
+typeset -g work_ssh_dir="$HOME/.ssh"
+typeset -g work_ssh_key="$work_ssh_dir/id_rsa_work"
 # 通用打印方法
 _JobsPrint() {
     local COLOR="$1"
@@ -56,31 +56,43 @@ generate_ssh_key() {
     ssh-keygen -t rsa -b 4096 -C "$email" -f "$key_path" -N ""
     eval "$(ssh-agent -s)"
     ssh-add "$key_path"
+#    open https://github.com/settings/keys
+    open https://github.com/settings/ssh/new
     _JobsPrint_Green "你的 $email 账户的公钥是："
     cat "$key_path.pub"
+    _JobsPrint_Green "将公钥内容复制到剪切板..."
+    cat "$key_path.pub" | pbcopy
+    _JobsPrint_Green "公钥内容已复制到剪切板并打开 GitHub SSH 密钥设置页面，请手动粘贴添加。"
 }
-# 获取用户输入的 personal_email
-get_personal_email() {
-    read -p "请输入个人邮箱 (默认: $default_personal_email): " personal_email
-    if [[ -z "$personal_email" ]]; then
-        personal_email="$default_personal_email"
+# 获取用户输入的 email
+get_email() {
+    local prompt="$1"
+    local default_email="$2"
+    local email
+    read -p "请输入 $prompt (默认: $default_email): " email
+    if [[ -z "$email" ]]; then
+        email="$default_email"
     fi
-    _JobsPrint_Green "$personal_email"
+    _JobsPrint_Green "$email"
 }
 # 测试与 GitHub 和 GitLab 的 SSH 连接
 test_ssh_connection() {
-    read -p "按回车键继续，并测试与 GitHub 的 SSH 连接..."
+    _JobsPrint_Green "只有在网页上粘贴了账户公钥，下面的测试连接才会正常..."
+    read "按回车键继续，并测试与 GitHub 的 SSH 连接..."
     ssh -T git@github.com
     ssh -T git@git.131j.com
     _JobsPrint_Green " SSH 设置完成！"
 }
 # 主函数
 main() {
-    jobs_logo
-    self_intro
-    personal_email=$(get_personal_email)
+    jobs_logo # 打印 "Jobs" logo
+    self_intro # 自述信息
+    open /Users/$(whoami)/.ssh
+    local personal_email=$(get_email "个人邮箱" "$default_personal_email")
+    local work_email=$(get_email "工作邮箱" "$default_work_email")
     generate_ssh_key "$personal_email" "$personal_ssh_key"
     generate_ssh_key "$work_email" "$work_ssh_key"
+    open https://github.com/settings/tokens
     test_ssh_connection
 }
 # 执行主函数
