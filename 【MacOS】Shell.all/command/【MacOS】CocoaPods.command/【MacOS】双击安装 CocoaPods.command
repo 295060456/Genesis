@@ -159,7 +159,8 @@ update_OhMyZsh() {
 check_OhMyZsh() {
     if [ ! -d "$HOME/.oh-my-zsh" ]; then
         _JobsPrint_Green "当前系统中未安装 Oh.My.Zsh，正在进行安装..."
-        sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+        sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" # 执行到这里，会结束
+        check_OhMyZsh
     else
         _JobsPrint_Green "当前系统中已安装 Oh.My.Zsh，进行检查更新升级。"
         update_OhMyZsh
