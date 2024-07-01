@@ -441,10 +441,28 @@ use_FVM(){
     # 使用最新的fvm稳定版
     fvm use stable
 }
+# 检查 sdkmanager 是否成功安装
+check_sdkmanager(){
+    if command -v sdkmanager &> /dev/null; then
+        _JobsPrint_Green "sdkmanager 已安装."
+    else
+        _JobsPrint_Green "请安装 sdkmanager 后继续."
+        _JobsPrint_Green "按 Enter 键继续..."
+        read -r
+        # 再次检查是否安装，防止用户直接按 Enter 继续
+        if ! command -v sdkmanager &> /dev/null; then
+            _JobsPrint_Red "sdkmanager 未安装或配置不正确"
+            check_sdkmanager
+        fi
+    fi
+}
 # 配置 flutter 工程
 config_flutter(){
     _JobsPrint_Yellow "正在执行: ${funcstack[1]}()"
     flutter doctor -v
+    _JobsPrint_Red "Android SDK Command-line Tools : 目前的版本，需要在 Android Studio 的 setting 里面手动勾选安装。然后才会得到 sdkmanager"
+    check_sdkmanager
+    flutter doctor --android-licenses
     fvm flutter --version
     fvm flutter pub get
     flutter precache
