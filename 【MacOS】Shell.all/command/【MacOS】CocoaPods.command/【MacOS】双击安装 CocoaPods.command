@@ -3,15 +3,15 @@
 # 定义全局变量
 # Apple Silicon (M1/M2) 的默认 Homebrew 安装路径是 /opt/homebrew，
 # Intel 芯片的默认路径是 /usr/local。
-HOMEBREW_PATH_1='export PATH="/opt/homebrew/bin:$PATH"' # HomeBrew 的环境变量（M系列芯片）
-HOMEBREW_PATH_2='export PATH="/opt/homebrew/sbin:$PATH"' # HomeBrew 的环境变量（M系列芯片）
-HOMEBREW_PATH_3='export PATH="/usr/local/bin:/usr/local/sbin:$PATH"' # HomeBrew 的环境变量（x86架构芯片）
-HOMEBREW_PATH_4='export PATH="/usr/local/bin:/usr/local/bin:$PATH"' # HomeBrew 的环境变量（x86架构芯片）
-RVM_RUBY_PATH='export PATH="$HOME/.rvm/bin:$PATH"' # RVM.Ruby 的环境变量
-RUBY_PATH='export PATH="/opt/homebrew/opt/ruby/bin:$PATH"' # Homebrew.Ruby 的环境变量
-RBENV_PATH='export PATH="$HOME/.rbenv/bin:$PATH"' # Rbenv 的环境变量
-RBENV_INIT='eval "$(rbenv init -)"' # eval 是一个 shell 命令，用于将字符串作为 shell 命令执行。它实际上是在执行 rbenv init - 生成的命令。
-RUBY_GEMS_PATH='export PATH="/opt/homebrew/lib/ruby/gems/3.3.0/bin"' # Gems 的环境变量
+typeset -g HOMEBREW_PATH_1='export PATH="/opt/homebrew/bin:$PATH"' # HomeBrew 的环境变量（M系列芯片）
+typeset -g HOMEBREW_PATH_2='export PATH="/opt/homebrew/sbin:$PATH"' # HomeBrew 的环境变量（M系列芯片）
+typeset -g HOMEBREW_PATH_3='export PATH="/usr/local/bin:/usr/local/sbin:$PATH"' # HomeBrew 的环境变量（x86架构芯片）
+typeset -g HOMEBREW_PATH_4='export PATH="/usr/local/bin:/usr/local/bin:$PATH"' # HomeBrew 的环境变量（x86架构芯片）
+typeset -g RVM_RUBY_PATH='export PATH="$HOME/.rvm/bin:$PATH"' # RVM.Ruby 的环境变量
+typeset -g RUBY_PATH='export PATH="/opt/homebrew/opt/ruby/bin:$PATH"' # Homebrew.Ruby 的环境变量
+typeset -g RBENV_PATH='export PATH="$HOME/.rbenv/bin:$PATH"' # Rbenv 的环境变量
+typeset -g RBENV_INIT='eval "$(rbenv init -)"' # eval 是一个 shell 命令，用于将字符串作为 shell 命令执行。它实际上是在执行 rbenv init - 生成的命令。
+typeset -g RUBY_GEMS_PATH='export PATH="/opt/homebrew/lib/ruby/gems/3.3.0/bin"' # Gems 的环境变量
 # 获取所有 ruby 的安装路径
 ruby_paths=$(which -a ruby)
 # 通用打印方法
@@ -427,7 +427,7 @@ install_Homebrew_gitee(){
     _framework_do "_x64_homebrew_install" "_x86_homebrew_install"
 }
 # 配置 Home.Ruby 环境变量
-_brewRuby(){
+_config_brew_ruby(){
     _JobsPrint_Yellow "正在执行: ${funcstack[1]}()"
 #HOMEBREW_PATH_1='export PATH="/opt/homebrew/bin:$PATH"' # HomeBrew 的环境变量（M系列芯片）
 #HOMEBREW_PATH_2='export PATH="/opt/homebrew/sbin:$PATH"' # HomeBrew 的环境变量（M系列芯片）
@@ -441,6 +441,11 @@ _brewRuby(){
         add_line_if_not_exists ".bash_profile" "$HOMEBREW_PATH_2" # 检查并添加行到 ./bash_profile
 #        add_line_if_not_exists ".bashrc" "$HOMEBREW_PATH_4" # 检查并添加行到 ./bashrc
 #        add_line_if_not_exists ".zshrc" "$HOMEBREW_PATH_4" # 检查并添加行到 ./zshrc
+
+        # 双引号需要转意，否则出错
+        add_line_if_not_exists ".bash_profile" "eval \"\$(/opt/homebrew/bin/brew shellenv)\"" # 检查并添加行到 ./bash_profile
+#        add_line_if_not_exists ".bashrc" "eval \"\$(/opt/homebrew/bin/brew shellenv)\"" # 检查并添加行到 ./bashrc
+#        add_line_if_not_exists ".zshrc" "eval \"\$(/opt/homebrew/bin/brew shellenv)\"" # 检查并添加行到 ./zshrc
     }
     
     _home_ruby_env_x86(){
@@ -451,13 +456,13 @@ _brewRuby(){
         add_line_if_not_exists ".bash_profile" "$HOMEBREW_PATH_4" # 检查并添加行到 ./bash_profile
 #        add_line_if_not_exists ".bashrc" "$HOMEBREW_PATH_2" # 检查并添加行到 ./bashrc
 #        add_line_if_not_exists ".zshrc" "$HOMEBREW_PATH_2" # 检查并添加行到 ./zshrc
+
+        # 双引号需要转意，否则出错
+        add_line_if_not_exists ".bash_profile" "eval \"\$(/usr/local/bin/brew shellenv)\"" # 检查并添加行到 ./bash_profile
+#        add_line_if_not_exists ".bashrc" "eval \"\$(/usr/local/bin/brew shellenv)\"" # 检查并添加行到 ./bashrc
+#        add_line_if_not_exists ".zshrc" "eval \"\$(/usr/local/bin/brew shellenv)\"" # 检查并添加行到 ./zshrc
     }
-    
     _framework_do "_home_ruby_env_x64" "_home_ruby_env_x86"
-    # 双引号需要转意，否则出错
-    add_line_if_not_exists ".bash_profile" "eval \"\$(/opt/homebrew/bin/brew shellenv)\"" # 检查并添加行到 ./bash_profile
-#    add_line_if_not_exists ".bashrc" "eval \"\$(/opt/homebrew/bin/brew shellenv)\"" # 检查并添加行到 ./bashrc
-#    add_line_if_not_exists ".zshrc" "eval \"\$(/opt/homebrew/bin/brew shellenv)\"" # 检查并添加行到 ./zshrc
     if ! command -v brew >/dev/null 2>&1; then
         # 重新加载配置文件
         source ~/.bash_profile
@@ -517,7 +522,7 @@ install_homebrew_normal() {
         _JobsPrint_Green "正在使用自定义脚本安装 Homebrew..."
         open https://gitee.com/ineo6/homebrew-install/
         install_Homebrew_gitee
-        _brewRuby # 写环境变量
+        _config_brew_ruby # 写环境变量
         _JobsPrint_Green "自定义脚本安装 Homebrew 完毕。验证安装..."
         check_homebrew # 检查安装 Homebrew
         ;;
@@ -525,7 +530,7 @@ install_homebrew_normal() {
         _JobsPrint_Green "正在使用官方脚本安装 Homebrew..."
         open https://brew.sh/
         install_Homebrew_githubusercontent
-        _brewRuby # 写环境变量
+        _config_brew_ruby # 写环境变量
         _JobsPrint_Green "官方脚本安装 Homebrew 完毕。验证安装..."
         check_homebrew # 检查安装 Homebrew
         ;;

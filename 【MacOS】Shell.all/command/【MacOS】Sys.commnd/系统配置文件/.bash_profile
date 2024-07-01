@@ -2,10 +2,11 @@
 # ARM64
 export PATH="/opt/homebrew/bin:$PATH"
 export PATH="/opt/homebrew/sbin:$PATH"
+eval "$(/opt/homebrew/bin/brew shellenv)"
 # x86_64
 export PATH="/usr/local/bin:$PATH""
 export PATH="/usr/local/sbin:$PATH""
-eval "$(/bin/brew shellenv)"
+# eval "$(/usr/local/bin/brew shellenv)"
 
 # 在配置文件中同时配置 rbenv 和 rvm 的路径会产生冲突。
 #rbenv 和 rvm 都是用于管理 Ruby 版本的工具，但它们的工作方式不同，并且在系统路径和环境变量的配置上会互相干扰。
@@ -28,6 +29,9 @@ export LDFLAGS="-L/opt/homebrew/opt/ruby/lib" # 设置 LDFLAGS 环境变量，�
 ## 确保 pkg-config 工具在需要 Ruby 库的编译和链接信息时，能够找到 Homebrew.Ruby 的配置文件
 export PKG_CONFIG_PATH="/opt/homebrew/opt/ruby/lib/pkgconfig"
 
+# 添加 Visual Studio Code 命令到 PATH
+export PATH="$PATH:/Applications/Visual Studio Code.app/Contents/Resources/app/bin"
+
 # 配置 JDK 环境变量
 # export JAVA_HOME=/Users/$(whoami)/Library/Java/JavaVirtualMachines/corretto-20.0.2.1/Contents/Home
 export JAVA_HOME=/Users/$(whoami)/Library/Java/JavaVirtualMachines/corretto-18.0.2/Contents/Home
@@ -46,7 +50,7 @@ export PATH="/Users/$(whoami)/Documents/Gradle/gradle-8.7/bin:$PATH"
 
 # 配置 Flutter 环境
 # 这里的路径即为Dart.Flutter.SDK名下的为bin目录（主要取决于你下载的SDK的绝对路径）
-export PATH=/Users/$(whoami)/Documents/GitHub/Flutter.SDK/flutter/bin:$PATH
+export PATH=/Users/$(whoami)/Documents/GitHub/Flutter.sdk/last/bin/dart:$PATH
 #【相关阅读：Flutter切换源】https://juejin.cn/post/7204285137047257148
 # 防止域名在中国大陆互联网环境下的被屏蔽
 # export PUB_HOSTED_URL=https://pub.flutter-io.cn # 告诉了 Dart.Flutter 和 Dart 的包管理器 pub 在执行 pub get 或 pub upgrade 命令时使用备用仓库而不是默认的官方仓库。
@@ -75,5 +79,3 @@ export PATH=$PATH:$GOBIN
 cd ./Desktop
 
 # source ~/.bash_profile
-
-
