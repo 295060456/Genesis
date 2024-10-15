@@ -3,17 +3,44 @@
 # 定义全局变量
 # Apple Silicon (M1/M2) 的默认 Homebrew 安装路径是 /opt/homebrew，
 # Intel 芯片的默认路径是 /usr/local。
-typeset -g HOMEBREW_PATH_1='export PATH="/opt/homebrew/bin:$PATH"' # HomeBrew 的环境变量（M系列芯片）
-typeset -g HOMEBREW_PATH_2='export PATH="/opt/homebrew/sbin:$PATH"' # HomeBrew 的环境变量（M系列芯片）
-typeset -g HOMEBREW_PATH_3='export PATH="/usr/local/bin:/usr/local/sbin:$PATH"' # HomeBrew 的环境变量（x86架构芯片）
-typeset -g HOMEBREW_PATH_4='export PATH="/usr/local/bin:/usr/local/bin:$PATH"' # HomeBrew 的环境变量（x86架构芯片）
-typeset -g RVM_RUBY_PATH='export PATH="$HOME/.rvm/bin:$PATH"' # RVM.Ruby 的环境变量
-typeset -g RUBY_PATH='export PATH="/opt/homebrew/opt/ruby/bin:$PATH"' # Homebrew.Ruby 的环境变量
-typeset -g RBENV_PATH='export PATH="$HOME/.rbenv/bin:$PATH"' # Rbenv 的环境变量
-typeset -g RBENV_INIT='eval "$(rbenv init -)"' # eval 是一个 shell 命令，用于将字符串作为 shell 命令执行。它实际上是在执行 rbenv init - 生成的命令。
-typeset -g RUBY_GEMS_PATH='export PATH="/opt/homebrew/lib/ruby/gems/3.3.0/bin"' # Gems 的环境变量
+
+# Homebrew for M Series
+typeset -g HOMEBREW_PATH_M_SERIES="/opt/homebrew"
+# Homebrew for x86
+typeset -g HOMEBREW_PATH_X86="/usr/local"
+# RVM Ruby Path
+typeset -g RVM_RUBY_PATH="$HOME/.rvm/bin"
+# Homebrew Ruby Path
+typeset -g RUBY_PATH="$HOMEBREW_PATH_M_SERIES/opt/ruby/bin"
+# Rbenv Path
+typeset -g RBENV_PATH="$HOME/.rbenv/bin"
+# Gems Path
+typeset -g RUBY_GEMS_PATH="$HOMEBREW_PATH_M_SERIES/lib/ruby/gems/3.3.0/bin"
+# Homebrew 环境变量（M系列芯片）
+typeset -g HOMEBREW_PATH_1='export PATH="$HOMEBREW_PATH_M_SERIES/bin:$PATH"'
+typeset -g HOMEBREW_PATH_2='export PATH="$HOMEBREW_PATH_M_SERIES/sbin:$PATH"'
+# Homebrew 环境变量（x86架构芯片）
+typeset -g HOMEBREW_PATH_3='export PATH="$HOMEBREW_PATH_X86/bin:$PATH"'
+typeset -g HOMEBREW_PATH_4='export PATH="$HOMEBREW_PATH_X86/sbin:$PATH"'
+# RVM 环境变量
+typeset -g RVM_PATH='export PATH="$RVM_RUBY_PATH:$PATH"'
+# Ruby 环境变量
+typeset -g RUBY_PATH_ENV='export PATH="$RUBY_PATH:$PATH"'
+# Rbenv 环境变量
+typeset -g RBENV_PATH_ENV='export PATH="$RBENV_PATH:$PATH"'
+typeset -g RBENV_INIT='eval "$(rbenv init -)"'
+# Gems 环境变量
+typeset -g RUBY_GEMS_ENV='export PATH="$RUBY_GEMS_PATH:$PATH"'
+# 定义全局配置文件数组
+typeset -g -A config_files=(
+    ".bash_profile" ''
+    # ".bashrc" ''
+    ".zshrc" ''
+    # ".zprofile" ''
+)
 # 获取所有 ruby 的安装路径
 ruby_paths=$(which -a ruby)
+ruby_now=$(ruby -v)
 # 通用打印方法
 _JobsPrint() {
     local COLOR="$1"
@@ -176,10 +203,10 @@ check_env(){
     fi
 
     _JobsPrint_Green \
-    "不同的芯片拥有不同的指令集，会影响编译效果\n\
-    Intel 芯片架构：x86_64\n\
-    Apple M1 芯片架构：x86_64\n\
-    Apple M2 芯片架构：arm64"
+    "#不同的芯片拥有不同的指令集，会影响编译效果\n\
+    shellenv#Intel 芯片架构：x86_64\n\
+    #Apple M1 芯片架构：x86_64\n\
+    #Apple M2 芯片架构：arm64"
     
     _JobsPrint_Green "当在 Apple M1 芯片上运行 uname -m 并获得 x86_64 时，这表明你在通过 Rosetta 2 运行一个 x86_64 模拟环境。\n"
     _framework_do "_JobsPrint_Green 当前CPU芯片架构为：ARM64" "_JobsPrint_Green 当前CPU芯片架构为：X86"
@@ -323,12 +350,16 @@ folder_authorization(){
     update_permissions_for_dir "$(brew --prefix)/*"
 }
 # 删除 Homebrew 的残留目录
-homebrew_residual_directory_deletion(){
-
+homebrew_residual_directory_deletion() {
+    # 检查 SIP 状态
+    local sip_status=$(csrutil status)
     _JobsPrint_Green "正在删除残留的目录..."
-    _JobsPrint_Red "SIP（系统完整性保护）可能会导致某些目录删除失败"
-    _JobsPrint_Red "运行 csrutil disable 并重启 Mac，关闭 SIP（系统完整性保护）"
-
+    # 如果 SIP 启用，则输出警告信息
+    if [[ "$sip_status" == *"enabled"* ]]; then
+        _JobsPrint_Red "SIP（系统完整性保护）可能会导致某些目录删除失败"
+        _JobsPrint_Red "运行 csrutil disable 并重启 Mac，关闭 SIP（系统完整性保护）"
+    fi
+    # 删除残留目录
     sudo rm -rf /usr/local/Caskroom
     sudo rm -rf /usr/local/Cellar
     sudo rm -rf /usr/local/Homebrew/
@@ -345,16 +376,13 @@ homebrew_residual_directory_deletion(){
 uninstall_homebrew() {
     _JobsPrint_Yellow "正在执行: ${funcstack[1]}()"
     _JobsPrint_Green "检测 Homebrew 安装方式..."
-    
     # 检查 Homebrew 是否安装
     if ! command -v brew >/dev/null 2>&1; then
         _JobsPrint_Red "Homebrew 未安装。"
         return
     fi
-    
     # 检查 Homebrew 安装路径
     brew_path=$(brew --prefix)
-    
     if [[ "$brew_path" == "/usr/local/Homebrew" ]]; then
         _JobsPrint_Green "检测到 Homebrew 是通过官方脚本安装的..."
         _JobsPrint_Green "正在卸载 Homebrew..."
@@ -367,13 +395,15 @@ uninstall_homebrew() {
         _JobsPrint_Red "无法确定 Homebrew 的安装方式。"
         return
     fi
-    
-    folder_authorization # 更新每个目录的权限和所有权
-    homebrew_residual_directory_deletion # 删除 Homebrew 的残留目录
-
-    _JobsPrint_Green "残留目录删除完成。"
-    _JobsPrint_Green "Homebrew 卸载完成。验证卸载..."
-    
+    # 询问用户是否删除残留目录
+    read -p "是否要删除 Homebrew 的残留目录？(y/n): " user_input
+    if [[ "$user_input" == "y" || "$user_input" == "Y" ]]; then
+        folder_authorization # 更新每个目录的权限和所有权
+        homebrew_residual_directory_deletion # 删除 Homebrew 的残留目录
+        _JobsPrint_Green "残留目录删除完成。"
+    else
+        _JobsPrint_Red "跳过 Homebrew 残留目录的删除。"
+    fi
     check_homebrew # 检查安装 Homebrew
 }
 # 用fzf的方式安装 Homebrew。
@@ -429,74 +459,52 @@ install_Homebrew_gitee(){
 # 配置 Home.Ruby 环境变量
 _config_brew_ruby(){
     _JobsPrint_Yellow "正在执行: ${funcstack[1]}()"
-#HOMEBREW_PATH_1='export PATH="/opt/homebrew/bin:$PATH"' # HomeBrew 的环境变量（M系列芯片）
-#HOMEBREW_PATH_2='export PATH="/opt/homebrew/sbin:$PATH"' # HomeBrew 的环境变量（M系列芯片）
-#HOMEBREW_PATH_3='export PATH="/usr/local/bin:/usr/local/sbin:$PATH"' # HomeBrew 的环境变量（x86架构芯片）
-#HOMEBREW_PATH_4='export PATH="/usr/local/bin:/usr/local/bin:$PATH"' # HomeBrew 的环境变量（x86架构芯片）
+    # M系列芯片的环境设置
     _home_ruby_env_x64(){
-        add_line_if_not_exists ".bash_profile" "$HOMEBREW_PATH_1" # 检查并添加行到 ./bash_profile
-#        add_line_if_not_exists ".bashrc" "$HOMEBREW_PATH_3" # 检查并添加行到 ./bashrc
-#        add_line_if_not_exists ".zshrc" "$HOMEBREW_PATH_3" # 检查并添加行到 ./zshrc
-        
-        add_line_if_not_exists ".bash_profile" "$HOMEBREW_PATH_2" # 检查并添加行到 ./bash_profile
-#        add_line_if_not_exists ".bashrc" "$HOMEBREW_PATH_4" # 检查并添加行到 ./bashrc
-#        add_line_if_not_exists ".zshrc" "$HOMEBREW_PATH_4" # 检查并添加行到 ./zshrc
-
-        # 双引号需要转意，否则出错
-        add_line_if_not_exists ".bash_profile" "eval \"\$(/opt/homebrew/bin/brew shellenv)\"" # 检查并添加行到 ./bash_profile
-#        add_line_if_not_exists ".bashrc" "eval \"\$(/opt/homebrew/bin/brew shellenv)\"" # 检查并添加行到 ./bashrc
-#        add_line_if_not_exists ".zshrc" "eval \"\$(/opt/homebrew/bin/brew shellenv)\"" # 检查并添加行到 ./zshrc
+        for config_file in "${config_files[@]}"; do
+            add_line_if_not_exists "$config_file" "$HOMEBREW_PATH_1" # 添加 HOMEBREW_PATH_1
+            add_line_if_not_exists "$config_file" "$HOMEBREW_PATH_2" # 添加 HOMEBREW_PATH_2
+            add_line_if_not_exists "$config_file" "eval \"\$(/opt/homebrew/bin/brew shellenv)\"" # 添加 brew shellenv
+        done
     }
-    
+    # x86架构芯片的环境设置
     _home_ruby_env_x86(){
-        add_line_if_not_exists ".bash_profile" "$HOMEBREW_PATH_3" # 检查并添加行到 ./bash_profile
-#        add_line_if_not_exists ".bashrc" "$HOMEBREW_PATH_1" # 检查并添加行到 ./bashrc
-#        add_line_if_not_exists ".zshrc" "$HOMEBREW_PATH_1" # 检查并添加行到 ./zshrc
-
-        add_line_if_not_exists ".bash_profile" "$HOMEBREW_PATH_4" # 检查并添加行到 ./bash_profile
-#        add_line_if_not_exists ".bashrc" "$HOMEBREW_PATH_2" # 检查并添加行到 ./bashrc
-#        add_line_if_not_exists ".zshrc" "$HOMEBREW_PATH_2" # 检查并添加行到 ./zshrc
-
-        # 双引号需要转意，否则出错
-        add_line_if_not_exists ".bash_profile" "eval \"\$(/usr/local/bin/brew shellenv)\"" # 检查并添加行到 ./bash_profile
-#        add_line_if_not_exists ".bashrc" "eval \"\$(/usr/local/bin/brew shellenv)\"" # 检查并添加行到 ./bashrc
-#        add_line_if_not_exists ".zshrc" "eval \"\$(/usr/local/bin/brew shellenv)\"" # 检查并添加行到 ./zshrc
+        for config_file in "${config_files[@]}"; do
+            add_line_if_not_exists "$config_file" "$HOMEBREW_PATH_3" # 添加 HOMEBREW_PATH_3
+            add_line_if_not_exists "$config_file" "$HOMEBREW_PATH_4" # 添加 HOMEBREW_PATH_4
+            add_line_if_not_exists "$config_file" "eval \"\$(/usr/local/bin/brew shellenv)\"" # 添加 brew shellenv
+        done
     }
     _framework_do "_home_ruby_env_x64" "_home_ruby_env_x86"
-    if ! command -v brew >/dev/null 2>&1; then
-        # 重新加载配置文件
-        source ~/.bash_profile
-#        source ~/.bashrc
-#        source ~/.zshrc
-    fi
+    # 重新加载配置文件
+    for config_file in "${config_files[@]}"; do
+        source ~/"$config_file"
+    done
 }
 # 配置 Rbenv.Ruby 环境变量
 _rbenRuby(){
     _JobsPrint_Yellow "正在执行: ${funcstack[1]}()"
     # 使用全局变量更新 RBenv：$RBENV_PATH
-    add_line_if_not_exists ".bash_profile" "$RBENV_PATH" # 检查并添加行到 ./bash_profile
-#    add_line_if_not_exists ".bashrc" "$RBENV_PATH" # 检查并添加行到 ./bashrc
-#    add_line_if_not_exists ".zshrc" "$RBENV_PATH" # 检查并添加行到 ./zshrc
-    # 使用全局变量更新 RBenv：$RBENV_INIT
-    add_line_if_not_exists ".bash_profile" "$RBENV_INIT" # 检查并添加行到 ./bash_profile
-#    add_line_if_not_exists ".bashrc" "$RBENV_INIT" # 检查并添加行到 ./bashrc
-#    add_line_if_not_exists ".zshrc" "$RBENV_INIT" # 检查并添加行到 ./zshrc
+    for config_file in "${config_files[@]}"; do
+        add_line_if_not_exists "$config_file" "$RBENV_PATH" # 添加 RBENV_PATH
+        add_line_if_not_exists "$config_file" "$RBENV_INIT" # 添加 RBENV_INIT
+    done
     # 重新加载配置文件
-    source ~/.bash_profile
-#    source ~/.bashrc
-#    source ~/.zshrc
+    for config_file in "${config_files[@]}"; do
+        source ~/"$config_file"
+    done
 }
 # 配置 Ruby.Gems 环境变量
 _rubyGems(){
     _JobsPrint_Yellow "正在执行: ${funcstack[1]}()"
     # 使用全局变量更新 Gems
-    add_line_if_not_exists ".bash_profile" "$RUBY_GEMS_PATH" # 检查并添加行到 ./bash_profile
-#    add_line_if_not_exists ".bashrc" "$RUBY_GEMS_PATH" # 检查并添加行到 ./bashrc
-#    add_line_if_not_exists ".zshrc" "$RUBY_GEMS_PATH" # 检查并添加行到 ./zshrc
+    for config_file in "${config_files[@]}"; do
+        add_line_if_not_exists "$config_file" "$RUBY_GEMS_PATH" # 添加 RUBY_GEMS_PATH
+    done
     # 重新加载配置文件
-    source ~/.bash_profile
-#    source ~/.bashrc
-#    source ~/.zshrc
+    for config_file in "${config_files[@]}"; do
+        source ~/"$config_file"
+    done
 }
 # 键盘输入的方式安装 Homebrew if ! command -v brew &> /dev/null; then
 install_homebrew_normal() {
@@ -545,11 +553,9 @@ install_homebrew_normal() {
 # 安装/更新 Homebrew 必要的依赖项
 install_and_update_homebrew_dependencies() {
     _JobsPrint_Yellow "正在执行: ${funcstack[1]}()"
-
-    dependencies=("ruby-build" "openssl" "readline" "zlib")
+    dependencies=("ruby-build" "openssl@3" "readline" "zlib")
     missing_dependencies=()
     installed_dependencies=()
-
     # 检查每个依赖项是否已安装
     for dep in "${dependencies[@]}"; do
         if brew list --formula | grep -q "^$dep\$"; then
@@ -558,38 +564,35 @@ install_and_update_homebrew_dependencies() {
             missing_dependencies+=("$dep")
         fi
     done
-
-    _homebrew_update_arm64(){
-        arch -arm64 brew upgrade # 更新 Homebrew 自身及其公式（Formulae）的本地数据库。升级已安装的软件包到最新版本
-        arch -arm64 brew update # 更新 Homebrew 自身及其公式的本地数据库，不会安装或升级软件包。
-        # 安装缺失的依赖项
-        if [ ${#missing_dependencies[@]} -gt 0 ]; then
-            _JobsPrint_Green "以下依赖项未安装，将进行安装: ${missing_dependencies[*]}"
-            arch -arm64 brew install "${missing_dependencies[@]}"
-        fi
-
-        # 升级已安装的依赖项
-        if [ ${#installed_dependencies[@]} -gt 0 ]; then
-            _JobsPrint_Green "以下依赖项已安装，将进行升级: ${installed_dependencies[*]}"
-            arch -arm64 brew upgrade "${installed_dependencies[@]}"
-        fi
-    }
-    
-    _homebrew_update_x86(){
-        brew upgrade # 更新 Homebrew 自身及其公式（Formulae）的本地数据库。升级已安装的软件包到最新版本
-        brew update # 更新 Homebrew 自身及其公式的本地数据库，不会安装或升级软件包。
-        # 安装缺失的依赖项
+    _install_missing_dependencies() {
         if [ ${#missing_dependencies[@]} -gt 0 ]; then
             _JobsPrint_Green "以下依赖项未安装，将进行安装: ${missing_dependencies[*]}"
             brew install "${missing_dependencies[@]}"
         fi
-
-        # 升级已安装的依赖项
+    }
+    _reinstall_installed_dependencies() {
         if [ ${#installed_dependencies[@]} -gt 0 ]; then
-            _JobsPrint_Green "以下依赖项已安装，将进行升级: ${installed_dependencies[*]}"
-            brew upgrade "${installed_dependencies[@]}"
+            _JobsPrint_Green "以下依赖项已安装，将进行重新安装: ${installed_dependencies[*]}"
+            brew reinstall "${installed_dependencies[@]}"
         fi
     }
+    _homebrew_update_arm64() {
+        arch -arm64 brew update # 更新 Homebrew 自身及其公式的本地数据库
+        arch -arm64 brew upgrade # 升级已安装的软件包到最新版本
+        # 安装缺失的依赖项
+        _install_missing_dependencies
+        # 重新安装已安装的依赖项
+        _reinstall_installed_dependencies
+    }
+    _homebrew_update_x86() {
+        brew update # 更新 Homebrew 自身及其公式的本地数据库
+        brew upgrade # 升级已安装的软件包到最新版本
+        # 安装缺失的依赖项
+        _install_missing_dependencies
+        # 重新安装已安装的依赖项
+        _reinstall_installed_dependencies
+    }
+    # 根据架构选择相应的更新函数
     _framework_do "_homebrew_update_arm64" "_homebrew_update_x86"
 }
 # 检查安装 Homebrew
@@ -629,7 +632,7 @@ check_and_install_zsh() {
 # 安装/升级 ruby-build 插件
 install_ruby_build() {
     _JobsPrint_Yellow "正在执行: ${funcstack[1]}()"
-    local ruby_build_dir="$(rbenv root)/plugins/ruby-build"
+    local ruby_build_dir="$(\n root)/plugins/ruby-build"
     # 检查 ruby-build 是否已安装
     if ! command -v ruby-build &> /dev/null; then
         _JobsPrint_Green "选择安装 ruby-build 插件的方式："
@@ -807,7 +810,7 @@ check_rbenv_installed_ruby() {
 # 检测当前 Ruby 环境是否是 MacOS 自带的
 check_ruby_install_ByMacOS(){
     _JobsPrint_Yellow "正在执行: ${funcstack[1]}()" "${FUNC_NAME}"
-    if echo "$ruby_paths" | grep -q "/usr/bin/ruby"; then
+    if echo "$ruby_now" | grep -q "/usr/bin/ruby"; then
         _JobsPrint_Red "当前Ruby环境为MacOS自带的Ruby环境（阉割版）"
     fi
 }
@@ -844,7 +847,9 @@ check_and_remove_non_system_ruby() {
 check_ruby_environment() {
     _JobsPrint_Yellow "正在执行: ${funcstack[1]}()"
     _JobsPrint_Green "查看本机的 Ruby 环境安装目录："
-    which -a ruby
+    ruby_paths
+    _JobsPrint_Green "当前使用的 Ruby 版本："
+    ruby -v
 
     check_ruby_install_ByMacOS # 检测当前 Ruby 环境是否是 MacOS 自带的
     check_rbenv_version # 检测当前 Ruby 环境是否通过 Rbenv 安装的
@@ -853,9 +858,7 @@ check_ruby_environment() {
     
     _JobsPrint_Green "打印已安装的 Ruby 版本："
     rvm list
-    _JobsPrint_Green "当前使用的 Ruby 版本："
-    ruby -v
-    
+
     _JobsPrint_Green "清理 RVM 环境..."
     rvm cleanup all
     _JobsPrint_Green "RVM 环境清理完成。"
@@ -1074,15 +1077,15 @@ install_cocoapods() {
         ;;
     esac
     # 安装其他相关的 CocoaPods 插件
-    sudo gem install \
-        # 这是一个 CocoaPods 插件，用于从一个项目中移除所有 CocoaPods 的痕迹。它可以清理所有由 CocoaPods 添加的配置和文件，使项目回到未使用 CocoaPods 管理依赖之前的状态。
-        cocoapods-deintegrate \
-        # 这个 Gem 为 CocoaPods 提供下载功能，支持多种类型的源（如 git, http, svn 等）。它是 CocoaPods 内部使用的组件，也可以单独用于下载特定的库或框架。
-        cocoapods-downloader \
-        # 这是一个用于与 CocoaPods 的 Trunk 服务交互的命令行工具。CocoaPods Trunk 是一个允许开发者提交他们的库到一个中央索引的服务，使得这些库可以被全球的开发者搜索和使用。
-        cocoapods-trunk \
-        # 这个插件允许开发者直接尝试使用一个 CocoaPod，而无需手动在项目中集成。它可以快速地克隆一个库的示例项目，安装依赖，并打开这个项目，使得评估和试用第三方库变得更加简单。
-        cocoapods-try
+#    sudo gem install \
+#        # 这是一个 CocoaPods 插件，用于从一个项目中移除所有 CocoaPods 的痕迹。它可以清理所有由 CocoaPods 添加的配置和文件，使项目回到未使用 CocoaPods 管理依赖之前的状态。
+#        cocoapods-deintegrate \
+#        # 这个 Gem 为 CocoaPods 提供下载功能，支持多种类型的源（如 git, http, svn 等）。它是 CocoaPods 内部使用的组件，也可以单独用于下载特定的库或框架。
+#        cocoapods-downloader \
+#        # 这是一个用于与 CocoaPods 的 Trunk 服务交互的命令行工具。CocoaPods Trunk 是一个允许开发者提交他们的库到一个中央索引的服务，使得这些库可以被全球的开发者搜索和使用。
+#        cocoapods-trunk \
+#        # 这个插件允许开发者直接尝试使用一个 CocoaPod，而无需手动在项目中集成。它可以快速地克隆一个库的示例项目，安装依赖，并打开这个项目，使得评估和试用第三方库变得更加简单。
+#        cocoapods-try
       
     update_cocoapods
     pod cache clean --all
@@ -1160,12 +1163,13 @@ check_homebrew # 检查安装 Homebrew
 check_and_update_fzf # 检查并安装/更新 fzf（2种方式安装:Homebrew/Git）
 check_and_update_libyaml # 检查并安装/更新 Homebrew.libyaml
 check_and_install_zsh # 检查并安装 Homebrew.zsh
-
+echo $PATH | tr ':' '\n'
 check_ruby_environment # 检查当前的 Ruby 环境
+echo $PATH | tr ':' '\n'
 check_and_remove_non_system_ruby # 检查并删除非系统 Ruby 环境
 setup_ruby_environment # 安装 Ruby 环境（3种方式安装：Homebrew/Rbenv/RVM官方）
 check_ruby_environment # 检查当前的 Ruby 环境
-
+echo $PATH | tr ':' '\n'
 check_and_set_gem_cocoaPods_mirror # 检查和设置 Gem/CocoaPods 镜像
 check_and_setup_gem # 检查并安装 Homebrew.Gem
 check_and_setup_cocoapods # 检查并安装 CocoaPods
