@@ -80,7 +80,7 @@ test_ssh_connection() {
     _JobsPrint_Green "只有在网页上粘贴了账户公钥，下面的测试连接才会正常..."
     read "按回车键继续，并测试与 GitHub 的 SSH 连接..."
     ssh -T git@github.com
-    ssh -T git@git.131j.com
+#    ssh -T git@git.131j.com
     _JobsPrint_Green " SSH 设置完成！"
 }
 # 主函数
@@ -88,10 +88,13 @@ main() {
     jobs_logo # 打印 "Jobs" logo
     self_intro # 自述信息
     open /Users/$(whoami)/.ssh
+    
     local personal_email=$(get_email "个人邮箱" "$default_personal_email")
-#    local work_email=$(get_email "工作邮箱" "$default_work_email")
     generate_ssh_key "$personal_email" "$personal_ssh_key"
+    
+#    local work_email=$(get_email "工作邮箱" "$default_work_email")
 #    generate_ssh_key "$work_email" "$work_ssh_key"
+    
     open https://github.com/settings/tokens
     test_ssh_connection
 }
